@@ -29,31 +29,39 @@ public class WcBoardDto {
         @NotNull (message = "1개 이상 선택해주세요")
         private String areaTag;
 
+        private String startTime;
+
+        private String endTime;
+
+        private String createdAt;
+
+        private String postStatus;
+
 
 
 
     }
-//    @AllArgsConstructor
-//    @Getter
-//    public static class Patch {
-//        @NotNull (message = "공백이 아니어야 합니다")
-//        private String title;
-//
-//        @NotNull (message = "공백이 아니어야 합니다")
-//        private String content;
-//
-//        @NotBlank
-//        private String images;
-//
-//        @NotNull (message = "공백이 아니어야 합니다")
-//        private String wcTag;
-//
-//        @NotNull (message = "공백이 아니어야 합니다")
-//        private String animalTag;
-//
-//        @NotNull (message = "공백이 아니어야 합니다")
-//        private String areaTag;
-//    }
+    @AllArgsConstructor
+    @Getter
+    public static class Patch {
+        private long wcBoardId;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+
+        private String startTime;
+
+        private String endTime;
+
+        private String postStatus;
+
+        public void addwcBoardId(long wcBoardId) {
+            this.wcBoardId = wcBoardId;
+        }
+    }
 
     @AllArgsConstructor
     @Getter
@@ -66,6 +74,8 @@ public class WcBoardDto {
         private String animalTag;
         private String areaTag;
         private String postStatus;
+        private String startTime;
+        private String endTime;
     }
 
 

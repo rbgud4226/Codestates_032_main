@@ -10,6 +10,7 @@ import org.mapstruct.MappingConstants;
 public interface WcBoardMapper {
 //     @Mapping(source = "memberId", target = "member.memberId") // 추후에 member에 맞게 수정
      WcBoard wcBoardPostDtoToWcBoard(WcBoardDto.Post postDto);
+     WcBoard wcBoardPatchDtotoWcBoard(WcBoardDto.Patch patchDto);
 
 //     @Mapping(source = "", target = "")
      WcBoardDto.Response wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
