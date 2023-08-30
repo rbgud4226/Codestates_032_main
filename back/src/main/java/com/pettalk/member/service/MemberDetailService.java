@@ -1,30 +1,30 @@
 package com.pettalk.member.service;
 
+import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
-import com.pettalk.utils.CustomAuthorityUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 @Component
 public class MemberDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
-    private final CustomAuthorityUtils authorityUtils;
 
-    public MemberDetailService(MemberRepository memberRepository, CustomAuthorityUtils authorityUtils){
+    public MemberDetailService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
-        this.authorityUtils = authorityUtils;
+
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        Member findMember = optionalMember.orElseThrow(() -> new RuntimeException("맴버를 찾을 수 없습니다"));
-
+        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return new MemberDetails(findMember);
     }
 
@@ -35,12 +35,14 @@ public class MemberDetailService implements UserDetailsService {
             setMemberId(member.getMemberId());
             setEmail(member.getEmail());
             setPassword(member.getPassword());
-            setRoles(member.getRoles());
+            setNickName(member.getNickName());
+            setProfileImage(member.getProfileImage());
+
         }
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return authorityUtils.createAuthorities(this.getRoles()); // User 권한 정보 생성
+            return Collections.EMPTY_LIST;
         }
 
         @Override
@@ -68,5 +70,6 @@ public class MemberDetailService implements UserDetailsService {
             return true;
         }
     }
+
 
 }

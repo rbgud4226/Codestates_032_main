@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 public class PostMemberDto {
     @NotNull
     private String nickName;
-    @Email
+    @Email(message = "유효한 이메일 형식이 아닙니다.")
     @NotNull
     private String email;
     @NotNull

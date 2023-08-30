@@ -5,7 +5,6 @@ import com.pettalk.jwt.JwtAuthenticationFilter;
 import com.pettalk.jwt.JwtTokenizer;
 import com.pettalk.jwt.JwtVerificationFilter;
 import com.pettalk.member.repository.RefreshTokenRepository;
-import com.pettalk.utils.CustomAuthorityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,12 +22,10 @@ import java.util.Arrays;
 @Configuration
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
-    private final CustomAuthorityUtils authorityUtils;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils,RefreshTokenRepository refreshTokenRepository){
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer,RefreshTokenRepository refreshTokenRepository){
         this.jwtTokenizer = jwtTokenizer;
-        this.authorityUtils = authorityUtils;
         this.refreshTokenRepository = refreshTokenRepository;
     }
     @Bean
@@ -55,8 +52,6 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -77,7 +72,7 @@ public class SecurityConfiguration {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, refreshTokenRepository);
             jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer);
             builder.addFilter(jwtAuthenticationFilter)
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
         }
