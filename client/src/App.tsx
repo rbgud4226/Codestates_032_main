@@ -6,7 +6,6 @@ function App() {
     <>
       <Router>
         <GlobalStyles />
-        초기세팅 완료
       </Router>
     </>
   );
