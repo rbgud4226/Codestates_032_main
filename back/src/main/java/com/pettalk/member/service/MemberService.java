@@ -1,5 +1,7 @@
 package com.pettalk.member.service;
 
+import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.dto.GetMemberDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.entity.RefreshToken;
@@ -44,7 +46,7 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("회원 정보가 없습니다."));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         if (member.getNickName().trim().length() <= 3) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
@@ -56,14 +58,14 @@ public class MemberService {
     public GetMemberDto getMember(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("회원 정보가 없습니다."));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return mapper.memberToGetMemberDto(findMember);
     }
 
     public void deleteMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("회원 정보가 없습니다"));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         memberRepository.delete(findMember);
     }
 
@@ -78,7 +80,7 @@ public class MemberService {
         String email = (String) authentication.getPrincipal();
 
         // 이메일로 회원 정보를 찾습니다.
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("회원 정보가 없습니다."));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         // 해당 회원과 연관된 refreshToken을 찾습니다.
         Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByMember(findMember);
