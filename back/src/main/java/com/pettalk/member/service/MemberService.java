@@ -43,7 +43,7 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
         if (member.getNickName().trim().length() <= 3) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
@@ -63,6 +63,10 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByMember(findMember);
+        refreshTokenOptional.ifPresent(refreshToken -> {
+            refreshTokenRepository.delete(refreshToken);
+        });
         memberRepository.delete(findMember);
     }
 
