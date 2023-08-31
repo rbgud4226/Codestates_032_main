@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
-
+import Mypage from "./page/Mypage";
 function App() {
   return (
     <>
@@ -10,7 +10,9 @@ function App() {
         <Main>
           <Container>
             <Header />
-            <Wrapper>배고파</Wrapper>
+            <Wrapper>
+              <Mypage />
+            </Wrapper>
           </Container>
         </Main>
       </Router>
@@ -51,5 +53,4 @@ const Header = styled.div`
 const Wrapper = styled.div`
   min-height: 100%;
   margin: 28px;
-  background-color: pink;
 `;
