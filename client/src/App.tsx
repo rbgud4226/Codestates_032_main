@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
-
+import MainForm from "./component/MainForm";
 function App() {
   return (
     <>
@@ -10,7 +10,7 @@ function App() {
         <Main>
           <Container>
             <Header />
-            <Wrapper>배고파</Wrapper>
+            <MainForm propertyName="example" />
           </Container>
         </Main>
       </Router>
@@ -26,11 +26,12 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     text-decoration: none;
     font-family: 'Roboto';
+    background-color: while;
   }
 `;
 const Main = styled.main`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   margin: 0px;
   display: flex;
   justify-content: center;
