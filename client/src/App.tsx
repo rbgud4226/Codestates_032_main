@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
+import Header from "./component/header/Header";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
         <Main>
           <Container>
             <Header />
-            <Wrapper>배고파</Wrapper>
+            <Wrapper></Wrapper>
           </Container>
         </Main>
       </Router>
@@ -40,12 +41,6 @@ const Container = styled.div`
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
-`;
-
-const Header = styled.div`
-  min-height: 70px;
-  min-width: 320px;
-  background-color: aqua;
 `;
 
 const Wrapper = styled.div`
