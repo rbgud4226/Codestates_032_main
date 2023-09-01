@@ -1,11 +1,14 @@
 import React from "react";
+import { styled } from "styled-components";
 
 const LoginForm = () => {
-  return (
-    <div style={{ display: "flex", alignContent: "center" }}>
-      기본 디렉토리 구조
-    </div>
-  );
+  return <LoginContainer></LoginContainer>;
 };
 
 export default LoginForm;
+
+export const LoginContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: grey;
+`;

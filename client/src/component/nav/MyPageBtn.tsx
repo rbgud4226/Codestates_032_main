@@ -7,13 +7,12 @@ const MyPageBtn = () => {
 
   return (
     <MyPageContainer
-      active={active}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
       onMouseLeave={() => setActive(false)}
     >
-      <MyPageIcon active={active} src={myPageIcon} />
-      <MyPageLb active={active}>검색</MyPageLb>
+      <MyPageIcon $active={active} src={myPageIcon} />
+      <MyPageLb $active={active}>검색</MyPageLb>
     </MyPageContainer>
   );
 };
@@ -24,11 +23,7 @@ const BaseStyledComponent = styled.button`
   border: 0px;
   cursor: pointer;
 `;
-interface MyPageBtnProps {
-  active: boolean;
-}
-
-export const MyPageContainer = styled(BaseStyledComponent)<MyPageBtnProps>`
+export const MyPageContainer = styled(BaseStyledComponent)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,20 +34,20 @@ export const MyPageContainer = styled(BaseStyledComponent)<MyPageBtnProps>`
   }
 `;
 interface MyPageIconProps {
-  active: boolean;
+  $active: boolean;
 }
 export const MyPageIcon = styled.img<MyPageIconProps>`
   margin-top: 12px;
-  width: ${props => (props.active ? "20px" : "24px")};
+  width: ${props => (props.$active ? "20px" : "24px")};
   transition: width 0.2s;
 `;
 interface MyPageLbProps {
-  active: boolean;
+  $active: boolean;
 }
 
 export const MyPageLb = styled.label<MyPageLbProps>`
   color: #279eff;
   margin-top: 7px;
-  font-size: ${props => (props.active ? "10px" : "12px")};
+  font-size: ${props => (props.$active ? "10px" : "12px")};
   transition: font-size 0.2s;
 `;

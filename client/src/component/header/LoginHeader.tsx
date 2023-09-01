@@ -1,15 +1,14 @@
 import React from "react";
 import { styled } from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginHeader = () => {
-  const navigate = useNavigate();
-
-  return <Login onClick={(): void => navigate("/login")}>Login</Login>;
+  return <Login to="/login">Login</Login>;
 };
 
 export default LoginHeader;
 
-export const Login = styled.div`
+export const Login = styled(Link)`
   color: #279eff;
+  cursor: pointer;
 `;

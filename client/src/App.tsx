@@ -4,9 +4,12 @@ import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 =======
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./page/LoginPage";
 import Nav from "./component/nav/Nav";
 import Header from "./component/header/Header";
+import LoginPage from "./page/LoginPage";
+import MemberAgreePage from "./page/memberAgreePage";
+import SignUpPage from "./page/SignUpPage";
+import MainPage from "./page/MainPage";
 
 >>>>>>> 27a48d4 (feat:Nav 뷰 구현)
 function App() {
@@ -22,7 +25,10 @@ function App() {
             <Header />
             <Wrapper>
               <Routes>
+                <Route path="/" element={<MainPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/memberAgree" element={<MemberAgreePage />} />
+                <Route path="/signup" element={<SignUpPage />} />
               </Routes>
             </Wrapper>
             <Nav />
