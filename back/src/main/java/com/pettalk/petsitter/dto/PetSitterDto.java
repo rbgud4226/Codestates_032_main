@@ -14,7 +14,7 @@ public class PetSitterDto {
 
         private long pet_sitter_id;
 
-        private long member_id;
+//        private long member_id;
 
         @NotBlank(message = "현재 하시는 일을 작성해주세요.")
         private String now_job;
@@ -57,7 +57,7 @@ public class PetSitterDto {
 
         private long pet_sitter_id;
 
-        private long member_id;
+//        private long member_id;
 
         private String now_job;
 

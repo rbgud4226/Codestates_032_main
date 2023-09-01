@@ -16,6 +16,9 @@ public class PetSitterMapper {
 //            petSitter.setPetSitterId(postToPetSitter(postDto));
             petSitter.setInfo(postDto.getInfo());
             petSitter.setNowJob(postDto.getNow_job());
+            petSitter.setSmoking(postDto.isSmoking());
+            petSitter.setMotive(postDto.getMotive());
+
 
             return petSitter;
         }
@@ -27,9 +30,9 @@ public class PetSitterMapper {
         }
         else {
             PetSitter petsitter = new PetSitter();
+            petsitter.setNowJob(patchDto.getNow_job());
             petsitter.setSmoking(patchDto.isSmoking());
             petsitter.setInfo(patchDto.getInfo());
-            petsitter.setNowJob(patchDto.getNow_job());
             petsitter.setMotive(patchDto.getMotive());
 
             return petsitter;
@@ -52,7 +55,5 @@ public class PetSitterMapper {
 
             return responseDto;
         }
-
     }
-
 }

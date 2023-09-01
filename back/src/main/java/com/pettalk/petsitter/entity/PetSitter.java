@@ -31,5 +31,11 @@ public class PetSitter {
 //    @ManyToOne
 //    private Member member;
 
+//    @JoinColumn
+//    @ManyToOne
+//    private WcBoard wcBoard;
+
+
     private String createdAt;
+
 }

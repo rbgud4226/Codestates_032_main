@@ -24,13 +24,13 @@ import java.net.URI;
 @Validated
 public class PetSitterController {
 
-    private final static String PETSITTER_DEFULT_URL = "/petsitter";
+    private final static String PETSITTER_DEFAULT_URL = "/petsitter";
 
     private final PetSitterMapper mapper;
 
     private final PetSitterService service;
 
-//    private final
+//TODO:다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 다소 존재함.
 
     @PostMapping("/petsitter")
     public ResponseEntity postPetSitter(@Valid @RequestBody PetSitterDto.PostDto postDto) {
@@ -40,7 +40,7 @@ public class PetSitterController {
         PetSitter petSitter = service.createPetSitter(mapper.postToPetSitter(postDto));
 
         URI location = UriComponentsBuilder
-                .fromPath(PETSITTER_DEFULT_URL)
+                .fromPath(PETSITTER_DEFAULT_URL)
                 .pathSegment(String.valueOf(petSitter.getPetSitterId()))
                 .build()
                 .toUri();
