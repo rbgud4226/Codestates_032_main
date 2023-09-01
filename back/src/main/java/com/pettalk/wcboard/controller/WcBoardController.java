@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping("/wcBoard")
+@RequestMapping("/wcboard")
 public class WcBoardController {
     private final WcBoardMapper mapper;
     private final WcBoardService service;
@@ -39,14 +39,14 @@ public class WcBoardController {
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
     }
 
-    @PatchMapping("/{wcBoard-id}")
+    @PatchMapping("/{wcboard-id}")
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
-                                    @Positive @PathVariable("wcBoard-id") long wcBoardId) {
+                                    @Positive @PathVariable("wcboard-id") long wcboardId) {
 
         /**long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId(); TODO : 멤버와 연결후 로그인한 아이디 가져오기 기능 추가
         patchDto.addAuthenticatedMemberId(authenticatedMemberId);
          */
-        patchDto.addwcBoardId(wcBoardId);
+        patchDto.addwcBoardId(wcboardId);
         WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto));
 
         return ResponseEntity
@@ -81,12 +81,12 @@ public class WcBoardController {
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
     }
 
-    @GetMapping("/wcBoard/walkcare") // 산책 돌봄 태그 선택 시 표출
+    @GetMapping("/walkcare")// 산책 돌봄 태그 선택 시 표출
     public ResponseEntity findPostsWcTag(@Positive @RequestParam int page,
                                          @Positive @RequestParam int size,
                                          @RequestParam String wcTag) {
 
-        Page<WcBoard> pageWcBoardPosts = service.findPostWcTag(page - 1, size, wcTag);
+        Page<WcBoard> pageWcBoardPosts = service.findPostByWcTag(page - 1, size, wcTag);
         List<WcBoard> posts = pageWcBoardPosts.getContent();
 
         return new ResponseEntity<>(
@@ -94,27 +94,36 @@ public class WcBoardController {
     }
 
 
+    @GetMapping("/animalkind") //동물 종류 선택시 필터
+    public ResponseEntity findPostsAnimalTag(@Positive @RequestParam int page,
+                                             @Positive @RequestParam int size,
+                                             @RequestParam String animalTag) {
+        Page<WcBoard> pageWcBoardPosts = service.findPostByAnimalTag(page - 1, size, animalTag);
+        List<WcBoard> posts = pageWcBoardPosts.getContent();
 
-//    @GetMapping("/animalkind") //
-//    public ResponseEntity findPostsAnimalTag(@Positive @RequestParam int page,
-//                                             @Positive @RequestParam int size,
-//                                             @RequestParam String tag) { // < tag 명칭을 정해야됨
-//        Page<WcBoard> pageWcBoardPosts = service.filterByWcTag(page - 1, size, tag);
-//        List<WcBoard> posts = pageWcBoardPosts.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/area") //
-//    public ResponseEntity findPostsAreaTag(@Positive @RequestParam int page,
-//                                           @Positive @RequestParam int size,
-//                                           @RequestParam String tag) { // < tag 명칭을 정해야됨
-//        Page<WcBoard> pageWcBoardPosts = service.filterByWcTag(page - 1, size, tag);
-//        List<WcBoard> posts = pageWcBoardPosts.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-//    }
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/area") // 지역 선택시 필터
+    public ResponseEntity findPostsAreaTag(@Positive @RequestParam int page,
+                                             @Positive @RequestParam int size,
+                                             @RequestParam String areaTag) {
+        Page<WcBoard> pageWcBoardPosts = service.findPostByAreaTag(page - 1, size, areaTag);
+        List<WcBoard> posts = pageWcBoardPosts.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{wcboard-id}")
+    public ResponseEntity WcbDelete(@PathVariable("wcboard-id") long wcboardId) {
+
+
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
 }

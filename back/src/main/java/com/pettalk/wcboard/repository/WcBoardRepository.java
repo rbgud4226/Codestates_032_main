@@ -12,7 +12,7 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> {
     Optional<WcBoard> findById(long wcBoardId);
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
     Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
-//    Page<WcBoard> findPostAreaTag(String areaTag, PageRequest pageRequest);
-//    Page<WcBoard> findPostAnimalTag(String animalTag, PageRequest pageRequest);
+    Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
+    Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
 
 }
