@@ -24,12 +24,16 @@ public class WcBoard {
     private String content;
     @Column
     private String images;
+
+
     @Column
     private String wcTag;
     @Column
     private String animalTag;
     @Column
     private String areaTag;
+
+
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column
