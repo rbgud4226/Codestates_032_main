@@ -1,6 +1,14 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
+<<<<<<< HEAD
 import { BrowserRouter as Router } from "react-router-dom";
+=======
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./page/LoginPage";
+import Nav from "./component/nav/Nav";
+import Header from "./component/header/Header";
+
+>>>>>>> 27a48d4 (feat:Nav 뷰 구현)
 function App() {
   return (
     <>
@@ -8,7 +16,17 @@ function App() {
         <GlobalStyles />
         <Main>
           <Container>
+<<<<<<< HEAD
             <Wrapper></Wrapper>
+=======
+            <Header />
+            <Wrapper>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </Wrapper>
+            <Nav />
+>>>>>>> 27a48d4 (feat:Nav 뷰 구현)
           </Container>
         </Main>
       </Router>
