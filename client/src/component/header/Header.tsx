@@ -31,7 +31,7 @@ export const HeaderContainer = styled.header`
   background-color: white;
 `;
 
-export const HeaderBtnContainer = styled.div`
+export const HeaderBtnContainer = styled.section`
   display: flex;
   align-items: end;
   padding-right: 20px;

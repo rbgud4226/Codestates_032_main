@@ -1,9 +1,12 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./page/LoginPage";
 import Nav from "./component/nav/Nav";
 import Header from "./component/header/Header";
+import LoginPage from "./page/LoginPage";
+import MemberAgreePage from "./page/memberAgreePage";
+import SignUpPage from "./page/SignUpPage";
+import MainPage from "./page/MainPage";
 
 function App() {
   return (
@@ -15,7 +18,10 @@ function App() {
             <Header />
             <Wrapper>
               <Routes>
+                <Route path="/" element={<MainPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/memberAgree" element={<MemberAgreePage />} />
+                <Route path="/signup" element={<SignUpPage />} />
               </Routes>
             </Wrapper>
             <Nav />
@@ -53,5 +59,4 @@ const Container = styled.div`
 const Wrapper = styled.div`
   min-height: 100%;
   margin: 28px;
-  background-color: pink;
 `;

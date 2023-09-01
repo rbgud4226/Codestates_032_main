@@ -7,13 +7,12 @@ const BookCheckBtn = () => {
 
   return (
     <BookCheckContainer
-      active={active}
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
       onMouseLeave={() => setActive(false)}
     >
-      <BookCheckIcon active={active} src={bookCheckIcon} />
-      <BookCheckLb active={active}>예약확인</BookCheckLb>
+      <BookCheckIcon $active={active} src={bookCheckIcon} />
+      <BookCheckLb $active={active}>예약확인</BookCheckLb>
     </BookCheckContainer>
   );
 };
@@ -24,13 +23,8 @@ const BaseStyledComponent = styled.button`
   border: 0px;
   cursor: pointer;
 `;
-interface BookCheckBtnProps {
-  active: boolean;
-}
 
-export const BookCheckContainer = styled(
-  BaseStyledComponent,
-)<BookCheckBtnProps>`
+export const BookCheckContainer = styled(BaseStyledComponent)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,20 +35,20 @@ export const BookCheckContainer = styled(
   }
 `;
 interface BookCheckIconProps {
-  active: boolean;
+  $active: boolean;
 }
 export const BookCheckIcon = styled.img<BookCheckIconProps>`
   margin-top: 12px;
-  width: ${props => (props.active ? "20px" : "24px")};
+  width: ${props => (props.$active ? "20px" : "24px")};
   transition: width 0.2s;
 `;
 interface BookCheckLbProps {
-  active: boolean;
+  $active: boolean;
 }
 
 export const BookCheckLb = styled.label<BookCheckLbProps>`
   color: #279eff;
   margin-top: 7px;
-  font-size: ${props => (props.active ? "10px" : "12px")};
+  font-size: ${props => (props.$active ? "10px" : "12px")};
   transition: font-size 0.2s;
 `;
