@@ -1,6 +1,8 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./page/LoginPage";
+import Nav from "./component/nav/Nav";
 import Header from "./component/header/Header";
 
 function App() {
@@ -11,7 +13,12 @@ function App() {
         <Main>
           <Container>
             <Header />
-            <Wrapper></Wrapper>
+            <Wrapper>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </Wrapper>
+            <Nav />
           </Container>
         </Main>
       </Router>

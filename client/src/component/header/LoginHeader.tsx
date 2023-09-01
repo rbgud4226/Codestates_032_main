@@ -1,12 +1,11 @@
 import React from "react";
 import { styled } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const LoginHeader = () => {
-  return (
-    <a>
-      <Login>Login</Login>
-    </a>
-  );
+  const navigate = useNavigate();
+
+  return <Login onClick={(): void => navigate("/login")}>Login</Login>;
 };
 
 export default LoginHeader;
