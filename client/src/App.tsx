@@ -1,17 +1,23 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { BrowserRouter as Router } from "react-router-dom";
 =======
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+=======
+import { BrowserRouter as Router } from "react-router-dom";
+>>>>>>> a06214b (fix:nav를 제외한 헤더및 페이지 삭제)
 import Nav from "./component/nav/Nav";
-import Header from "./component/header/Header";
 import LoginPage from "./page/LoginPage";
+<<<<<<< HEAD
 import MemberAgreePage from "./page/memberAgreePage";
 import SignUpPage from "./page/SignUpPage";
 import MainPage from "./page/MainPage";
 
 >>>>>>> 27a48d4 (feat:Nav 뷰 구현)
+=======
+>>>>>>> a06214b (fix:nav를 제외한 헤더및 페이지 삭제)
 function App() {
   return (
     <>
@@ -20,16 +26,14 @@ function App() {
         <Main>
           <Container>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Wrapper></Wrapper>
 =======
             <Header />
+=======
+>>>>>>> a06214b (fix:nav를 제외한 헤더및 페이지 삭제)
             <Wrapper>
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/memberAgree" element={<MemberAgreePage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-              </Routes>
+              <LoginPage />
             </Wrapper>
             <Nav />
 >>>>>>> 27a48d4 (feat:Nav 뷰 구현)
