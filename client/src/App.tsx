@@ -1,13 +1,8 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Nav from "./component/nav/Nav";
-import Header from "./component/header/Header";
 import LoginPage from "./page/LoginPage";
-import MemberAgreePage from "./page/memberAgreePage";
-import SignUpPage from "./page/SignUpPage";
-import MainPage from "./page/MainPage";
-
 function App() {
   return (
     <>
@@ -15,14 +10,8 @@ function App() {
         <GlobalStyles />
         <Main>
           <Container>
-            <Header />
             <Wrapper>
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/memberAgree" element={<MemberAgreePage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-              </Routes>
+              <LoginPage />
             </Wrapper>
             <Nav />
           </Container>
