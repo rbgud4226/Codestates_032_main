@@ -2,7 +2,6 @@ import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 import Nav from "./component/nav/Nav";
-import LoginPage from "./page/LoginPage";
 function App() {
   return (
     <>
@@ -10,9 +9,7 @@ function App() {
         <GlobalStyles />
         <Main>
           <Container>
-            <Wrapper>
-              <LoginPage />
-            </Wrapper>
+            <Wrapper></Wrapper>
             <Nav />
           </Container>
         </Main>
