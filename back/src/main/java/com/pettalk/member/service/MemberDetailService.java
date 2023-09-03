@@ -28,7 +28,6 @@ public class MemberDetailService implements UserDetailsService {
         return new MemberDetails(findMember);
     }
 
-
     // 데이터베이스에서 조회한 회원 정보를 Spring Security의 User 정보로 변환하는 과정과 User의 권한 정보를 생성하는 과정을 캡슐화
     private final class MemberDetails extends Member implements UserDetails {
         MemberDetails(Member member) {

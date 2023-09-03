@@ -9,7 +9,7 @@ spring:
       enabled: true
   redis:
     host: localhost
-    port: 8080
+    port: 6397
 jwt:
   key: codestatescodestates123123123123123123123123123
   access-token-expiration-minutes: 1
@@ -17,3 +17,7 @@ jwt:
 mail:
   address:
     admin: admin@gmail.com
+coolsms:
+  api:
+    key:
+    secret:

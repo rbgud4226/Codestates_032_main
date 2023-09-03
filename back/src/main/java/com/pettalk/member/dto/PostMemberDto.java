@@ -3,25 +3,23 @@ package com.pettalk.member.dto;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 public class PostMemberDto {
-    @NotNull
+    @NotBlank
     private String nickName;
 
-    @Email(message = "유효한 이메일 형식이 아닙니다.")
-    @NotNull
+    @Email
+    @NotBlank
     private String email;
 
-    @NotNull
+    @NotBlank
     private String password;
 
-    @NotNull
-    @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$")
+    @NotBlank
     private String phone;
 
-    @NotNull
+    @NotBlank
     private String profileImage;
 }

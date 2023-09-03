@@ -43,6 +43,11 @@ dependencies {
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'net.nurigo:sdk:4.2.7'
+
+	implementation 'com.squareup.retrofit2:retrofit:2.7.0' //Retrofit 버전
+
 }
 
 tasks.named('test') {

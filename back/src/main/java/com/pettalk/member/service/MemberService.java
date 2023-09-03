@@ -8,6 +8,9 @@ import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +22,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberMapper mapper;
     private final RefreshTokenRepository refreshTokenRepository;
+
 
 
     public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper mapper, RefreshTokenRepository refreshTokenRepository) {
@@ -38,6 +42,11 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         return savedMember;
     }
+    private boolean verifyExistsEmail(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        return member.isPresent();
+    }
+
 
     public Member updateMember(Member member) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,6 +68,12 @@ public class MemberService {
         return mapper.memberToGetMemberDto(findMember);
     }
 
+    public Page<Member> getMembers(int page, int size){
+        return memberRepository.findAll(PageRequest.of(page,size, Sort.by("memberId").descending()));
+
+    }
+
+
     public void deleteMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
@@ -68,11 +83,6 @@ public class MemberService {
             refreshTokenRepository.delete(refreshToken);
         });
         memberRepository.delete(findMember);
-    }
-
-    private boolean verifyExistsEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        return member.isPresent();
     }
 
     public void logoutAndRemoveRefreshToken() {
@@ -85,4 +95,13 @@ public class MemberService {
         });
         SecurityContextHolder.clearContext(); // 기타 로그아웃 관련 처리를 수행합니다. 예를 들어, SecurityContext를 클리어하는 등
     }
+
+    public Long findMemberIdByEmail(String email) throws Exception {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new Exception("MEMBER NOT FOUND" + email);
+        }
+        return member.get().getMemberId();
+    }
+
 }
