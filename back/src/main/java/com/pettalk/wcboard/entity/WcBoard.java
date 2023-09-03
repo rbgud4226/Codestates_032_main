@@ -25,13 +25,13 @@ public class WcBoard {
     @Column
     private String images;
     @Column
-    private LocalDateTime createdAt = LocalDateTime.now();
-    @Column
     private String wcTag;
     @Column
     private String animalTag;
     @Column
     private String areaTag;
+    @Column
+    private LocalDateTime createdAt = LocalDateTime.now();
     @Column
     private LocalDateTime startTime = LocalDateTime.now();
     @Column
@@ -41,6 +41,12 @@ public class WcBoard {
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
+/** 개발물 통합되면 수정예정 0829
+    Member 매핑
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+*/
 
     public enum PostStatus{
         DEFAULT("기본 상태"), // 기본 게시된 상태

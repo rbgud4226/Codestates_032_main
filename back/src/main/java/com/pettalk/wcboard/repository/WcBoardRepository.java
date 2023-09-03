@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> {
-    Optional<WcBoard> findById(long id);
+    Optional<WcBoard> findById(long wcBoardId);
 
 }
