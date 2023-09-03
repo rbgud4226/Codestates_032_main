@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class WcBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long wcBoardId;
+    private long wcboardId;
 
     @Column
     private String title;
@@ -24,12 +24,16 @@ public class WcBoard {
     private String content;
     @Column
     private String images;
+
+
     @Column
     private String wcTag;
     @Column
     private String animalTag;
     @Column
     private String areaTag;
+
+
     @Column
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column
@@ -51,7 +55,8 @@ public class WcBoard {
     public enum PostStatus{
         DEFAULT("기본 상태"), // 기본 게시된 상태
         IN_RESERVATION("예약중"), // 예약중인 상태
-        IN_PROGRESS("진행중"), // 1:1 채팅, 산책/돌봄 진행중인 상태
+        IN_CHATTING("채팅"), // 1:1 채팅
+        IN_PROGRESS("진행중"), // 산책/돌봄 진행중인 상태
         COMPLETE("완료"); // 모든 과정이 끝난 상태
 
         @Getter

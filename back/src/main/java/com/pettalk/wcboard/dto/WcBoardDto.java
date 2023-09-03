@@ -10,7 +10,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     public static class Post { // 0829 위치는 어떤 정보를 줘야할까..
-        private long wcBoardId;
+        private long wcboardId;
         @NotNull (message = "공백이 아니어야 합니다")
         private String title;
 
@@ -44,7 +44,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     public static class Patch {
-        private long wcBoardId;
+        private long wcboardId;
         private String title;
         private String content;
         private String images;
@@ -58,15 +58,15 @@ public class WcBoardDto {
 
         private String postStatus;
 
-        public void addwcBoardId(long wcBoardId) {
-            this.wcBoardId = wcBoardId;
+        public void addwcBoardId(long wcboardId) {
+            this.wcboardId = wcboardId;
         }
     }
 
     @AllArgsConstructor
     @Getter
     public static class Response {
-        private long wcBoardId;
+        private long wcboardId;
         private String title;
         private String content;
         private String images;
