@@ -48,6 +48,6 @@ const ProfileImg = () => {
 export default ProfileImg;
 
 const Img = styled.img`
-  width: 100%; /* 이미지의 너비를 조절 */
-  height: 100%; /* 이미지의 높이를 조절 */
+  width: 100%;
+  height: 100%;
 `;
