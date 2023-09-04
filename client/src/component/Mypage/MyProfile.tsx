@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-// import { useState, useEffect } from "react"''
+import { useState } from "react";
 // import axios from "axios";
 import edit from "../../asset/MypageAsset/edit.png";
 import ProfileImg from "./ProfileImg";
 
 const MyProfile = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newNickname, setNewNickname] = useState("");
   const userData = {
     nickName: "홍길동",
     email: "hgd123@gmail.com",
@@ -37,6 +39,36 @@ const MyProfile = () => {
   //   }
   // };
 
+  const handleEditClick = () => {
+    setNewNickname(userData.nickName); // 편집 시작 시 현재 닉네임으로 초기화
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      // const response = await axios.put("/members", {
+      //   newNickname,
+      // });
+
+      // if (response.data.success) {
+      //   setUserData({ ...userData, nickName: newNickname });
+      //   setIsEditing(false);
+      // } else {
+      //   console.error("Nickname update failed.");
+      // }
+
+      // setUserData({ ...userData, nickName: newNickname });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating nickname:", error);
+      // 업데이트에 실패한 경우에 대한 처리
+    }
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+  };
+
   return (
     <Container>
       <HeaderText>마이페이지</HeaderText>
@@ -45,9 +77,24 @@ const MyProfile = () => {
       </ImgContainer>
       <UserInfo>
         <UserName>
-          {/* edit 아이콘 클릭 시 닉네임 수정 기능 추가해야함 */}
-          {userData.nickName}님
-          <EditIcon src={edit} alt="Name Edit" />
+          {isEditing ? (
+            <NicknameEdit>
+              <Input
+                type="text"
+                value={newNickname}
+                onChange={e => setNewNickname(e.target.value)}
+              />
+              <ButtonContainer>
+                <SaveButton onClick={handleSaveClick}>저장</SaveButton>
+                <CancelButton onClick={handleCancelClick}>취소</CancelButton>
+              </ButtonContainer>
+            </NicknameEdit>
+          ) : (
+            <>
+              {userData.nickName}님
+              <EditIcon src={edit} alt="Name Edit" onClick={handleEditClick} />
+            </>
+          )}
         </UserName>
         <UserEmail>{userData.email}</UserEmail>
         <Separator />
@@ -104,6 +151,48 @@ const UserName = styled.div`
 const EditIcon = styled.img`
   width: 24px;
   height: 24px;
+`;
+
+const NicknameEdit = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  width: 100px; /* 입력 필드의 넓이를 조정하세요 */
+  height: 32px; /* 입력 필드의 높이를 조정하세요 */
+  margin-right: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const SaveButton = styled.button`
+  background-color: #279eff;
+  color: white;
+  padding: 8px 16px; /* 버튼의 크기를 조정하세요 */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 8px;
+`;
+
+const CancelButton = styled.button`
+  background-color: #ccc;
+  color: white;
+  padding: 8px 16px; /* 버튼의 크기를 조정하세요 */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 `;
 
 const UserEmail = styled.div`

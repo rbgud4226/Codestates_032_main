@@ -95,7 +95,7 @@ const Category = styled.div`
   margin-top: 16px;
 `;
 
-const CategoryTitle = styled.h2`
+const CategoryTitle = styled.p`
   font-size: 18px;
   margin-bottom: 8px;
 `;
@@ -103,7 +103,6 @@ const CategoryTitle = styled.h2`
 const RecentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 320px;
   border-radius: 8px;
   box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
 `;
