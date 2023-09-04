@@ -7,6 +7,7 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Setter
@@ -19,13 +20,16 @@ public class PetSitter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long petSitterId;
 
+    private String introduce;
+
     private String nowJob;
 
     private boolean smoking;
 
-    private String info;
+    @OneToMany(mappedBy = "petSitter")
+    private List<Animal> exAnimal;
 
-    private String motive;
+    private String info;
 
 //    @JoinColumn(name = "member_id")
 //    @ManyToOne

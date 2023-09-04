@@ -13,13 +13,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Path;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*") //모든 출처와 헤더에 대해 허용된 상태이므로 나중에 고칠 것.
 @Controller
-@RequestMapping
+@RequestMapping("/petsitter")
 @RequiredArgsConstructor
 @Validated
 public class PetSitterController {
@@ -30,9 +31,9 @@ public class PetSitterController {
 
     private final PetSitterService service;
 
-//TODO:다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 다소 존재함.
+//TODO:다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 존재함.
 
-    @PostMapping("/petsitter")
+    @PostMapping
     public ResponseEntity postPetSitter(@Valid @RequestBody PetSitterDto.PostDto postDto) {
 
 //        memberService.findMember(postDto.getMember_id());
@@ -49,7 +50,7 @@ public class PetSitterController {
 
     }
 
-    @PatchMapping("/petsitter/{pet-sitter-id}")
+    @PatchMapping("/{pet-sitter-id}")
     public ResponseEntity patchPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId,
             @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
 
@@ -62,11 +63,16 @@ public class PetSitterController {
         return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
     }
 
-    @GetMapping("/petsitter/{pet-sitter-id}")
+    @GetMapping("/{pet-sitter-id}")
     public ResponseEntity getPetSitter(@PathVariable("/petsitter/{pet-sitter-id}") @Positive long PetSitterId) {
 
         PetSitter petSitter = service.findPetSitter(PetSitterId);
 
         return new ResponseEntity<>(mapper.petSitterToResponse(petSitter), HttpStatus.OK);
     }
+
+//    @GetMapping("/{pet-sitter-id}/recent")
+//    public  ResponseEntity getRecentCare(@PathVariable("/{pet-sitter-id}") ) {
+//
+//    }
 }
