@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PetSitterDto {
@@ -34,7 +35,7 @@ public class PetSitterDto {
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private String created_at;
+        private LocalDateTime created_at;
     }
 
     @Getter
@@ -58,7 +59,7 @@ public class PetSitterDto {
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private String created_at;
+        private LocalDateTime created_at;
 
     }
 
@@ -80,7 +81,7 @@ public class PetSitterDto {
 
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private String created_at;
+        private LocalDateTime created_at;
 
     }
 

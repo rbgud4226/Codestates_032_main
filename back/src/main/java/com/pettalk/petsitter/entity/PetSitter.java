@@ -7,6 +7,7 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,8 +27,8 @@ public class PetSitter {
 
     private boolean smoking;
 
-    @OneToMany(mappedBy = "petSitter")
-    private List<Animal> exAnimal;
+    @ElementCollection
+    private List<String> exAnimal;
 
     private String info;
 
@@ -40,6 +41,6 @@ public class PetSitter {
 //    private WcBoard wcBoard;
 
 
-    private String createdAt;
+    private LocalDateTime createdAt;
 
 }

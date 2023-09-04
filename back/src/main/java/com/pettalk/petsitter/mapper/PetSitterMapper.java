@@ -1,10 +1,10 @@
 package com.pettalk.petsitter.mapper;
 
 import com.pettalk.petsitter.dto.PetSitterDto;
-import com.pettalk.petsitter.entity.Animal;
 import com.pettalk.petsitter.entity.PetSitter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,19 +21,9 @@ public class PetSitterMapper {
             petSitter.setIntroduce(postDto.getIntroduce());
             petSitter.setNowJob(postDto.getNow_job());
             petSitter.setSmoking(postDto.isSmoking());
-
-            List<Animal> exAnimals = postDto.getExAnimal().stream()
-                    .map(name -> {
-                        Animal animal = new Animal();
-                        animal.setName(name);
-                        animal.setPetSitter(petSitter); // PetSitter와 연결
-                        return animal;
-                    })
-                    .collect(Collectors.toList());
-
-            petSitter.setExAnimal(exAnimals);
+            petSitter.setExAnimal(postDto.getExAnimal());
             petSitter.setInfo(postDto.getInfo());
-            petSitter.setCreatedAt(petSitter.getCreatedAt());
+            petSitter.setCreatedAt(LocalDateTime.now());
 
 
             return petSitter;
@@ -49,17 +39,7 @@ public class PetSitterMapper {
             petSitter.setIntroduce(patchDto.getIntroduce());
             petSitter.setNowJob(patchDto.getNow_job());
             petSitter.setSmoking(patchDto.isSmoking());
-
-            List<Animal> exAnimals = patchDto.getExAnimal().stream()
-                    .map(name -> {
-                        Animal animal = new Animal();
-                        animal.setName(name);
-                        animal.setPetSitter(petSitter); // PetSitter와 연결
-                        return animal;
-                    })
-                    .collect(Collectors.toList());
-
-            petSitter.setExAnimal(exAnimals);
+            petSitter.setExAnimal(patchDto.getExAnimal());
             petSitter.setInfo(patchDto.getInfo());
 
             return petSitter;
@@ -76,17 +56,7 @@ public class PetSitterMapper {
             responseDto.setIntroduce(petSitter.getIntroduce());
             responseDto.setNow_job(petSitter.getNowJob());
             responseDto.setSmoking(petSitter.isSmoking());
-
-            List<Animal> exAnimals = responseDto.getExAnimal().stream()
-                    .map(name -> {
-                        Animal animal = new Animal();
-                        animal.setName(name);
-                        animal.setPetSitter(petSitter); // PetSitter와 연결
-                        return animal;
-                    })
-                    .collect(Collectors.toList());
-
-            petSitter.setExAnimal(exAnimals);
+            responseDto.setExAnimal(petSitter.getExAnimal());
             responseDto.setInfo(petSitter.getInfo());
             responseDto.setCreated_at(petSitter.getCreatedAt());
 
