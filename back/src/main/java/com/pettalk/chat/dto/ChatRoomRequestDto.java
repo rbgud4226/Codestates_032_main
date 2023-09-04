@@ -2,11 +2,12 @@ package com.pettalk.chat.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class ChatMessage {
-    private String id;
-    private String sender;
+@Setter
+public class ChatRoomRequestDto {
+    private String userType;
     private String message;
 
 }
