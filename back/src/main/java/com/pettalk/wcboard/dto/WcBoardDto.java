@@ -37,9 +37,6 @@ public class WcBoardDto {
 
         private String postStatus;
 
-
-
-
     }
     @AllArgsConstructor
     @Getter

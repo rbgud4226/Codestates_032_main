@@ -1,5 +1,6 @@
 package com.pettalk.petsitter.entity;
 
+import com.pettalk.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,9 @@ public class PetSitter {
 
     private String motive;
 
-//    @JoinColumn(name = "member_id")
-//    @ManyToOne
-//    private Member member;
+    @JoinColumn(name = "member_id")
+    @OneToOne
+    private Member member;
 
     private String createdAt;
 }

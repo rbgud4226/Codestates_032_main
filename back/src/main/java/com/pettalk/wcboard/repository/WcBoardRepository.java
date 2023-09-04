@@ -1,11 +1,14 @@
 package com.pettalk.wcboard.repository;
 
+import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> {
@@ -14,5 +17,5 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> {
     Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
     Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
     Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
-
+    List<WcBoard> findByMember_MemberId(Long memberId); //M
 }

@@ -19,5 +19,4 @@ public class RefreshToken {
 
     @OneToOne
     private Member member;
-
 }

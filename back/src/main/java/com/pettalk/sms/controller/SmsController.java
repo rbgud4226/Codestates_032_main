@@ -1,20 +1,22 @@
 package com.pettalk.sms.controller;
 
-import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
+import com.pettalk.sms.service.RedisService;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.time.Duration;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -22,63 +24,61 @@ public class SmsController {
 
     final DefaultMessageService messageService;
     private MemberRepository memberRepository;
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisService redisService;
 
-    public SmsController( MemberRepository memberRepository, RedisTemplate<String, Object> redisTemplate) {
-        this.messageService = NurigoApp.INSTANCE.initialize("", "", "https://api.coolsms.co.kr");
+    public SmsController( MemberRepository memberRepository,
+                          RedisService redisService,
+                          @Value("${coolsms.api.key}")String apiKey,
+                          @Value("${coolsms.api.secret}")String apiSecret) {
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
         this.memberRepository =memberRepository;
-        this.redisTemplate =redisTemplate;
+        this.redisService = redisService;
     }
 
-    @PostMapping("/send-message")
-    public SingleMessageSentResponse sendAuthMessageToMember(@RequestParam String email) {
-        // Redis에서 이메일로 회원 정보를 찾음
-        Member cachedMember = (Member) redisTemplate.opsForValue().get(email);
 
-        if (cachedMember != null) {
-            String to = cachedMember.getPhone();
-            String authCode = generateRandomAuthCode();
-
-            Message message = new Message();
-            message.setFrom("01029776228");
-            message.setTo(to);
-            message.setText("인증 코드: " + authCode);
-
-            SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
-            System.out.println(response);
-
-
-            cachedMember.setAuthCode(authCode);
-            redisTemplate.opsForValue().set(email, cachedMember, Duration.ofMinutes(10));
-
-            return response;
-        } else {
-            throw new IllegalArgumentException("회원정보를 찾을 수 없습니다");
-        }
+    @PostMapping("/sendSms")
+    public SingleMessageSentResponse sendMessage(@RequestBody Map<String, String> request) {
+        String to = request.get("phone");
+        String authCode = randomAuthCode();
+        redisService.setPhoneNumberWithExpiration(to, authCode, 5, TimeUnit.MINUTES);
+        Message message = new Message();
+        message.setFrom("01029776228");
+        message.setTo(to);
+        message.setText("인증 코드: " + authCode);
+        SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
+        return response;
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> completeRegistration(@RequestParam String authCode, @RequestParam String email) {
-        Member cachedMember = (Member) redisTemplate.opsForValue().get(email);
-
-        if (cachedMember != null) {
-            if (authCode.equals(cachedMember.getAuthCode())) {
-
-
-                memberRepository.save(cachedMember);
-                return new ResponseEntity<>("핸드폰 인증 완료, 회원가입 완료되었습니다", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("인증코드가 올바르지 않습니다", HttpStatus.BAD_REQUEST);
-            }
+    public ResponseEntity smsRegistration(@RequestParam String authCode, @RequestParam String phone) {
+        String storedAuthCode = redisService.getPhoneNumber(phone);
+        if (storedAuthCode == null) {
+            return new ResponseEntity<>("인증 코드가 만료되었습니다", HttpStatus.BAD_REQUEST);
+        }
+        if (authCode.equals(storedAuthCode)) {
+            redisService.deletePhoneNumber(phone);
+            return new ResponseEntity<>("핸드폰 인증 완료", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("회원정보를 찾을 수 없습니다", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("인증 코드가 일치하지 않습니다", HttpStatus.BAD_REQUEST);
         }
     }
-    private String generateRandomAuthCode() {
+
+    @PostMapping("/check")
+    public ResponseEntity checkEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        boolean isExist = memberRepository.existsByEmail(email);
+        if (isExist) {
+            return new ResponseEntity<>("이미 존재하는 이메일입니다.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("사용 가능한 이메일입니다.", HttpStatus.OK);
+        }
+    }
+
+    private String randomAuthCode() {
         Random random = new Random();
         return String.format("%04d", random.nextInt(10000));
     }
-
 }
 
 

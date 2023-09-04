@@ -8,8 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -20,27 +19,21 @@ public class Member implements Serializable{
     private Long memberId;
 
     @Size(min = 2, max = 10)
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private String nickName;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String profileImage;
 
-    @Column(nullable = false)
+    @Column
     private String phone;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @CreationTimestamp
     private Timestamp createdAt;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
-
-    @Column
-    private String authCode;
 }

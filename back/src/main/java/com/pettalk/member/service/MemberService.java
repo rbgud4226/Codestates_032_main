@@ -8,31 +8,40 @@ import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import com.pettalk.sms.service.RedisService;
+import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.mapper.WcBoardMapper;
+import com.pettalk.wcboard.repository.WcBoardRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
 import java.util.Optional;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MemberMapper mapper;
+    private final MemberMapper membermapper;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final WcBoardRepository wcBoardRepository;
+    private final WcBoardMapper wcBoardMapper;
+    private final RedisService redisService;
 
 
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper mapper, RefreshTokenRepository refreshTokenRepository) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository,WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper,
+                         RedisService redisService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
+        this.membermapper = membermapper;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.wcBoardRepository = wcBoardRepository;
+        this.wcBoardMapper = wcBoardMapper;
+        this.redisService = redisService;
 
     }
-
     public Member createMember(Member member) {
         if(verifyExistsEmail(member.getEmail())){
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
@@ -42,6 +51,7 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         return savedMember;
     }
+
     private boolean verifyExistsEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
         return member.isPresent();
@@ -65,11 +75,17 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
-        return mapper.memberToGetMemberDto(findMember);
+        GetMemberDto memberDtoGet = membermapper.memberToGetMemberDto(findMember);
+        return memberDtoGet;
     }
+    // 진짜
 
-    public Page<Member> getMembers(int page, int size){
-        return memberRepository.findAll(PageRequest.of(page,size, Sort.by("memberId").descending()));
+    public List<WcBoardDto.Response> getMembers(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+        return wcBoardDtoGet;
 
     }
 
@@ -95,13 +111,4 @@ public class MemberService {
         });
         SecurityContextHolder.clearContext(); // 기타 로그아웃 관련 처리를 수행합니다. 예를 들어, SecurityContext를 클리어하는 등
     }
-
-    public Long findMemberIdByEmail(String email) throws Exception {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if (member == null) {
-            throw new Exception("MEMBER NOT FOUND" + email);
-        }
-        return member.get().getMemberId();
-    }
-
 }

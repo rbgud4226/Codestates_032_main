@@ -5,9 +5,9 @@ import com.pettalk.member.dto.PatchMemberDto;
 import com.pettalk.member.dto.PostMemberDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
+import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
-import com.pettalk.sms.service.SmsService;
-import org.springframework.data.domain.Page;
+import com.pettalk.wcboard.dto.WcBoardDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,44 +24,27 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
     private final PasswordEncoder passwordEncoder;
-    private final SmsService smsService;
-
-    public MemberController(MemberService memberService, MemberMapper mapper, PasswordEncoder passwordEncoder, SmsService smsService) {
+    private final MemberRepository memberRepository;
+    public MemberController(MemberService memberService, MemberMapper mapper, PasswordEncoder passwordEncoder,MemberRepository memberRepository) {
         this.memberService = memberService;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
-        this.smsService = smsService;
-    }
-
-    @PostMapping("/test") //일반회원가입 테스트
-    public ResponseEntity membertestSignUp(@Valid @RequestBody PostMemberDto requestBody) {
-        try {
-            Member member = memberService.createMember(mapper.memberPostToMember(requestBody));
-            return new ResponseEntity<>("회원가입 완료되었습니다", HttpStatus.OK);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity logout() {
         try {
-            memberService.logoutAndRemoveRefreshToken(); // refreshToken 삭제 및 로그아웃 처리
+            memberService.logoutAndRemoveRefreshToken();
             return new ResponseEntity<>("로그아웃 완료되었습니다", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
     @PostMapping
     public ResponseEntity memberSignUp(@Valid @RequestBody PostMemberDto requestBody) {
         try {
-            Member tempMember = mapper.memberPostToMember(requestBody);
-            String encryptedPassword = passwordEncoder.encode(tempMember.getPassword());
-            tempMember.setPassword(encryptedPassword);
-            smsService.cacheMemberInfo(tempMember);
-
+            Member member = memberService.createMember(mapper.memberPostToMember(requestBody));
             return new ResponseEntity<>("회원가입 완료되었습니다", HttpStatus.OK);
         }
         catch (Exception e){
@@ -80,18 +63,13 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/{page}/{size}")
-    public ResponseEntity<?> memberGets(@PathVariable int page, @PathVariable int size){
+    @GetMapping("/gets")
+    public ResponseEntity getMemberBoards() {
         try {
-            if (page < 0) {
-                page = 0;
-            }
-            Page<Member> pageMembers = memberService.getMembers(page,size);
-            List<Member> members = pageMembers.getContent();
-            return new ResponseEntity<>(members, HttpStatus.OK);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers();
+            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -116,6 +94,4 @@ public class MemberController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
-
   }

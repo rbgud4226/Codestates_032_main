@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.entity;
 
+import com.pettalk.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,12 +46,11 @@ public class WcBoard {
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-/** 개발물 통합되면 수정예정 0829
-    Member 매핑
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-*/
+
 
     public enum PostStatus{
         DEFAULT("기본 상태"), // 기본 게시된 상태

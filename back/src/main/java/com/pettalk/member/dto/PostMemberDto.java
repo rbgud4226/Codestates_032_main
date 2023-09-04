@@ -4,11 +4,15 @@ import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 public class PostMemberDto {
     @NotBlank
     private String nickName;
+
+    @NotBlank
+    private String phone;
 
     @Email
     @NotBlank
@@ -17,9 +21,5 @@ public class PostMemberDto {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String phone;
-
-    @NotBlank
     private String profileImage;
 }

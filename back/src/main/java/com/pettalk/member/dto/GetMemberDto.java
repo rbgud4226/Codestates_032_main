@@ -1,23 +1,32 @@
 package com.pettalk.member.dto;
 
+import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.WcBoard;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
 public class GetMemberDto {
-    @NotNull
+    @NotBlank
     private String nickName;
 
     @Email
-    @NotNull
+    @NotBlank
     private String email;
 
-    @NotNull
+    @NotBlank
     private String phone;
 
-    @NotNull
+    @NotBlank
     private String profileImage;
+
+
+    private List<WcBoardDto> wcBoards;
+    
+
 }
