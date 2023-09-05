@@ -1,7 +1,8 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
-import MainForm from "./component/MainForm";
+import Header from "./component/header/Header";
+
 function App() {
   return (
     <>
@@ -10,7 +11,7 @@ function App() {
         <Main>
           <Container>
             <Header />
-            <MainForm propertyName="example" />
+            <Wrapper></Wrapper>
           </Container>
         </Main>
       </Router>
@@ -26,12 +27,11 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     text-decoration: none;
     font-family: 'Roboto';
-    background-color: while;
   }
 `;
 const Main = styled.main`
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   margin: 0px;
   display: flex;
   justify-content: center;
@@ -41,12 +41,6 @@ const Container = styled.div`
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
-`;
-
-const Header = styled.div`
-  min-height: 70px;
-  min-width: 320px;
-  background-color: aqua;
 `;
 
 const Wrapper = styled.div`
