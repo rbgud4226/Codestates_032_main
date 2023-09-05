@@ -37,7 +37,7 @@ const Main = styled.main`
   justify-content: center;
 `;
 const Container = styled.div`
-  width: 393px;
+  width: 500px;
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
