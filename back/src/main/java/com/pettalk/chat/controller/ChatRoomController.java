@@ -61,5 +61,4 @@ public class ChatRoomController {
         simpMessageSendingOperations.convertAndSend("/sub/room/" + roomId, chatMessage);
         chatMessageService.createChatMessage(chatMessageMapper.chatRoomRequestToChatMessage(chatMessage), roomId);
     }
-
 }
