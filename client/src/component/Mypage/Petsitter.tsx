@@ -1,4 +1,5 @@
 import React from "react";
+// import { useState, useEffect } from "react"''
 import styled from "styled-components";
 import petssiterImg from "../../asset/MainAsset/MainImage1.png";
 import edit from "../../asset/MypageAsset/edit.png";
@@ -7,7 +8,7 @@ import score from "../../asset/MypageAsset/Mypagescore.png";
 
 const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
   const dummyData = {
-    name: "펫시터 홍길동",
+    name: "홍길동",
     careActivities: 10,
     reviewCount: 5,
     averageRating: 4.5,
@@ -38,7 +39,7 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
       {petSitter ? (
         <PetSitterContainer petSitter={petSitter}>
           <NameWrapper>
-            <NameText>{dummyData.name}</NameText>
+            <NameText>펫시터 {dummyData.name}</NameText>
             <EditIcon src={edit} alt="Name Edit" />
             {/* 수정버튼 클릭시 펫시터 수정 페이지로 이동 구현해야함*/}
           </NameWrapper>
