@@ -1,197 +1,344 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import MainImage1 from "../asset/MainImage/MainImage1.png";
 import MainLogo from "../asset/MainImage/MainLogo.png";
 import MainImage2 from "../asset/MainImage/MainImage2.png";
 import MainImage3 from "../asset/MainImage/MainImage3.png";
 import MainImage4 from "../asset/MainImage/MainImage4.png";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import WhiteBox from "../asset/MainImage/WhiteBox.png";
 import { useNavigate } from "react-router-dom";
-import LoginForm from "./Login/LoginForm";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // 슬라이더 스타일 import
 import { Carousel } from "react-responsive-carousel"; // 슬라이더 컴포넌트 import
 
+/* 이미지 안에 글씨를 넣어서 크기에 맞게 같이 작아지는걸 하고싶은데 어떻게 하는지 모르겠다. 나중에 물어봐야겠다. */
 interface MainProps {
   propertyName: string;
   // 필요한 프로퍼티 타입 정의
 }
 
-const Container = styled.div`
-  background-color: white; /* 하얀색 배경 추가 */
-  padding-bottom: 600px; /* 하얀색 배경의 높이로 조절 */
-  position: relative; /* 자식 요소의 절대 위치 설정을 위해 부모 요소를 상대 위치로 설정 */
-`;
-
-const MainImage = styled.img`
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  margin: 0px auto; /*중앙정렬*/
-`;
-
-const MainImageWithMargin = styled(MainImage)`
-  margin-bottom: 380px; /* 사진 3과 4의 간격 조절 */
-  transform: translate(0%, -150px);
-`;
-
-const OverlayText = styled.p`
-  transform: translate(0%, -350px);
-  color: white; /* 텍스트 색상 */
-  padding: 30px 30px; /* 내용 주변 여백 */
-  cursor: pointer; /* 커서 스타일을 포인터로 변경 */
-  font-size: 36px;
-  white-space: pre-line; /* 줄바꿈 적용 */
-  font-weight: bold;
-`;
-
-const OverlayText1 = styled.p`
-  transform: translate(10%, -530px);
-  color: #279eff; /* 텍스트 색상 */
-  padding: 10px 30px; /* 내용 주변 여백 */
-  cursor: pointer; /* 커서 스타일을 포인터로 변경 */
-  font-size: 28px;
-  white-space: pre-line; /* 줄바꿈 적용 */
-  font-weight: bold;
-`;
-
-const SlideText = styled.p`
-  color: #279eff; /* 텍스트 색상 */
-  padding: 10px 30px; /* 내용 주변 여백 */
-  cursor: pointer; /* 커서 스타일을 포인터로 변경 */
-  font-size: 28px;
-  white-space: pre-line; /* 줄바꿈 적용 */
-`;
-
-const OverlayText5 = styled.p`
-  /*마지막 부분 */
-  transform: translate(0%, 400px);
-  color: #279eff; /* 텍스트 색상 */
-  padding: 10px 30px; /* 내용 주변 여백 */
-  cursor: pointer; /* 커서 스타일을 포인터로 변경 */
-  font-size: 28px;
-  white-space: pre-line; /* 줄바꿈 적용 */
-`;
-
-const Button = styled.button`
-  transform: translate(30%, -320px);
-  background-color: #279eff;
-  color: white; /* 텍스트 색상 */
-  padding: 10px 40px; /* 내용 주변 여백 */
-  border: none; /* 테두리 없음 */
-  cursor: pointer; /* 커서 스타일을 포인터로 변경 */
-  border-radius: 4px;
-`;
-const OverlappingImagesContainer = styled.div`
-  /*메인이미지3 가운데 조절하는데 사용함*/
-  position: relative;
-  transform: translate(20%, -320px);
-`;
-const MainImage2WithOverlay = styled.img``;
-
-const WhiteOverlay = styled.div`
-  /* 메인이미지2 반을 가리는 흰박스임니다*/
-  position: absolute;
-  bottom: 0; /* 아래에서 시작 */
-  left: -80px;
-  width: 100%; /* 가로로 전체 폭 */
-  height: 40%; /* 세로로 반만 표시 */
-  background-color: white; /* 흰색 바탕 */
-  z-index: 2; /* MainImage2WithOverlay 위에 표시 */
-  display: flex; /* 내부 요소를 수평 및 수직 가운데 정렬하기 위해 flex 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  text-align: center; /* 텍스트 가운데 정렬 */
-`;
-
 function MainForm(props: MainProps) {
-  const [images, setImages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const imageUrls = [
-      MainImage1,
-      MainLogo,
-      MainImage2,
-      MainImage3,
-      MainImage4,
-    ];
-    setImages(imageUrls);
-  }, []);
-
   const navigate = useNavigate();
 
-  const filteredImages = images.filter(
-    (imageUrl, index) => index !== 3 && index !== 4,
-  );
+  const LoginButtonClick = () => {
+    // 버튼 클릭 시 '/login' 경로로 이동
+    navigate("/login");
+  };
 
+  const [selectedButton, setSelectedButton] = useState("walk");
+
+  const handleButtonClick = (buttonName: string) => {
+    setSelectedButton(buttonName);
+  };
+  const whiteBoxText =
+    /* 여기부분도 좀 잘하면 더 좋아질거같은데 급하다.*/
+    selectedButton === "walk" ? (
+      <>
+        <WalkText>
+          동네 산책 <br />
+          <WalkSText>후각 활동, 마킹, 바른 습관 형성 .</WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+          발 닦기
+          <br />
+          <WalkSText>물티슈 또는 물세척 후 닦기 .</WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+          배변 정리
+          <br />
+          <WalkSText>산책 중 배변 처리</WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+        </WalkText>
+      </>
+    ) : (
+      <>
+        <WalkText>
+          맞춤 배식 <br />
+          <WalkSText>사료와 간식, 물 급여 </WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+          신나는 놀이
+          <br />
+          <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+          배변 정리
+          <br />
+          <WalkSText>돌봄 중 배변 처리</WalkSText>
+          <WalkIText>------------------------------</WalkIText>
+        </WalkText>
+      </>
+    );
   return (
     <Container>
-      {filteredImages.map((imageUrl, index) => (
-        <div key={index}>
-          {imageUrl === MainLogo && index === 0 ? (
-            <img src={imageUrl} alt={`Image ${index + 1}`} />
-          ) : imageUrl === MainImage1 ? (
-            <MainImage src={imageUrl} alt={`Image ${index + 1}`} />
-          ) : index === 2 ? (
-            <OverlappingImagesContainer>
-              <MainImage2WithOverlay
-                src={imageUrl}
-                alt={`Image ${index + 1}`}
-              />
-              <WhiteOverlay />
-              <WhiteOverlay>
-                <h1 style={{ color: "#279eff" }}>
-                  산책시 실시간 <br /> 위치확인까지!
-                </h1>
-                {/* 원하는 텍스트를 추가할 수 있습니다 */}
-              </WhiteOverlay>
-            </OverlappingImagesContainer>
-          ) : (
-            <MainImageWithMargin src={imageUrl} alt={`Image ${index + 1}`} />
-          )}
-          {index === 0 && ( // 첫 번째 이미지 위에만 텍스트를 추가
-            <div>
-              <OverlayText>내가 없을 때 {"\n"} 내 아이는?</OverlayText>
-              <Button onClick={() => navigate("/login")}>예약하기</Button>{" "}
-              {/* 버튼 클릭 시 /login으로 이동 */}
-            </div>
-          )}
-          {index === 1 && ( // 두번째 이미지 위에만 텍스트를 추가
-            <div>
-              <OverlayText1>펫톡과 함께하세요!</OverlayText1>
-            </div>
-          )}
-        </div>
-      ))}
-      <Carousel showThumbs={false}>
-        <div>
-          <img src={MainImage3} alt="Image 3" />
-          <h1 style={{ color: "#279eff", marginTop: "30%" }}>
-            돌봄 맡기기 <br />
-            휴가도 즐겁게!
-          </h1>
-          <p style={{ marginTop: "10%" }}>
-            집을 비우거나 휴가를 떠날 때 <br />
-            혼자 있는 우리 아이 걱정 없이!
-          </p>
-        </div>
-        <div>
-          <img src={MainImage4} alt="Image 4" />
-          <h1 style={{ color: "#279eff", marginTop: "30%" }}>
-            돌봄 맡기기 <br />
-            휴가도 즐겁게!
-          </h1>
-          <p style={{ marginTop: "10%" }}>
-            집을 비우거나 휴가를 떠날 때 <br />
-            혼자 있는 우리 아이 걱정 없이!
-          </p>
-        </div>
-      </Carousel>
-      <div>
-        <OverlayText5>hh</OverlayText5>
-      </div>
+      <Container>
+        <A>
+          <MainImage src={MainImage1} alt={`Image`} />
+          <TextWrap>
+            <MainText>{"내가 없을 때\n 내 아이는?"}</MainText>
+            <Btn onClick={LoginButtonClick}>예약하기</Btn>
+          </TextWrap>
+
+          <MainLogoImage src={MainLogo} alt={`Image`} />
+          <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
+
+          <A>
+            <MainImagetwo src={MainImage2} alt={`Image`} />
+            <WhiteImage />
+            <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
+            <MainTexttwoo>
+              {
+                "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
+              }
+            </MainTexttwoo>
+          </A>
+        </A>
+
+        <Carousel showThumbs={false}>
+          <div>
+            <img src={MainImage3} alt="Image 3" />
+            <h1>
+              돌봄 맡기기 <br />
+              휴가도 즐겁게!
+            </h1>
+            <p>
+              집을 비우거나 휴가를 떠날 때 <br />
+              혼자 있는 우리 아이 걱정 없이!
+            </p>
+          </div>
+          <div>
+            <img src={MainImage4} alt="Image 4" />
+            <h1>
+              돌봄 맡기기 <br />
+              휴가도 즐겁게!
+            </h1>
+            <p>
+              집을 비우거나 휴가를 떠날 때 <br />
+              혼자 있는 우리 아이 걱정 없이!
+            </p>
+          </div>
+        </Carousel>
+      </Container>
+      <WhiteBoxContainer>
+        <WalkButton
+          className={selectedButton === "walk" ? "active" : ""}
+          onClick={() => handleButtonClick("walk")}
+        >
+          산책
+        </WalkButton>
+        <CareButton
+          className={selectedButton === "care" ? "active" : ""}
+          onClick={() => handleButtonClick("care")}
+        >
+          돌봄
+        </CareButton>
+
+        <WhiteBoxImage src={WhiteBox} alt={`Image`} />
+        <TextWrap1>
+          {" "}
+          <WhiteBoxText>{whiteBoxText}</WhiteBoxText>
+          <WalkSbutton onClick={LoginButtonClick}>예약하기</WalkSbutton>
+        </TextWrap1>
+      </WhiteBoxContainer>
     </Container>
   );
 }
 export default MainForm;
+
+const WalkText = styled.div`
+  font-size: 16px;
+  margin-top: 100px;
+`;
+
+const WalkIText = styled.div`
+  font-size: "12px";
+  margin: 20px;
+`;
+
+const WalkSText = styled.div`
+  font-size: 12px;
+  margin: 20px;
+`;
+const WalkSbutton = styled.button`
+  background-color: white;
+  color: #279eff;
+  font-size: 16px;
+  padding: 8px 24px;
+  position: relative;
+  top: 30px;
+  width: 120px;
+  left: 180px;
+  border: 2px solid #279eff;
+  cursor: pointer;
+`;
+
+const WhiteBoxMargin = styled.div`
+  margin-bottom: 4px; /* 원하는 마진 값으로 조절하세요 */
+`;
+const WhiteBoxContainer = styled.div`
+  background-color: white;
+  position: relative;
+`;
+
+const WhiteBoxText = styled.div`
+  display: flex;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 120px;
+  white-space: nowrap;
+  line-height: 1.5;
+`;
+
+const WhiteBoxImage = styled.img`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: 60%;
+`;
+
+const MainImage = styled.img`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin: 0px auto;
+`;
+const h1 = styled.div`
+  color: "#279eff";
+  margintop: "30%";
+`;
+const MainLogoImage = styled.img`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: 52px;
+  margin-bottom: 24px;
+`;
+
+const MainImagetwo = styled.img`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: 52px;
+  margin-bottom: 40%;
+`;
+
+const A = styled.div`
+  position: relative;
+  margin-bottom: 40px;
+`;
+const TextWrap1 = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  top: -800px;
+  white-space: pre-line;
+`;
+
+const TextWrap = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  white-space: pre-line;
+`;
+
+const MainText = styled.div`
+  margin-left: 16px;
+  top: 0;
+  margin-top: 263px;
+  color: White;
+  font-size: 36px;
+  font-weight: bold;
+`;
+
+const WalkButton = styled.button`
+  background-color: white;
+  color: #279eff;
+  font-size: 16px;
+  padding: 24px 52px;
+  position: relative;
+  top: 280px;
+  left: 80px;
+  border: 2px solid #279eff;
+  cursor: pointer;
+
+  &.active {
+    background-color: #279eff;
+    color: white;
+  }
+`;
+
+const CareButton = styled.button`
+  background-color: white;
+  color: #279eff;
+  font-size: 16px;
+  padding: 24px 52px;
+  position: relative;
+  top: 280px;
+  left: 160px;
+  border: 2px solid #279eff;
+  cursor: pointer;
+
+  &.active {
+    background-color: #279eff;
+    color: white;
+  }
+`;
+
+const MainLogoText = styled.div`
+  text-align: center;
+  margin-bottom: 48px;
+  top: 0;
+  color: #279eff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 50%;
+`;
+
+const MainTexttwo = styled.div`
+  margin-left: 20%;
+  top: 70%;
+  color: #279eff;
+  font-size: 28px;
+  z-index: 3;
+  position: absolute;
+  white-space: pre-line;
+`;
+
+const MainTexttwoo = styled.div`
+  margin-left: 20%;
+  top: 84%;
+  color: black;
+  font-size: 16px;
+  z-index: 3;
+  position: absolute;
+  white-space: pre-line;
+`;
+
+const WhiteImage = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background-color: white;
+  z-index: 2;
+`;
+
+const Container = styled.div`
+  background-color: white;
+  position: relative;
+`;
+
+const Btn = styled.button`
+  background-color: #279eff;
+  color: white;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: relative;
+  top: 30px;
+  width: 80px;
+  left: 40px;
+  border: 2px solid #279eff;
+  cursor: pointer;
+`;
