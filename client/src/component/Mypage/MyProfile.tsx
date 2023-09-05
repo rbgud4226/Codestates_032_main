@@ -115,7 +115,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  /* width: 100%; */
 `;
 
 const HeaderText = styled.p`
@@ -138,6 +138,7 @@ const ImgContainer = styled.div`
 
 const UserInfo = styled.div`
   text-align: center;
+  width: 100%;
 `;
 
 const UserName = styled.div`
@@ -212,7 +213,6 @@ const PhoneNumber = styled.span`
 `;
 
 const Separator = styled.div`
-  width: 320px;
   height: 1px;
   background-color: #ccc;
   margin-bottom: 8px;

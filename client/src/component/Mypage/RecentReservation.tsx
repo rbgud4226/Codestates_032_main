@@ -85,8 +85,6 @@ export default RecentReservation;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: 100%;
 `;
 
 const Category = styled.div`
@@ -105,6 +103,7 @@ const RecentContainer = styled.div`
   flex-direction: column;
   border-radius: 8px;
   box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
+  width: 100%;
 `;
 
 const ReservationItem = styled.div`
