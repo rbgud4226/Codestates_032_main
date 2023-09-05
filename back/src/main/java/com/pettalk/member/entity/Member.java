@@ -1,25 +1,39 @@
 package com.pettalk.member.entity;
 
-import com.pettalk.chat.entity.ChatRoom;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
 @Setter
-public class Member {
+@NoArgsConstructor
+public class Member implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @Size(min = 2, max = 10)
+    @Column(length = 10)
     private String nickName;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<ChatRoom> room = new ArrayList<>();
+    @Column
+    private String email;
 
+    @Column
+    private String profileImage;
 
+    @Column
+    private String phone;
+
+    @Column
+    private String password;
+
+    @CreationTimestamp
+    private Timestamp createdAt;
 }
