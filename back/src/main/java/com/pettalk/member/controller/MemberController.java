@@ -5,16 +5,12 @@ import com.pettalk.member.dto.PatchMemberDto;
 import com.pettalk.member.dto.PostMemberDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
-import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
-import com.pettalk.wcboard.dto.WcBoardDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/members")
@@ -23,13 +19,9 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
-    private final PasswordEncoder passwordEncoder;
-    private final MemberRepository memberRepository;
-    public MemberController(MemberService memberService, MemberMapper mapper, PasswordEncoder passwordEncoder,MemberRepository memberRepository) {
+    public MemberController(MemberService memberService, MemberMapper mapper) {
         this.memberService = memberService;
         this.mapper = mapper;
-        this.passwordEncoder = passwordEncoder;
-        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/logout")
@@ -59,16 +51,6 @@ public class MemberController {
             return new ResponseEntity<>(getMemberDto, HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @GetMapping("/gets")
-    public ResponseEntity getMemberBoards() {
-        try {
-            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers();
-            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
-        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }

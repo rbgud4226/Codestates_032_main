@@ -17,5 +17,4 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> {
     Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
     Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
     Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
-    List<WcBoard> findByMember_MemberId(Long memberId); //M
 }

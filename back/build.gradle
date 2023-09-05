@@ -46,7 +46,7 @@ dependencies {
 
 	implementation 'net.nurigo:sdk:4.2.7'
 
-	implementation 'com.squareup.retrofit2:retrofit:2.7.0' //Retrofit 버전
+	implementation 'com.squareup.retrofit2:retrofit:2.7.0'
 
 }
 
