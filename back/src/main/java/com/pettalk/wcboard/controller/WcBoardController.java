@@ -71,7 +71,7 @@ public class WcBoardController {
      * 태그로 필터링된 관련 게시글을 전체 로드 하면됨
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요
      */
-    @GetMapping // 메인 페이지 전체 게시글 로드
+    @GetMapping // 메인 페이지 전체 게시글 로드 @@
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size) {
         Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
