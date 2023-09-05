@@ -43,5 +43,7 @@ public class PetSitter {
 
 
     private LocalDateTime createdAt;
+    //    @OneToMany(mappedBy = "petSitter")
+    //    private List<ChatRoom> room = new ArrayList<>();
 
 }
