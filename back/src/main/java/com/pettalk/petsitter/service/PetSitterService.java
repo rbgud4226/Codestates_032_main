@@ -1,6 +1,8 @@
 package com.pettalk.petsitter.service;
 
 
+import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.exception.ExceptionCode;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.repository.PetSitterRepository;
@@ -42,26 +44,27 @@ public class PetSitterService {
     public PetSitter findVerifiedPetSitter(long petSitterId) {
         Optional<PetSitter> optionalPetSitter = petSitterRepository.findById(petSitterId);
 
-        //TODO:ExceptionCode와 BusinessLogicException클래스 필요.
-//        PetSitter findPetSitter = optionalPetSitter
-//        .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        PetSitter findPetSitter = new PetSitter(); //에러가 발생하지 않도록 해둔 임시 조치. ExceptionCode 작성시 삭제할 것.
+
+        PetSitter findPetSitter = optionalPetSitter
+        .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         return findPetSitter;
     }
 
     public PetSitter findPetSitter(long petSitterId) {
 
-        return verifyExistPetSitter(petSitterId);
+        PetSitter findPetSitter = verifyExistPetSitter(petSitterId);
+
+        return findPetSitter;
     }
 
     private PetSitter verifyExistPetSitter(long petSitterId) {
 
-        //TODO:ExceptionCode와 BusinessLogicException클래스 필요.
-//        PetSitter petSitter = petSitterRepository.findById(petSitterId)
-//                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
-        PetSitter petSitter = new PetSitter(); //에러가 발생하지 않도록 해둔 임시 조치. ExceptionCode 작성시 삭제할 것.
+        PetSitter petSitter = petSitterRepository.findById(petSitterId)
+                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
 
         return petSitter;
     }
+
+
 }

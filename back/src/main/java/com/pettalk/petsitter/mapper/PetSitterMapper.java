@@ -4,6 +4,10 @@ import com.pettalk.petsitter.dto.PetSitterDto;
 import com.pettalk.petsitter.entity.PetSitter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class PetSitterMapper {
 
@@ -14,8 +18,13 @@ public class PetSitterMapper {
         else {
             PetSitter petSitter = new PetSitter();
 //            petSitter.setPetSitterId(postToPetSitter(postDto));
-            petSitter.setInfo(postDto.getInfo());
+            petSitter.setIntroduce(postDto.getIntroduce());
             petSitter.setNowJob(postDto.getNow_job());
+            petSitter.setSmoking(postDto.isSmoking());
+            petSitter.setExAnimal(postDto.getExAnimal());
+            petSitter.setInfo(postDto.getInfo());
+            petSitter.setCreatedAt(LocalDateTime.now());
+
 
             return petSitter;
         }
@@ -26,13 +35,14 @@ public class PetSitterMapper {
             return null;
         }
         else {
-            PetSitter petsitter = new PetSitter();
-            petsitter.setSmoking(patchDto.isSmoking());
-            petsitter.setInfo(patchDto.getInfo());
-            petsitter.setNowJob(patchDto.getNow_job());
-            petsitter.setMotive(patchDto.getMotive());
+            PetSitter petSitter = new PetSitter();
+            petSitter.setIntroduce(patchDto.getIntroduce());
+            petSitter.setNowJob(patchDto.getNow_job());
+            petSitter.setSmoking(patchDto.isSmoking());
+            petSitter.setExAnimal(patchDto.getExAnimal());
+            petSitter.setInfo(patchDto.getInfo());
 
-            return petsitter;
+            return petSitter;
         }
     }
 
@@ -43,16 +53,14 @@ public class PetSitterMapper {
         else {
             PetSitterDto.ResponseDto responseDto = new PetSitterDto.ResponseDto();
 //            responseDto.setMember_id(petSitter.getMember().getMemberId);
-            responseDto.setPet_sitter_id(petSitter.getPetSitterId());
+            responseDto.setIntroduce(petSitter.getIntroduce());
             responseDto.setNow_job(petSitter.getNowJob());
             responseDto.setSmoking(petSitter.isSmoking());
+            responseDto.setExAnimal(petSitter.getExAnimal());
             responseDto.setInfo(petSitter.getInfo());
-            responseDto.setMotive(petSitter.getMotive());
             responseDto.setCreated_at(petSitter.getCreatedAt());
 
             return responseDto;
         }
-
     }
-
 }
