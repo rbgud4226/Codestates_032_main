@@ -59,7 +59,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/gets")
+    @GetMapping("/recent")
     public ResponseEntity getMemberBoards() {
         try {
             List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers();
