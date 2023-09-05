@@ -8,26 +8,34 @@ import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
+import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.mapper.WcBoardMapper;
+import com.pettalk.wcboard.repository.WcBoardRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MemberMapper mapper;
+    private final MemberMapper membermapper;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final WcBoardRepository wcBoardRepository;
+    private final WcBoardMapper wcBoardMapper;
 
 
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper mapper, RefreshTokenRepository refreshTokenRepository) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository,WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
+        this.membermapper = membermapper;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.wcBoardRepository = wcBoardRepository;
+        this.wcBoardMapper = wcBoardMapper;
 
     }
     public Member createMember(Member member) {
@@ -63,8 +71,20 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
-        return mapper.memberToGetMemberDto(findMember);
+        GetMemberDto memberDtoGet = membermapper.memberToGetMemberDto(findMember);
+        return memberDtoGet;
     }
+    // 진짜
+
+    public List<WcBoardDto.Response> getMembers(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+        return wcBoardDtoGet;
+
+    }
+
 
     public void deleteMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

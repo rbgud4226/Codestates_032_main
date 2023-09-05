@@ -25,4 +25,5 @@ public class GetMemberDto {
     @NotBlank
     private String profileImage;
 
+    private List<WcBoardDto> wcBoards;
 }
