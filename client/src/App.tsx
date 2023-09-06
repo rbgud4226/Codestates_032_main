@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Mypage from "./page/Mypage";
 import Layout from "./Layout";
+import Nav from "./component/nav/Nav";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
                 <Route path="/members" element={<Mypage />} />
               </Routes>
             </Layout>
-            {/* <Nav /> */}
+            <Nav />
           </Container>
         </Body>
       </Router>
