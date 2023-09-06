@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Mypage from "./page/Mypage";
 import Layout from "./Layout";
+import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Body>
           <Container>
             <Header />
+            {/* <Header1 /> */}
             <Layout>
               <Routes>
                 <Route path="/members" element={<Mypage />} />
@@ -49,7 +51,7 @@ const Container = styled.div`
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
 `;
 
-const Header = styled.div`
+const Header1 = styled.div`
   min-height: 70px;
   min-width: 320px;
   background-color: aqua;
