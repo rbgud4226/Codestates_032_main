@@ -20,12 +20,12 @@ export default Nav;
 
 export const NavContainer = styled.nav`
   display: flex;
-  position: fixed;
-  background-color: yellow;
-  width: 393px;
-  min-width: 320px;
   height: 70px;
-  bottom: 0px;
+  width: 100%;
+  bottom: 0;
+  position: sticky;
+  min-width: 320px;
+  max-width: 500px;
   box-shadow: 0px 10px 34px #272c5614;
   background-color: white;
 `;
