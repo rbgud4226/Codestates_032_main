@@ -16,50 +16,50 @@ public class PetSitterDto {
     @Setter
     public static class PostDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
 
-//        private long member_id;
+        private long memberId;
 
         @NotBlank(message = "자기소개를 작성해 주세요.")
         private String introduce;
 
-        @NotBlank(message = "현재 하시는 일을 작성해주세요.")
-        private String now_job;
+        @NotNull(message = "현재 직업을 선택해주세요.")
+        private String nowJob;
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
 
-        private List<String> exAnimal; //맡아본 적 있는 동물.
+        private String exAnimal; //맡아본 적 있는 동물.
 
         @NotBlank(message = "반려 경험 및 경력을 작성해주세요.")
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private LocalDateTime created_at;
+        private LocalDateTime createdAt;
     }
 
     @Getter
     @Setter
     public static class PatchDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
 
         @NotBlank(message = "자기소개를 작성해 주세요.")
         private String introduce;
 
-        @NotBlank(message = "현재 하시는 일을 작성해주세요.")
-        private String now_job;
+        @NotBlank(message = "현재 직업을 선택해주세요.")
+        private String nowJob;
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
 
-        private List<String> exAnimal; //맡아본 적 있는 동물.
+        private String exAnimal; //맡아본 적 있는 동물.
 
         @NotBlank(message = "반려 경험 및 경력을 작성해주세요.")
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private LocalDateTime created_at;
+        private LocalDateTime createdAt;
 
     }
 
@@ -67,21 +67,21 @@ public class PetSitterDto {
     @Setter
     public static class ResponseDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
 
-//        private long member_id;
+        private long memberId;
 
         private String introduce;
 
-        private String now_job;
+        private String nowJob;
 
         private boolean smoking;
 
-        private List<String> exAnimal; //맡아본 적 있는 동물.
+        private String exAnimal; //맡아본 적 있는 동물.
 
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private LocalDateTime created_at;
+        private LocalDateTime createdAt;
 
     }
 

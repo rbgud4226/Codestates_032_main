@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.entity;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.petsitter.dto.PetSitterDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,7 @@ public class PetSitter {
 
     private boolean smoking;
 
-    @ElementCollection
-    private List<String> exAnimal;
+    private String exAnimal;
 
     private String info;
 
@@ -43,6 +43,7 @@ public class PetSitter {
 
 
     private LocalDateTime createdAt;
+
     //    @OneToMany(mappedBy = "petSitter")
     //    private List<ChatRoom> room = new ArrayList<>();
 
