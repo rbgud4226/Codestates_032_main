@@ -14,7 +14,6 @@ function App() {
         <Body>
           <Container>
             <Header />
-            {/* <Header1 /> */}
             <Layout>
               <Routes>
                 <Route path="/members" element={<Mypage />} />
@@ -49,10 +48,4 @@ const Container = styled.div`
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
-`;
-
-const Header1 = styled.div`
-  min-height: 70px;
-  min-width: 320px;
-  background-color: aqua;
 `;
