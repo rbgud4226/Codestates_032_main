@@ -9,6 +9,7 @@ import SignUpDonePage from "./page/signup/SignUpDonePage";
 import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
+import Login from "./component/Login/Index";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Header />
             <Layout>
               <Routes>
+                <Route path="/login" element={<Login />} />
                 <Route path="/members" element={<Mypage />} />
               </Routes>
             </Layout>
