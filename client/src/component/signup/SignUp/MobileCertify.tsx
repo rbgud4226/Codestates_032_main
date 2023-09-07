@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import PhoneNumberInput from "../../InputBox/PhoneNumInput";
+import PhoneNumberInput from "../../InputBox/PhoneNumberInput";
 import CertifyBtn from "../../Button/CertifyBtn";
 import CertifyNumInput from "../../InputBox/CertifyNumInput";
 import SendBtn from "../../Button/SendBtn";
