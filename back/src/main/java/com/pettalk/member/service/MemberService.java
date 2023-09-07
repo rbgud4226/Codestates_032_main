@@ -57,8 +57,8 @@ public class MemberService {
     public Member updateMember(Member member) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
-
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+
         if (member.getNickName().trim().length() <= 3) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
