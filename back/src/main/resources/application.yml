@@ -11,9 +11,25 @@ spring:
   redis:
     host: localhost
     port: 6397
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client_id:
+            client_secret:
+            authorization-grant-type: authorization_code
+            redirect_uri:
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 jwt:
   key: codestatescodestates123123123123123123123123123
-  access-token-expiration-minutes: 1
+  access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 420
 coolsms:
   api:

@@ -25,5 +25,13 @@ public class GetMemberDto {
     @NotBlank
     private String profileImage;
 
-    private List<WcBoardDto> wcBoards;
+    private List<WcBoardDto.Response> wcBoardDtoGet;
+
+    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet) {
+        this.nickName = nickName;
+        this.email = email;
+        this.phone = phone;
+        this.profileImage = profileImage;
+        this.wcBoardDtoGet = wcBoardDtoGet;
+    }
 }
