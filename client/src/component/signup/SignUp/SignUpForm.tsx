@@ -8,7 +8,7 @@ import PasswordCfInput from "../../InputBox/PasswordCfInput";
 import ConfirmBtn from "../../Button/ConfirmBtn";
 import MobileCertify from "./MobileCertify";
 import axios, { AxiosError } from "axios";
-import { iconImg } from "../../../data/IconData";
+import { iconImg } from "../../../Data/IconImg";
 import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
