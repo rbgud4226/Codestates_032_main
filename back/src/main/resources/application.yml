@@ -29,7 +29,7 @@ spring:
             user-name-attribute: id
 jwt:
   key: codestatescodestates123123123123123123123123123
-  access-token-expiration-minutes: 1
+  access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 420
 coolsms:
   api:

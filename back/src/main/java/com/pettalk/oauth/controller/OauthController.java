@@ -26,9 +26,7 @@ public class OauthController {
         if (authorizationCode == null || authorizationCode.isEmpty()) {
             return ResponseEntity.badRequest().body("authorizationCode is required");
         }
-
         String accessToken = kakaoLoginService.getAccessTokenFromAuthorizationCode(authorizationCode);
-
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", accessToken);
 
@@ -70,9 +68,12 @@ public class OauthController {
         }
         memberRepository.save(member);
 
+
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(member.getEmail(), null, new ArrayList<>());
+                new UsernamePasswordAuthenticationToken(member.getKakaoId(), null, new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
 
         Map<String, String> response = new HashMap<>();
         response.put("jwtToken", "Bearer " + jwtToken);

@@ -68,6 +68,4 @@ public class MemberDetailService implements UserDetailsService {
             return true;
         }
     }
-
-
 }
