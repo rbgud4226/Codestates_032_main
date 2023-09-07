@@ -78,8 +78,10 @@ function MainForm(props: MainProps) {
           <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
 
           <A>
+            <NainItwo>
             <MainImagetwo src={MainImage2} alt={`Image`} />
             <WhiteImage />
+            </NainItwo>
             <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
             <MainTexttwoo>
               {
@@ -139,6 +141,17 @@ function MainForm(props: MainProps) {
   );
 }
 export default MainForm;
+
+
+const NainItwo = styled.div`
+  background-color: White;
+  position: relative;
+  margin-left: 20px;
+  margin-right: 20px;
+  justify-content: center;
+  display: flex;
+`;
+
 
 const WalkText = styled.div`
   font-size: 16px;
@@ -214,12 +227,8 @@ const MainLogoImage = styled.img`
 `;
 
 const MainImagetwo = styled.img`
-  display: flex;
-  justify-content: center;
-  width: 100%;
+  width: 80%;
   height: auto;
-  margin-top: 52px;
-  margin-bottom: 40%;
 `;
 
 const A = styled.div`
