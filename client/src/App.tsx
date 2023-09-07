@@ -7,6 +7,7 @@ import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import MainPage from "./page/MainPage";
 
+
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
             <Header />
             <Layout>
               <Routes>
+
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
               </Routes>
