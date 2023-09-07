@@ -11,6 +11,7 @@ import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
+import WebSocketChat from "./page/Chat";
 
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
+                <Route path="/chat" element={<WebSocketChat />} />
                 <Route path="/members" element={<Mypage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
