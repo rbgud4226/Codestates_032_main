@@ -55,11 +55,11 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:8080","https://9421-221-141-15-253.ngrok-free.app","https://0acf-222-102-41-193.ngrok-free.app/","https://8bf9-121-162-236-116.ngrok-free.app/"));
+        configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh"));
-        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

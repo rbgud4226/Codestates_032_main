@@ -1,7 +1,7 @@
 import React from "react";
 // import { useState, useEffect } from "react"''
 import styled from "styled-components";
-import petssiterImg from "../../asset/MainAsset/MainImage1.png";
+import petssiterImg from "../../asset/MainImage/MainImage1.png";
 import edit from "../../asset/MypageAsset/edit.png";
 import score from "../../asset/MypageAsset/Mypagescore.png";
 // import axios from "axios";

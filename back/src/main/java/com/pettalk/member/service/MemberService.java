@@ -107,4 +107,9 @@ public class MemberService {
         });
         SecurityContextHolder.clearContext(); // 기타 로그아웃 관련 처리를 수행합니다. 예를 들어, SecurityContext를 클리어하는 등
     }
+
+    public Member findMemberByEmail(String memberEmail) {
+        return memberRepository.findByEmail(memberEmail).get();
+    }
+
 }
