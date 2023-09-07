@@ -2,29 +2,36 @@ package com.pettalk.wcboard.service;
 
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.BeanUtils;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor //private final 된것만
 public class WcBoardService {
     private final WcBoardRepository wcBoardRepository;
+    private final MemberService memberService;
 
-    public WcBoardService(WcBoardRepository wcBoardRepository){ this.wcBoardRepository = wcBoardRepository; }
+//    public WcBoardService(WcBoardRepository wcBoardRepository, MemberService memberService){
+//        this.wcBoardRepository = wcBoardRepository;
+//        this.memberService = memberService;
+//    }
 
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
-    public WcBoard createWcBoardPost (WcBoard wcboard){
+    public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+        //멤버 아이디 가져오기
+        wcboard.setMember(memberService.findVerifyMember(memberId));
         // TODO : 멤버 ID 가져오기 로그인한 사용자만 게시글 작성 가능
+        // 9월 7일 닉네임 가져와야하나?
         // memberService.findMember(WcBoard.getMember().getMemberId());
         wcboard.setCreatedAt(LocalDateTime.now());
         wcBoardRepository.save(wcboard);
@@ -49,32 +56,32 @@ public class WcBoardService {
     }
 
     // wcBoardId 검색해주는 메서드
-    public WcBoard findWcBoardPost(long wcboardId){
+    public WcBoard findWcBoardPost(Long wcboardId){
         return findVerifyPost(wcboardId);
     }
 
     //전체 글 조회 (최신순 정렬)
     public Page<WcBoard> findAllPosts(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findAll(pageRequest);
     }
 
     public Page<WcBoard> findPostByWcTag(int page, int size, String wcTag) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findByWcTagContaining(wcTag, pageRequest);
     }
 
     public Page<WcBoard> findPostByAnimalTag(int page, int size, String animalTag) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findByAnimalTagContaining(animalTag, pageRequest);
     }
 
     public Page<WcBoard> findPostByAreaTag(int page, int size, String areaTag) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findByAreaTagContaining(areaTag, pageRequest);
     }
 
-    public void deletePost(long wcboardId) {
+    public void deletePost(Long wcboardId) {
         WcBoard findPost = findVerifyPost(wcboardId);
 
         if(!findPost.getPostStatus().equals(WcBoard.PostStatus.DEFAULT)) { // 진행중인 게시글만 삭제 가능
@@ -91,7 +98,7 @@ public class WcBoardService {
 
 
     // 게시글 찾고 없으면 예외처리
-    public WcBoard findVerifyPost (long wcboardId) {
+    public WcBoard findVerifyPost (Long wcboardId) {
         Optional<WcBoard> optionalPOST = wcBoardRepository.findById(wcboardId);
 
         WcBoard findWcBoardPost =

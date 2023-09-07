@@ -107,4 +107,14 @@ public class MemberService {
         });
         SecurityContextHolder.clearContext(); // 기타 로그아웃 관련 처리를 수행합니다. 예를 들어, SecurityContext를 클리어하는 등
     }
+
+    public Member findVerifyMember(Long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember = optionalMember.get();
+        return findMember;
+    }
+
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email).get();
+    }
 }
