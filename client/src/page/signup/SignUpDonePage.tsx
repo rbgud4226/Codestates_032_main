@@ -1,10 +1,10 @@
 import React from "react";
-import SignUp from "../component/signup/SignUp/Index";
+import SignUpDone from "../../component/signup/SignUpDone/Index";
 
 const SignUpDonePage = () => {
   return (
     <>
-      <SignUp></SignUp>
+      <SignUpDone />
     </>
   );
 };
