@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import MainImage1 from "../asset/MainImage/MainImage1.png";
-import MainLogo from "../asset/MainImage/MainLogo.png";
-import MainImage2 from "../asset/MainImage/MainImage2.png";
-import MainImage3 from "../asset/MainImage/MainImage3.png";
-import MainImage4 from "../asset/MainImage/MainImage4.png";
-import WhiteBox from "../asset/MainImage/WhiteBox.png";
+import MainImage1 from "../../asset/MainAsset/MainImage1.png";
+import MainLogo from "../../asset/MainAsset/MainLogo.png";
+import MainImage2 from "../../asset/MainAsset/MainImage2.png";
+import MainImage3 from "../../asset/MainAsset/MainImage3.png";
+import MainImage4 from "../../asset/MainAsset/MainImage4.png";
+import WhiteBox from "../../asset/MainAsset/WhiteBox.png";
 import { useNavigate } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // 슬라이더 스타일 import
 import { Carousel } from "react-responsive-carousel"; // 슬라이더 컴포넌트 import
@@ -79,8 +79,8 @@ function MainForm(props: MainProps) {
 
           <A>
             <NainItwo>
-            <MainImagetwo src={MainImage2} alt={`Image`} />
-            <WhiteImage />
+              <MainImagetwo src={MainImage2} alt={`Image`} />
+              <WhiteImage />
             </NainItwo>
             <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
             <MainTexttwoo>
@@ -142,7 +142,6 @@ function MainForm(props: MainProps) {
 }
 export default MainForm;
 
-
 const NainItwo = styled.div`
   background-color: White;
   position: relative;
@@ -151,7 +150,6 @@ const NainItwo = styled.div`
   justify-content: center;
   display: flex;
 `;
-
 
 const WalkText = styled.div`
   font-size: 16px;

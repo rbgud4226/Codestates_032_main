@@ -1,10 +1,10 @@
 import React from "react";
-import MainForm from "../component/MainForm";
+import MainForm from "../component/MainPage/MainForm";
 
 const MainPage = () => {
   return (
     <div>
-      <MainForm />
+      <MainForm propertyName="example" />
     </div>
   );
 };

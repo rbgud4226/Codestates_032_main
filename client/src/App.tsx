@@ -17,9 +17,9 @@ function App() {
             <Header />
             <Layout>
               <Routes>
-              <Route path="/" element={MainPage /} />
+                <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
-                
+              </Routes>
             </Layout>
             <Nav />
           </Container>
