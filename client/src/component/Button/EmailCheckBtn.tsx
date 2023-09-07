@@ -75,11 +75,11 @@ export const ECBtn = styled.button`
   align-items: center;
   background-color: #e9eeff;
   border-radius: 4px;
-  border: 1px inset #595959;
+  border: 1px solid #595959;
   cursor: pointer;
   &:disabled {
     background-color: #f6f8ff;
     color: #a6a6a6;
-    border: 1px inset #edf2ff;
+    border: 1px solid #edf2ff;
   }
 `;

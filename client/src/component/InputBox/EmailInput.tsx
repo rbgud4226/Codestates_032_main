@@ -65,10 +65,12 @@ export const EIContainer = styled.section`
 
 export const InputBox = styled.input`
   height: 31px;
-  border: 1px, inset, #595959;
+  border: 1px inset #595959;
   border-radius: 4px;
   padding-left: 10px;
-  width: 190px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const InputMsg = styled.label`

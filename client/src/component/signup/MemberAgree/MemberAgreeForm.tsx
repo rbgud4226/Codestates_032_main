@@ -112,7 +112,7 @@ export const DoneSpan = styled.span`
 export const AllAgree = styled.div`
   display: flex;
   align-items: center;
-  border: 1px inset #bdbdbd;
+  border: 1px solid #bdbdbd;
   background-color: #e9eeff;
   border-radius: 4px;
   height: 30px;

@@ -25,10 +25,13 @@ export const CFNumInput = styled.input`
   width: 160px;
   padding-left: 8px;
   font-size: 12px;
-  border: 1px inset #595959;
+  border: 1px solid #595959;
   border-radius: 4px;
   ::placeholder {
     font-size: 12px;
     color: #5c5858;
+  }
+  &:focus {
+    outline: none;
   }
 `;

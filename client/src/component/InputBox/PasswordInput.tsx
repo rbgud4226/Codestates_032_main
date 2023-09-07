@@ -81,28 +81,30 @@ export const PwContainer = styled.section`
 `;
 export const PwWrapper = styled.div`
   display: flex;
+  height: 31px;
+  border: 1px solid #595959;
+  width: 240px;
+  border-radius: 4px;
+  justify-content: space-between;
 `;
 export const PwInput = styled.input`
-  height: 31px;
-  border: 1px, inset, #595959;
-  width: 190px;
-  border-radius: 4px;
-  padding-left: 10px;
-`;
-
-export const InputMsg = styled.label`
-  color: #279eff;
-  margin-top: 4px;
-  font-size: 10px;
+  width: 240px;
+  height: 29px;
+  border: 0px;
+  margin-left: 8px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const ToggleIcon = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 31px;
+  height: 29px;
   background-color: white;
   border: 0px;
+  margin-right: 8px;
 `;
 
 export const ShowIcon = styled.img`

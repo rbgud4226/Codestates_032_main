@@ -72,14 +72,20 @@ export const InputCtn = styled.div``;
 
 export const PwCfWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
+  height: 31px;
+  border: 1px solid #595959;
+  width: 240px;
+  border-radius: 4px;
 `;
 
 export const InputBox = styled.input`
-  height: 31px;
-  border: 1px, inset, #595959;
-  width: 190px;
-  border-radius: 4px;
-  padding-left: 10px;
+  height: 29px;
+  margin-left: 10px;
+  border: 0px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const InputMsg = styled.label`
@@ -92,7 +98,8 @@ export const ToggleIcon = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 31px;
+  height: 29px;
+  margin-right: 8px;
   background-color: white;
   border: 0px;
 `;

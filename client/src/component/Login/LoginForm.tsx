@@ -16,7 +16,11 @@ const LoginForm = () => {
   const loginHdr = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     TokenProvider({ email, password }, setErrorMsg);
-    navigate("/");
+    if (!errorMsg) {
+      setErrorMsg("");
+    } else {
+      navigate("/");
+    }
 
     // try {
     //   const res = await axios.post("http://localhost:8080/members/login", {
@@ -44,8 +48,8 @@ const LoginForm = () => {
       <PasswordInput setPassword={setPassword} />
       <LoginBtn onClick={e => loginHdr(e)} />
       {errorMsg ? (
-        <span style={{ fontSize: "12px", marginTop: "4px" }}>
-          로그인정보를 확인하세요{" "}
+        <span style={{ fontSize: "12px", marginTop: "4px", color: "red" }}>
+          {errorMsg}
         </span>
       ) : (
         ""
