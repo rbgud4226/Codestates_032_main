@@ -185,6 +185,7 @@ export const AgreeSpan = styled.span`
 `;
 
 export const InputSpan = styled.span`
+  font-weight: 600;
   font-size: 12px;
   margin-right: 5px;
 `;

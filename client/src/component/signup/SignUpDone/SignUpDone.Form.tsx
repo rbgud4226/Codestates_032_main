@@ -47,6 +47,7 @@ export const InputSpan = styled.span`
 
 export const DoneSpan = styled.span`
   font-size: 12px;
+  font-weight: 600;
 `;
 
 export const WelcomeSpan = styled.span`

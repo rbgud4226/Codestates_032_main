@@ -96,6 +96,7 @@ export const MASection = styled.section`
 export const AgreeSpan = styled.span`
   font-size: 12px;
   margin-right: 5px;
+  font-weight: 600;
 `;
 
 export const InputSpan = styled.span`
