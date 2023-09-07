@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
-import PetTalkLogo from "../../PetTalkLogo/PetTalkLogo";
-import SignUpDoneForm from "./SignUpDoneForm";
+import PetTalkLogo from "../../petalkLogo/PetTalkLogo";
+import SignUpDoneForm from "./SignUpDone.Form";
 const SignUpDone = () => {
   return (
     <DoneCtn>

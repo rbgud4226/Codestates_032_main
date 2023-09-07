@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import PetTalkLogo from "../../PetTalkLogo/PetTalkLogo";
+import PetTalkLogo from "../../petalkLogo/PetTalkLogo";
 import MemberAgreeForm from "./MemberAgreeForm";
 import CheckLogin from "./CheckLogin";
 const MemberAgree = () => {
