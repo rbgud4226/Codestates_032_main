@@ -1,6 +1,15 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+<<<<<<< Updated upstream
+=======
+import Layout from "./Layout";
+import LoginPage from "./page/LoginPage";
+import MemberAgreePage from "./page/signup/MemberAgreePage";
+import SignUpPage from "./page/SignUpPage";
+import SignUpDone from "./component/signup/SignUpDone";
+import TestPage from "./page/TestPage";
+>>>>>>> Stashed changes
 import Mypage from "./page/Mypage";
 import Layout from "./Layout";
 import Header from "./component/header/Header";
