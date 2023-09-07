@@ -1,12 +1,22 @@
 import React from "react";
-import SignUp from "../component/signup/SignUp/Index";
+import { styled } from "styled-components";
+import PetTalkLogo from "../../PetTalkLogo/PetTalkLogo";
+import SignUpForm from "./SignUpForm";
 
-const SignUpPage = () => {
+const SignUp = () => {
   return (
-    <>
-      <SignUp />
-    </>
+    <SignUpCtn>
+      <PetTalkLogo />
+      <SignUpForm />
+    </SignUpCtn>
   );
 };
 
-export default SignUpPage;
+export default SignUp;
+
+export const SignUpCtn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 201px;
+`;
