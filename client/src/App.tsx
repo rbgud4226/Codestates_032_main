@@ -4,11 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import LoginPage from "./page/LoginPage";
 import MemberAgreePage from "./page/signup/MemberAgreePage";
-import SignUpPage from "./page/SignUpPage";
-import SignUpDone from "./component/signup/SignUpDone";
+import SignUpPage from "./page/signup/SignUpPage";
+import SignUpDonePage from "./page/signup/SignUpDonePage";
 import TestPage from "./page/TestPage";
 import Mypage from "./page/Mypage";
-import Layout from "./Layout";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 
