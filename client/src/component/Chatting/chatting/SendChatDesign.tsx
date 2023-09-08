@@ -8,7 +8,9 @@ interface CCDProps {
 const ClientChatDesign: React.FC<CCDProps> = ({ input, createAt }) => {
   return (
     <ChatCtn>
-      <ChatDesign>{input}</ChatDesign>
+      <ChatDesign>
+        <div style={{ overflowWrap: "break-word" }}>{input}</div>
+      </ChatDesign>
       <TimeDesign>{createAt}</TimeDesign>
     </ChatCtn>
   );

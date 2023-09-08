@@ -8,7 +8,9 @@ interface RCVProps {
 const RecieveChatDesign: React.FC<RCVProps> = ({ input, createAt }) => {
   return (
     <ChatCtn>
-      <ChatDesign>{input}</ChatDesign>
+      <ChatDesign>
+        <div style={{ overflowWrap: "break-word" }}>{input}</div>
+      </ChatDesign>
       <TimeDesign>{createAt}</TimeDesign>
     </ChatCtn>
   );
