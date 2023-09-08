@@ -2,6 +2,7 @@ package com.pettalk.wcboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 public class WcBoardDto {
     @AllArgsConstructor
     @Getter
+    @Setter
     public static class Post { // 0829 위치는 어떤 정보를 줘야할까..
         private long wcboardId;
         @NotNull (message = "공백이 아니어야 합니다")
