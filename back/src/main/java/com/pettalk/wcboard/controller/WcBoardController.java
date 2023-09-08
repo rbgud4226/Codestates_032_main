@@ -32,13 +32,11 @@ public class WcBoardController {
 
 
     @PostMapping // 산책,돌봄 게시글 등록
-    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){ //, @LoginMemberId Long memberId
+    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
+                                  @LoginMemberId Long memberId){ //, @LoginMemberId Long memberId
 //        log.info(memberId + "MemberId");
-/**     long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId(); TODO : 멤버와 연결후 로그인한 아이디 가져오기 기능 추가
-        postDto.addQuestionId(wcBoardId);
-        postDto.addAuthenticatedMemberId(authenticatedMemberId); */
 
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto)); //memberId
+        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
@@ -46,13 +44,11 @@ public class WcBoardController {
 
     @PatchMapping("/{wcboard-id}")
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
-                                    @Positive @PathVariable("wcboard-id") Long wcboardId) {
+                                    @Positive @PathVariable("wcboard-id") Long wcboardId,
+                                    @LoginMemberId Long memberId) {
 
-        /**long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId(); TODO : 멤버와 연결후 로그인한 아이디 가져오기 기능 추가
-        patchDto.addAuthenticatedMemberId(authenticatedMemberId);
-         */
         patchDto.addwcBoardId(wcboardId);
-        WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto));
+        WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto), memberId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -82,9 +78,14 @@ public class WcBoardController {
         log.info("page : " + page +", " + "size : " + size);
         Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
-
-        return new ResponseEntity<> (
-                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+        if(!posts.isEmpty()) {
+            return new ResponseEntity<>(
+                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body("작성된 글이 없어요!");
+        }
     }
 
     /**
@@ -140,7 +141,7 @@ public class WcBoardController {
      }*/
 
 
-    @GetMapping("/myself")
+    @GetMapping("/tag")
     public ResponseEntity findAllWithTags(
             @RequestParam(name = "page") int page,
             @RequestParam(name = "size") int size,
@@ -161,9 +162,11 @@ public class WcBoardController {
     @DeleteMapping("/{wcboard-id}")
     public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
 
+        service.deletePost(wcboardId);
 
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("삭제 완료!");
     }
 
 
