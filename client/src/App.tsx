@@ -9,6 +9,8 @@ import SignUpDonePage from "./page/signup/SignUpDonePage";
 import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
+import MainPage from "./page/MainPage";
+
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
                 <Route path="/memberAgree" element={<MemberAgreePage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
+                <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
               </Routes>
             </Layout>
