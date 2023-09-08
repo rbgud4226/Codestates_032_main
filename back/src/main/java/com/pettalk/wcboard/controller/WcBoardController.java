@@ -29,14 +29,13 @@ public class WcBoardController {
         this.service = service;
     }
     @PostMapping // 산책,돌봄 게시글 등록
-    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
-                                  @LoginMemberId Long memberId){
-        log.info(memberId + "MemberId");
+    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){ //, @LoginMemberId Long memberId
+//        log.info(memberId + "MemberId");
 /**     long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId(); TODO : 멤버와 연결후 로그인한 아이디 가져오기 기능 추가
         postDto.addQuestionId(wcBoardId);
         postDto.addAuthenticatedMemberId(authenticatedMemberId); */
 
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId);
+        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto)); //memberId
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -78,6 +77,7 @@ public class WcBoardController {
     @GetMapping // 메인 페이지 전체 게시글 로드 @@
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size) {
+        log.info("page : " + page +", " + "size : " + size);
         Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
 
@@ -85,41 +85,59 @@ public class WcBoardController {
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
     }
 
-    @GetMapping("/walkcare")// 산책 돌봄 태그 선택 시 표출
-    public ResponseEntity findPostsWcTag(@Positive @RequestParam int page,
-                                         @Positive @RequestParam int size,
-                                         @RequestParam String wcTag) {
+    /**
+     * 태그를 활용한 검색의 주요 로직
+     *
+     * 1. 첫번째 태그를 적용한다.
+     * 2. 두번째 태그가 적용되면 첫번째 태그가 적용된 게시글은 남아있어야한다.
+     * 3. 세번째 태그가 적용되면 첫번째, 두번째 태그가 적용된 게시글은 남아있어야한다.
+     * 4. 태그를 해제 하면 해제된 순서대로 태그 필터가 빠져야한다.
+     *
+     * 0908
+     * 현재 로직 : wcTag, animalTag, areaTag 는 각각 개별로 동작하여
+     * 하나의 태그가 적용되면 나머지는 적용안되는 상태..
+     * 9월 8일 현재 일시 비활성화 처리 후
+     * JPA Specification을 Custom해서 적용해볼 예정
+     */
 
-        Page<WcBoard> pageWcBoardPosts = service.findPostByWcTag(page - 1, size, wcTag);
-        List<WcBoard> posts = pageWcBoardPosts.getContent();
+    /**
+     @GetMapping("/walkcare")// 산책 돌봄 태그 선택 시 표출
+     public ResponseEntity findPostsWcTag(@Positive @RequestParam int page,
+     @Positive @RequestParam int size,
+     @RequestParam String wcTag) {
 
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-    }
+     Page<WcBoard> pageWcBoardPosts = service.findPostByWcTag(page - 1, size, wcTag);
+     List<WcBoard> posts = pageWcBoardPosts.getContent();
 
-
-    @GetMapping("/animalkind") //동물 종류 선택시 필터
-    public ResponseEntity findPostsAnimalTag(@Positive @RequestParam int page,
-                                             @Positive @RequestParam int size,
-                                             @RequestParam String animalTag) {
-        Page<WcBoard> pageWcBoardPosts = service.findPostByAnimalTag(page - 1, size, animalTag);
-        List<WcBoard> posts = pageWcBoardPosts.getContent();
-
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-    }
+     return new ResponseEntity<>(
+     new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+     }
 
 
-    @GetMapping("/area") // 지역 선택시 필터
-    public ResponseEntity findPostsAreaTag(@Positive @RequestParam int page,
-                                           @Positive @RequestParam int size,
-                                           @RequestParam String areaTag) {
-        Page<WcBoard> pageWcBoardPosts = service.findPostByAreaTag(page - 1, size, areaTag);
-        List<WcBoard> posts = pageWcBoardPosts.getContent();
+     @GetMapping("/animalkind") //동물 종류 선택시 필터
+     public ResponseEntity findPostsAnimalTag(@Positive @RequestParam int page,
+     @Positive @RequestParam int size,
+     @RequestParam String animalTag) {
+     Page<WcBoard> pageWcBoardPosts = service.findPostByAnimalTag(page - 1, size, animalTag);
+     List<WcBoard> posts = pageWcBoardPosts.getContent();
 
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-    }
+     return new ResponseEntity<>(
+     new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+     }
+
+
+     @GetMapping("/area") // 지역 선택시 필터
+     public ResponseEntity findPostsAreaTag(@Positive @RequestParam int page,
+     @Positive @RequestParam int size,
+     @RequestParam String areaTag) {
+     Page<WcBoard> pageWcBoardPosts = service.findPostByAreaTag(page - 1, size, areaTag);
+     List<WcBoard> posts = pageWcBoardPosts.getContent();
+
+     return new ResponseEntity<>(
+     new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+     }*/
+
+
 
     @DeleteMapping("/{wcboard-id}")
     public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
