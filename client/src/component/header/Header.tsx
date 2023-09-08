@@ -1,16 +1,15 @@
 import React from "react";
 import { styled } from "styled-components";
 import HeaderLogo from "./HeaderLogo";
-import SignUpHeader from "./SignUpHeader";
-import LoginHeader from "./LoginHeader";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <HeaderContainer>
       <HeaderLogo />
       <HeaderBtnContainer>
-        <SignUpHeader />
-        <LoginHeader />
+        <CustomLink to={"/signup"}>Signup</CustomLink>
+        <CustomLink to={"/login"}>Login</CustomLink>
       </HeaderBtnContainer>
     </HeaderContainer>
   );
@@ -26,15 +25,17 @@ export const HeaderContainer = styled.header`
   width: 100%;
   top: 0;
   position: sticky;
-  min-width: 320px;
-  max-width: 500px;
-  /* width: 100%;  이거 설정하면 컨테이너 뚫고 나감*/
-  box-shadow: 0px 10px 34px #272c5614;
+  width: 100%;
+  box-shadow: 0px 10px 34px #272c56;
   background-color: white;
+  padding: 0 20px;
 `;
 
 export const HeaderBtnContainer = styled.div`
   display: flex;
-  align-items: end;
-  padding-right: 20px;
+  gap: 20px;
+`;
+
+const CustomLink = styled(Link)`
+  color: #279eff;
 `;

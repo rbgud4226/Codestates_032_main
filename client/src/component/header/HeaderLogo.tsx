@@ -13,9 +13,7 @@ const HeaderLogo = () => {
 
 export default HeaderLogo;
 
-export const LogoLink = styled.a`
-  margin-left: 20px;
-`;
+export const LogoLink = styled.a``;
 
 export const HeadLogo = styled.img`
   height: 28px;

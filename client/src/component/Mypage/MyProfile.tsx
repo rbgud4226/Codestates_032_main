@@ -100,7 +100,6 @@ const MyProfile = () => {
         <Separator />
         <UserPhone>
           휴대폰 번호
-          <br />
           <PhoneNumber>{formattedPhoneNumber}</PhoneNumber>
         </UserPhone>
         <Separator />
@@ -115,10 +114,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 100%; */
 `;
 
-const HeaderText = styled.p`
+const HeaderText = styled.h2`
   font-size: 20px;
   margin-bottom: 8px;
   color: #000000;
@@ -132,7 +130,7 @@ const ImgContainer = styled.div`
   height: 104px;
   padding: 8px;
   margin-bottom: 8px;
-  background-color: #279eff;
+  background-color: #2d9ffc;
   border-radius: 50%;
 `;
 
@@ -176,9 +174,9 @@ const ButtonContainer = styled.div`
 `;
 
 const SaveButton = styled.button`
-  background-color: #279eff;
+  background-color: #2d9ffc;
   color: white;
-  padding: 8px 16px; /* 버튼의 크기를 조정하세요 */
+  padding: 4px 16px; /* 버튼의 크기를 조정하세요 */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -189,7 +187,7 @@ const SaveButton = styled.button`
 const CancelButton = styled.button`
   background-color: #ccc;
   color: white;
-  padding: 8px 16px; /* 버튼의 크기를 조정하세요 */
+  padding: 4px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;

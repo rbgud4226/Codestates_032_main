@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Mypage from "./page/Mypage";
-import Layout from "./Layout";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
+import Layout from "./Layout";
 
 function App() {
   return (
@@ -15,10 +15,12 @@ function App() {
           <Container>
             <Header />
             <Layout>
+              {/* <Main> */}
               <Routes>
                 <Route path="/members" element={<Mypage />} />
               </Routes>
             </Layout>
+            {/* </Main> */}
             <Nav />
           </Container>
         </Body>
@@ -38,14 +40,20 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 const Body = styled.body`
-  width: 100vw;
-  margin: 0px;
+  width: 100%;
   display: flex;
   justify-content: center;
 `;
+
 const Container = styled.div`
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
+`;
+
+const Main = styled.main`
+  min-height: 100vh;
+  padding: 16px;
 `;

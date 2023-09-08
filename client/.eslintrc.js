@@ -7,16 +7,16 @@ module.exports = {
   ],
   plugins: ["prettier", "react", "@typescript-eslint"],
   rules: {
-    "prettier/prettier": [
-      "error",
-      {
-        doubleQuote: true,
-        tabWidth: 2,
-        printWidth: 80,
-        bracketSpacing: true,
-        arrowParens: "avoid",
-      },
-    ],
+    // "prettier/prettier": [
+    //   "error",
+    //   {
+    //     doubleQuote: true,
+    //     tabWidth: 2,
+    //     printWidth: 80,
+    //     bracketSpacing: true,
+    //     arrowParens: "avoid",
+    //   },
+    // ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "prefer-const": "off",

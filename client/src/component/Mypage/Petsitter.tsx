@@ -35,7 +35,7 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
   // };
 
   return (
-    <Container petSitter={petSitter}>
+    <Container>
       {petSitter ? (
         <PetSitterContainer petSitter={petSitter}>
           <NameWrapper>
@@ -81,7 +81,7 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
 
 export default Petsitter;
 
-const Container = styled.div<{ petSitter: boolean }>`
+const Container = styled.div`
   margin-top: 16px;
   text-align: center;
 `;

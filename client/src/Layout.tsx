@@ -26,7 +26,6 @@ const Container = styled.div`
   min-width: 320px;
   min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
-  /* background-color: pink; 식별하기 위해 색 넣음. 빼시면 됩니다! */
 `;
 
 const Wrapper = styled.div`
