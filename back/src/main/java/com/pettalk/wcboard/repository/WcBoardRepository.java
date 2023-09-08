@@ -3,6 +3,7 @@ package com.pettalk.wcboard.repository;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

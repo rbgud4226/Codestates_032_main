@@ -2,10 +2,12 @@ package com.pettalk.wcboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Getter
 public class WcBoardDto {
     @AllArgsConstructor
     @Getter
@@ -72,6 +74,7 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
+
     }
 
 

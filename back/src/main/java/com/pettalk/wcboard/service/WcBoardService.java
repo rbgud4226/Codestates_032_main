@@ -5,10 +5,13 @@ import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
+import com.pettalk.wcboard.specification.WcBoardSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -82,6 +85,22 @@ public class WcBoardService {
         return wcBoardRepository.findByAreaTagContaining(areaTag, pageRequest);
     }
      */
+
+    public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag) {
+        Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
+
+        if (wcTag != null)
+            spec = spec.and(WcBoardSpecification.equalWcTagWithTag(wcTag));
+
+        if (animalTag != null)
+            spec = spec.and(WcBoardSpecification.equalAnimalTagWithTag(animalTag));
+
+        if (areaTag != null)
+            spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
+
+        Pageable pageable = PageRequest.of(page, size);
+        return wcBoardRepository.findAll(spec, pageable);
+    }
 
     public void deletePost(Long wcboardId) {
         WcBoard findPost = findVerifyPost(wcboardId);
