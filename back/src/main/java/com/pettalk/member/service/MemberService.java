@@ -71,9 +71,10 @@ public class MemberService {
 
     public GetMemberDto getMember(Long memberId) {
         Member findMember = findVerifyMember(memberId);
+        boolean checkPetSitter = findMember.getPetSitter() != null;
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
-        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
+        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet, checkPetSitter);
     }
 
     public List<WcBoardDto.Response> getMembers(Long memberId) {

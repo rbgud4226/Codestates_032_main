@@ -41,11 +41,11 @@ public class PetSitterService {
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String email = (String) authentication.getPrincipal();
-//        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
 
-//        petSitter.setMember(findMember);
+        petSitter.setMember(findMember);
         petSitter.setPetSitterId(petSitter.getPetSitterId());
         petSitter.setName(petSitter.getName());
         petSitter.setIntroduce(petSitter.getIntroduce());
