@@ -1,8 +1,12 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Mypage from "./page/Mypage";
 import Layout from "./Layout";
+import LoginPage from "./page/LoginPage";
+import MemberAgreePage from "./page/signup/MemberAgreePage";
+import SignUpPage from "./page/signup/SignUpPage";
+import SignUpDonePage from "./page/signup/SignUpDonePage";
+import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import MainPage from "./page/MainPage";
@@ -18,7 +22,10 @@ function App() {
             <Header />
             <Layout>
               <Routes>
-
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/memberAgree" element={<MemberAgreePage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
               </Routes>
