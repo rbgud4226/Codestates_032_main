@@ -39,7 +39,6 @@ public class WcBoardController {
         postDto.addAuthenticatedMemberId(authenticatedMemberId); */
 
         WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto)); //memberId
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
@@ -139,24 +138,21 @@ public class WcBoardController {
      return new ResponseEntity<>(
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
      }*/
+
+
     @GetMapping("/myself")
-    public List<WcBoard> findAll(@RequestParam(name = "page") int page,
-                                 @RequestParam(name = "size") int size,
-                                 @RequestParam(name = "wcTag", required = false) String wcTag,
-                                 @RequestParam(name = "animalTag", required = false) String animalTag,
-                                 @RequestParam(name = "areaTag", required = false) String areaTag){
-        Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
+    public ResponseEntity findAllWithTags(
+            @RequestParam(name = "page") int page,
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "wcTag", required = false) String wcTag,
+            @RequestParam(name = "animalTag", required = false) String animalTag,
+            @RequestParam(name = "areaTag", required = false) String areaTag) {
 
-        if (wcTag != null)
-            spec = spec.and(WcBoardSpecification.equalWcTagWithTag(wcTag));
+        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag);
+        List<WcBoard> posts = pageWcBoardPosts.getContent();
 
-        if (animalTag != null)
-            spec = spec.and(WcBoardSpecification.equalAnimalTagWithTag(animalTag));
-
-        if (areaTag != null)
-            spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
-
-        return repository.findAll(spec);
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts),HttpStatus.OK);
     }
 
 
