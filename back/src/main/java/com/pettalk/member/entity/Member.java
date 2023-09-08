@@ -18,6 +18,9 @@ public class Member implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @Column
+    private String kakaoId;
+
     @Size(min = 2, max = 10)
     @Column(length = 10)
     private String nickName;

@@ -2,11 +2,15 @@ package com.pettalk.wcboard.service;
 
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
+import com.pettalk.member.entity.Member;
+import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +22,15 @@ import java.util.Optional;
 @Service
 public class WcBoardService {
     private final WcBoardRepository wcBoardRepository;
+    private final MemberRepository memberRepository;
 
-    public WcBoardService(WcBoardRepository wcBoardRepository){ this.wcBoardRepository = wcBoardRepository; }
+    public WcBoardService(WcBoardRepository wcBoardRepository, MemberRepository memberRepository){ this.wcBoardRepository = wcBoardRepository;
+    this.memberRepository = memberRepository;}
 
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
     public WcBoard createWcBoardPost (WcBoard wcboard){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+
         // TODO : 멤버 ID 가져오기 로그인한 사용자만 게시글 작성 가능
         // memberService.findMember(WcBoard.getMember().getMemberId());
         wcboard.setCreatedAt(LocalDateTime.now());
@@ -34,7 +41,6 @@ public class WcBoardService {
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost (WcBoard wcboard) {
         WcBoard findPost = findVerifyPost(wcboard.getWcboardId()); // TODO : 멤버 아이디 불러와서 검증 로직 구현 필요
-
         if (wcboard.getPostStatus() == WcBoard.PostStatus.DEFAULT){
             Optional.ofNullable(wcboard.getTitle())
                     .ifPresent(title -> findPost.setTitle(title));

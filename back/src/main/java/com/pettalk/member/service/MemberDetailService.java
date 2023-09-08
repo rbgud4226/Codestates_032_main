@@ -36,7 +36,6 @@ public class MemberDetailService implements UserDetailsService {
             setPassword(member.getPassword());
             setNickName(member.getNickName());
             setProfileImage(member.getProfileImage());
-
         }
 
         @Override
@@ -69,6 +68,4 @@ public class MemberDetailService implements UserDetailsService {
             return true;
         }
     }
-
-
 }
