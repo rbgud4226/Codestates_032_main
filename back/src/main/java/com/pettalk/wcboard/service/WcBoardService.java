@@ -26,10 +26,10 @@ public class WcBoardService {
 //    }
 
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
-    public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
+    public WcBoard createWcBoardPost (WcBoard wcboard){ //, Long memberId
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
         //멤버 아이디 가져오기
-        wcboard.setMember(memberService.findVerifyMember(memberId));
+//        wcboard.setMember(memberService.findVerifyMember(memberId));
         // TODO : 멤버 ID 가져오기 로그인한 사용자만 게시글 작성 가능
         // 9월 7일 닉네임 가져와야하나?
         // memberService.findMember(WcBoard.getMember().getMemberId());
@@ -66,6 +66,7 @@ public class WcBoardService {
         return wcBoardRepository.findAll(pageRequest);
     }
 
+    /** 0908 태그 다중적용이 안되어 일시 비활성화 처리
     public Page<WcBoard> findPostByWcTag(int page, int size, String wcTag) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findByWcTagContaining(wcTag, pageRequest);
@@ -80,6 +81,7 @@ public class WcBoardService {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findByAreaTagContaining(areaTag, pageRequest);
     }
+     */
 
     public void deletePost(Long wcboardId) {
         WcBoard findPost = findVerifyPost(wcboardId);

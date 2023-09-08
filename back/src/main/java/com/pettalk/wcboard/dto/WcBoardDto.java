@@ -17,7 +17,6 @@ public class WcBoardDto {
         @NotNull (message = "공백이 아니어야 합니다")
         private String content;
 
-        @NotBlank
         private String images;
 
         @NotNull (message = "1개 이상 선택해주세요")
