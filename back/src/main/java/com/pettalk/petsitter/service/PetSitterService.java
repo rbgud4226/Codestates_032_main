@@ -11,6 +11,10 @@ import com.pettalk.petsitter.dto.PetSitterDto;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.repository.PetSitterRepository;
+import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.WcBoard;
+import com.pettalk.wcboard.mapper.WcBoardMapper;
+import com.pettalk.wcboard.repository.WcBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,15 +36,18 @@ public class PetSitterService {
     private final PetSitterRepository petSitterRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final WcBoardRepository wcBoardRepository;
+    private final WcBoardMapper wcBoardMapper;
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = (String) authentication.getPrincipal();
+//        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
 
-        petSitter.setMember(findMember);
+//        petSitter.setMember(findMember);
         petSitter.setPetSitterId(petSitter.getPetSitterId());
+        petSitter.setName(petSitter.getName());
         petSitter.setIntroduce(petSitter.getIntroduce());
         petSitter.setNowJob(petSitter.getNowJob());
         petSitter.setSmoking(petSitter.isSmoking());
@@ -47,22 +55,27 @@ public class PetSitterService {
         petSitter.setInfo(petSitter.getInfo());
         petSitter.setCreatedAt(LocalDateTime.now());
 
-        PetSitter savedPetSitter = petSitterRepository.save(petSitter);
-
-        return savedPetSitter;
+        return petSitterRepository.save(petSitter);
     }
 
-//    public PetSitter updatePetSitter(PetSitter petSitter) {
-//
-//        PetSitter findPetSitter = findVerifiedPetSitter(petSitter.getPetSitterId());
+    public PetSitter updatePetSitter(PetSitter petSitter) {
+
+        PetSitter findPetSitter = findVerifiedPetSitter(petSitter.getPetSitterId());
 //        Member findMember = memberRepository.findById(petSitter.getMember().getMemberId())
 //                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 //
 //        petSitter.setMember(findMember);
-//        petSitter.setPetSitterId(findPetSitter.getPetSitterId());
-//
-//        return petSitter;
-//    }
+
+            petSitter.setPetSitterId(findPetSitter.getPetSitterId());
+            petSitter.setName(findPetSitter.getName());
+            petSitter.setIntroduce(petSitter.getIntroduce());
+            petSitter.setNowJob(petSitter.getNowJob());
+            petSitter.setSmoking(petSitter.isSmoking());
+            petSitter.setExAnimal(petSitter.getExAnimal());
+            petSitter.setInfo(petSitter.getInfo());
+
+        return petSitterRepository.save(petSitter);
+    }
 
     @Transactional(readOnly = true)
     public PetSitter findVerifiedPetSitter(long petSitterId) {
@@ -89,11 +102,6 @@ public class PetSitterService {
         return petSitter;
     }
 
-    private Member verifyExistMemberId(long memberId) {
-        Member existingMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-
-        return existingMember;
-    }
+//    private WcBoard
 
 }

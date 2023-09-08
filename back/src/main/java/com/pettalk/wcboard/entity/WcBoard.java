@@ -1,6 +1,7 @@
 package com.pettalk.wcboard.entity;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.petsitter.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,10 @@ public class WcBoard {
     @Enumerated(value = EnumType.STRING)
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
+
+//    @JoinColumn(name = "petSitter_id")
+//    @ManyToOne
+//    private PetSitter petSitter;
 
 
     @ManyToOne
