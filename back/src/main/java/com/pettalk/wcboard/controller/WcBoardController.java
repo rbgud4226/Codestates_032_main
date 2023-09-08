@@ -5,9 +5,13 @@ import com.pettalk.response.MultiResponseDto;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
+import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.service.WcBoardService;
+import com.pettalk.wcboard.specification.WcBoardSpecification;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +23,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/wcboard")
+@RequiredArgsConstructor
 @Slf4j
 public class WcBoardController {
     private final WcBoardMapper mapper;
     private final WcBoardService service;
+    private final WcBoardRepository repository;
 
-    public WcBoardController(WcBoardMapper mapper, WcBoardService service){
-        this.mapper = mapper;
-        this.service = service;
-    }
+
     @PostMapping // 산책,돌봄 게시글 등록
     public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){ //, @LoginMemberId Long memberId
 //        log.info(memberId + "MemberId");
@@ -136,6 +139,26 @@ public class WcBoardController {
      return new ResponseEntity<>(
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
      }*/
+    @GetMapping("/myself")
+    public List<WcBoard> findAll(@RequestParam(name = "page") int page,
+                                 @RequestParam(name = "size") int size,
+                                 @RequestParam(name = "wcTag", required = false) String wcTag,
+                                 @RequestParam(name = "animalTag", required = false) String animalTag,
+                                 @RequestParam(name = "areaTag", required = false) String areaTag){
+        Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
+
+        if (wcTag != null)
+            spec = spec.and(WcBoardSpecification.equalWcTagWithTag(wcTag));
+
+        if (animalTag != null)
+            spec = spec.and(WcBoardSpecification.equalAnimalTagWithTag(animalTag));
+
+        if (areaTag != null)
+            spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
+
+        return repository.findAll(spec);
+    }
+
 
 
 
