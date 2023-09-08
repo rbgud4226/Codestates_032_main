@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Mypage from "./page/Mypage";
 import Layout from "./Layout";
 import Nav from "./component/nav/Nav";
+import PetSitterPage from "./page/PetsitterRegisterPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/members" element={<Mypage />} />
+                <Route path="/petsitter" element={<PetSitterPage />} />
               </Routes>
             </Layout>
             <Nav />
