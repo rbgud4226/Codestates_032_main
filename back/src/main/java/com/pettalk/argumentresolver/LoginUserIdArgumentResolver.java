@@ -27,15 +27,28 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
         return true;
     }
 
+//    @Override
+//    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 사용자 인증 정보
+//        log.info(principal.toString() + "principal");
+//        // 익명이면 -1L 리턴
+//        if(principal == "anonymousUser"){
+//            return -1L;
+//        }
+//        Member member = memberService.findMemberByEmail(principal.toString());
+//        return member.getMemberId();
+//    }
+
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 사용자 인증 정보
-        log.info(principal.toString() + "principal");
+        log.info(principal.toString() + " principal");
         // 익명이면 -1L 리턴
-        if(principal == "anonymousUser"){
+        if ("anonymousUser".equals(principal)) {
             return -1L;
         }
-        Member member = memberService.findMemberByEmail(principal.toString());
+
+        Member member = memberService.findMemberByPrincipal(principal.toString());
         return member.getMemberId();
     }
 }
