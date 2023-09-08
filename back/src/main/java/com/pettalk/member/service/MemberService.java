@@ -31,8 +31,7 @@ public class MemberService {
     private final WcBoardMapper wcBoardMapper;
 
 
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository,WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository, WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.membermapper = membermapper;
@@ -41,12 +40,15 @@ public class MemberService {
         this.wcBoardMapper = wcBoardMapper;
 
     }
+
     public Member createMember(Member member) {
-        if(verifyExistsEmail(member.getEmail())){
+        if (verifyExistsEmail(member.getEmail())) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
-        };
+        }
+        ;
         String encrytedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encrytedPassword);;
+        member.setPassword(encrytedPassword);
+        ;
         Member savedMember = memberRepository.save(member);
         return savedMember;
     }
@@ -67,14 +69,14 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public GetMemberDto getMember(Long memberId){
+    public GetMemberDto getMember(Long memberId) {
         Member findMember = findVerifyMember(memberId);
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
         return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
     }
 
-    public List<WcBoardDto.Response> getMembers(Long memberId){
+    public List<WcBoardDto.Response> getMembers(Long memberId) {
         Member findMember = findVerifyMember(memberId);
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
@@ -106,7 +108,12 @@ public class MemberService {
         return findMember;
     }
 
-    public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).get();
+    public Member findMemberByPrincipal(String principal) {
+        Optional<Member> optionalMember = memberRepository.findByEmailOrKakaoId(principal, principal);
+        if (!optionalMember.isPresent()) {
+            return null;
+        }
+        Member member = optionalMember.get();
+        return member;
     }
 }

@@ -7,14 +7,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 @Service
@@ -46,19 +43,20 @@ public class KakaoLoginService {
         return (String) response.get("access_token");
     }
 
-    public String login(String kakaoAccessToken) {
 
+    public String login(String kakaoAccessToken) {
         Map<String, Object> kakaoProfile =  callKakaoApi(kakaoAccessToken);
         String kakaoId = String.valueOf(kakaoProfile.get("id"));
-
         long now = System.currentTimeMillis();
-        long expiration = now + 3600000; // 1시간 후 만료
+        long expiration = now + 3600000;
+
+        String base64EncodedSecretKey = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
 
         String jwtToken = Jwts.builder()
                 .setSubject(kakaoId)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(expiration))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, base64EncodedSecretKey)
                 .compact();
 
         return jwtToken;
