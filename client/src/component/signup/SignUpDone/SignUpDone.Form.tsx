@@ -1,13 +1,10 @@
 import React from "react";
 import { styled } from "styled-components";
 import LoginBtn from "../../Button/LoginBtn";
-import { useNavigate } from "react-router-dom";
 
 const SignUpDoneForm = () => {
-  const navigate = useNavigate();
-
   const loginBtnHdr = () => {
-    navigate("/login");
+    window.location.replace("/login");
   };
   return (
     <SDSection>

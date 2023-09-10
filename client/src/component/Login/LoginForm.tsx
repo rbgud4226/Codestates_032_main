@@ -47,10 +47,17 @@ const LoginForm = () => {
     try {
       const res: any = await axios.post(`${api}/members/login`, data);
       console.log(res.data);
-      localStorage.setItem("nickName", res?.nickName);
-      localStorage.setItem("profileImage", res?.profileImage);
-      localStorage.setItem("refreshToken", res?.refreshToken);
-      localStorage.setItem("accessToken", res?.accessToken);
+      const userData = {
+        nickName: res.data.nickName,
+        profileImage: res.data.profileImage,
+        accessToken: res.headers.authorization,
+        refreshToken: res.headers.refresh,
+      };
+      localStorage.setItem("nickName", userData.nickName);
+      localStorage.setItem("profileImage", userData.profileImage);
+      localStorage.setItem("refreshToken", userData.refreshToken);
+      localStorage.setItem("accessToken", userData.accessToken);
+      window.location.href = "/";
     } catch (e: AxiosError | unknown) {
       if (axios.isAxiosError(e)) {
         setErrorMsg("로그인 정보를 확인하세요");
@@ -73,7 +80,7 @@ const LoginForm = () => {
           />
           <Span>비밀번호를 입력하세요.</Span>
         </InputWrapper>
-        <div style={{ marginTop: "12px" }}>
+        <div style={{ marginTop: "12px", width: "100%" }}>
           <LargeBtn name={"로그인"} />
         </div>
         <ErrMsg>{errorMsg}</ErrMsg>

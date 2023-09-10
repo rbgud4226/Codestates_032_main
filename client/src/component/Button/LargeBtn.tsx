@@ -10,7 +10,7 @@ const LargeBtn = ({ name }: T) => {
 export default LargeBtn;
 
 export const Btn = styled.button`
-  width: 240px;
+  width: 100%;
   height: 30px;
   background-color: #279eff;
   align-items: center;
