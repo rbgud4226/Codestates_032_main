@@ -1,60 +1,84 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import EmailInput from "../InputBox/EmailInput";
-import PasswordInput from "../InputBox/PasswordInput";
-import LoginBtn from "../Button/LoginBtn";
-import TokenProvider from "../../util/tokenProvider";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import axios, { AxiosError } from "axios";
+import LargeBtn from "../Button/LargeBtn";
+
+const api = process.env.REACT_APP_DB_HOST;
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+// type T = {
+//   nickName: string;
+//   profileImage: string;
+//   accessToken: string;
+//   refreshToken: string;
+// };
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email("email형식으로 입력하세요")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .matches(
+      /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/,
+      "영문자 숫자조합 8글자 이상입니다.",
+    )
+    .required("Pw is required"),
+});
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  //로그인버튼 클릭시 수행 , 현재 문제가 있음 고칠 필요가 있음. 리스트페이지 등록시 navigate에 엔드포인트 입력.
-  const loginHdr = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    TokenProvider({ email, password }, setErrorMsg);
-    if (!errorMsg) {
-      setErrorMsg("");
-    } else {
-      navigate("/");
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
-    // try {
-    //   const res = await axios.post("http://localhost:8080/members/login", {
-    //     email: email,
-    //     password: password,
-    //   });
-    //   const token = res;
-    //   console.log(token);
-    // } catch (error) {
-    //   if (axios.isAxiosError(error)) {
-    //     const axiosError = error as AxiosError;
-    //     if (axiosError.response) {
-    //       console.log("로그인 정보 확인바람", axiosError.response.data);
-    //     } else {
-    //       console.error("요청 실패함", axiosError.message);
-    //     }
-    //   } else {
-    //     console.error("알수 없는 에러가 발생");
-    //   }
-    // }
+  const loginHdr = async (data: FormData) => {
+    try {
+      const res: any = await axios.post(`${api}/members/login`, data);
+      console.log(res.data);
+      localStorage.setItem("nickName", res?.nickName);
+      localStorage.setItem("profileImage", res?.profileImage);
+      localStorage.setItem("refreshToken", res?.refreshToken);
+      localStorage.setItem("accessToken", res?.accessToken);
+    } catch (e: AxiosError | unknown) {
+      if (axios.isAxiosError(e)) {
+        setErrorMsg("로그인 정보를 확인하세요");
+      }
+    }
   };
+
   return (
     <LoginContainer>
-      <EmailInput setEmail={setEmail} />
-      <PasswordInput setPassword={setPassword} />
-      <LoginBtn onClick={e => loginHdr(e)} />
-      {errorMsg ? (
-        <span style={{ fontSize: "12px", marginTop: "4px", color: "red" }}>
-          {errorMsg}
-        </span>
-      ) : (
-        ""
-      )}
-      <SignUpLink to={"/memberAgree"}>회원가입</SignUpLink>
+      <LForm onSubmit={handleSubmit(loginHdr)}>
+        <InputWrapper>
+          <TextInput placeholder="email" {...register("email")} />
+          <Span>email을 입력하세요.</Span>
+        </InputWrapper>
+        <InputWrapper>
+          <TextInput
+            placeholder="password"
+            type="password"
+            {...register("password")}
+          />
+          <Span>비밀번호를 입력하세요.</Span>
+        </InputWrapper>
+        <div style={{ marginTop: "12px" }}>
+          <LargeBtn name={"로그인"} />
+        </div>
+        <ErrMsg>{errorMsg}</ErrMsg>
+        <SignUpLink to={"/memberAgree"}>회원가입</SignUpLink>
+      </LForm>
     </LoginContainer>
   );
 };
@@ -67,6 +91,44 @@ export const LoginContainer = styled.section`
   align-items: center;
   margin-top: 60px;
   width: 240px;
+`;
+
+export const LForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  width: 240px;
+`;
+export const InputWrapper = styled.div`
+  margin-bottom: 8px;
+`;
+
+export const TextInput = styled.input`
+  height: 31px;
+  width: 100%;
+  border: 1px inset #595959;
+  border-radius: 4px;
+  padding-left: 10px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const Span = styled.span`
+  justify-content: flex-start;
+  margin-top: 4px;
+  color: #279eff;
+  font-size: 10px;
+  margin-bottom: 6px;
+`;
+
+export const ErrMsg = styled.div`
+  justify-content: flex-start;
+  margin-top: 4px;
+  color: #ff2727;
+  font-size: 10px;
+  margin-bottom: 6px;
 `;
 
 export const SignUpLink = styled(Link)`

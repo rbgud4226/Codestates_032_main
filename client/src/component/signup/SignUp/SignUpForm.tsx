@@ -12,6 +12,7 @@ import { iconImg } from "../../../Data/IconImg";
 import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
+  const api = process.env.REACT_APP_DB_HOST;
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); //email인풋에 입력
   const [isValidEmail, setValidEmail] = useState(false); //email형식에 유효한지 확인
@@ -25,8 +26,6 @@ const SignUpForm = () => {
   const [certifyNum, setCertifyNum] = useState(""); //인증번호 입력
   const [isCertify, setCertify] = useState(false); //전송버튼 누른후 인증성공시 인증을true로
   const [image, setImage] = useState(""); //image세팅
-
-  //http://localhost:8080
 
   //랜덤으로 1~18번 아이콘중 하나 뽑음
   const imageHdr = () => {
@@ -59,7 +58,7 @@ const SignUpForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        ` https://7fdc-218-155-160-190.ngrok-free.app/registration?authCode=${certifyNum}&phone=${phoneNum}`,
+        `${api}/registration?authCode=${certifyNum}&phone=${phoneNum}`,
       );
       console.log(res.data);
       if (res.data) {
@@ -84,10 +83,7 @@ const SignUpForm = () => {
 
       console.log(data);
       //회원가입 api 주소 확인하고 변경해야함.  react Query 사용시 바꿔야할 가능성 높음.
-      const res = await axios.post(
-        "https://7fdc-218-155-160-190.ngrok-free.app/members",
-        data,
-      );
+      const res = await axios.post(`${api}/members`, data);
       const successMsg = res.data;
       console.log(successMsg);
       navigate("/signupDone");
