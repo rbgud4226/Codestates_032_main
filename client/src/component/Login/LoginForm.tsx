@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
-import LargeBtn from "../Button/LargeBtn";
+import LargeBtn from "../Button/LargeCheckBtn";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -70,7 +70,11 @@ const LoginForm = () => {
       <LForm onSubmit={handleSubmit(loginHdr)}>
         <InputWrapper>
           <TextInput placeholder="email" {...register("email")} />
-          <Span>email을 입력하세요.</Span>
+          {!errors.email ? (
+            <Span>email을 입력하세요</Span>
+          ) : (
+            <ErrMsg>{errors?.email?.message}</ErrMsg>
+          )}
         </InputWrapper>
         <InputWrapper>
           <TextInput
@@ -78,7 +82,11 @@ const LoginForm = () => {
             type="password"
             {...register("password")}
           />
-          <Span>비밀번호를 입력하세요.</Span>
+          {!errors.password ? (
+            <Span>비밀번호를 입력하세요.</Span>
+          ) : (
+            <ErrMsg>{errors?.password?.message}</ErrMsg>
+          )}
         </InputWrapper>
         <div style={{ marginTop: "12px", width: "100%" }}>
           <LargeBtn name={"로그인"} />
@@ -96,7 +104,7 @@ export const LoginContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 20px;
   width: 240px;
 `;
 
@@ -104,10 +112,10 @@ export const LForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
   width: 240px;
 `;
 export const InputWrapper = styled.div`
+  width: 100%;
   margin-bottom: 8px;
 `;
 
@@ -124,7 +132,7 @@ export const TextInput = styled.input`
 
 export const Span = styled.span`
   justify-content: flex-start;
-  margin-top: 4px;
+  margin-top: 5px;
   color: #279eff;
   font-size: 10px;
   margin-bottom: 6px;

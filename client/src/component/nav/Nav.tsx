@@ -5,6 +5,10 @@ import bookCheckIcon from "../../asset/NavAsset/book-check-icon.png";
 import searchIcon from "../../asset/NavAsset/search-icon.png";
 import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
+import global from "../../Data/global.json";
+
+const { Primary, White, Gray } = global;
+
 const BtnArr = [
   {
     text: "예약하기",
@@ -64,7 +68,7 @@ export const BookContainer = styled(BaseStyledComponent)`
   flex-direction: column;
   align-items: center;
   width: 25%;
-  background-color: white;
+  background-color: ${global.White.value};
   &:active {
     background-color: #d9d9d9;
 
@@ -83,7 +87,7 @@ export const BookIcon = styled.img`
 `;
 
 export const BookLb = styled.label`
-  color: #279eff;
+  color: ${global.Primary.value};
   margin-top: 7px;
   font-size: 12px;
   transition: font-size 0.2s;

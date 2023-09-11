@@ -113,7 +113,7 @@ export const po = 12;
 //               <ErrorMsg>{errors?.nickname?.message}</ErrorMsg>
 //             )}
 //           </>
-//         )}
+//         )}x
 //         {errorMsg.includes("닉네임") && <ErrorMsg>{errorMsg}</ErrorMsg>}
 //         <BtnWrap>
 //           <Btn>{BtnText}</Btn>
