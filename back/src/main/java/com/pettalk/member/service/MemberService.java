@@ -9,13 +9,17 @@ import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -69,21 +73,29 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public GetMemberDto getMember(Long memberId) {
+    public GetMemberDto getMember(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
         boolean checkPetSitter = findMember.getPetSitter() != null;
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberId(findMember.getMemberId(), pageable);
+
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
         return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet, checkPetSitter);
     }
 
-    public List<WcBoardDto.Response> getMembers(Long memberId) {
+    public List<WcBoardDto.Response> getMembers(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberId(findMember.getMemberId(), pageable);
+
+
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
         return wcBoardDtoGet;
     }
-
 
     public void deleteMember(Long memberId) {
         Member findMember = findVerifyMember(memberId);

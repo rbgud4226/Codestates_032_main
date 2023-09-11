@@ -31,6 +31,12 @@ public class WcBoardService {
     public WcBoard createWcBoardPost (WcBoard wcboard){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
 
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        wcboard.setMember(findMember);
+
         // TODO : 멤버 ID 가져오기 로그인한 사용자만 게시글 작성 가능
         // memberService.findMember(WcBoard.getMember().getMemberId());
         wcboard.setCreatedAt(LocalDateTime.now());
