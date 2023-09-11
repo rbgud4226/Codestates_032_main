@@ -43,10 +43,7 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/members/**").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/members/**").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/members/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/members/**").permitAll()
+//                        .antMatchers(HttpMethod.POST, "/members/**").permitAll()
                         .anyRequest().permitAll());
         return http.build();
     }
@@ -59,17 +56,13 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*")); //직접입력
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000","https://ca34-221-141-15-253.ngrok-free.app","chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam")); //직접입력
-        configuration.setAllowedMethods(Arrays.asList("*")); // 직접입력
-        configuration.setAllowedHeaders(Arrays.asList("*")); // 직접입력
-        configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh")); //직접입력
-//        configuration.setAllowCredentials(false); // true일 경우 * 가 작동안함
-        configuration.setAllowCredentials(true); // true일 경우 * 가 작동안함
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080", "https://b428-218-155-160-190.ngrok-free.app"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);//직접입력
-//        source.registerCorsConfiguration("/ws-stomp/**", configuration); // 웹소켓 경로에 대한 CORS 설정
-
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

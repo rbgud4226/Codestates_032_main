@@ -1,12 +1,10 @@
 package com.pettalk.member.dto;
 
 import com.pettalk.wcboard.dto.WcBoardDto;
-import com.pettalk.wcboard.entity.WcBoard;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -27,11 +25,14 @@ public class GetMemberDto {
 
     private List<WcBoardDto.Response> wcBoardDtoGet;
 
-    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet) {
+    private boolean checkPetSitter;
+
+    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet , boolean checkPetSitter) {
         this.nickName = nickName;
         this.email = email;
         this.phone = phone;
         this.profileImage = profileImage;
         this.wcBoardDtoGet = wcBoardDtoGet;
+        this.checkPetSitter = checkPetSitter;
     }
 }

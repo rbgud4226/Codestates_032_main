@@ -26,4 +26,6 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpe
 //    Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
 //    Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
     List<WcBoard> findByMember_MemberId(Long memberId); //M
+
+    Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
 }
