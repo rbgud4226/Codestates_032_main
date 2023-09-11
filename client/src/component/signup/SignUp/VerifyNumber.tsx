@@ -3,7 +3,7 @@ import styled from "styled-components";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import PhoneBtn from "../../Button/PhoneBtn";
 
 const api = process.env.REACT_APP_DB_HOST;
@@ -21,11 +21,7 @@ const schema = yup.object().shape({
 //전화번호 전송 함수.
 
 const VerifyNumber = ({ phoneNum }: T) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
   //인증번호 전송 함수
   const certifyHdr = async (data: DataForm) => {

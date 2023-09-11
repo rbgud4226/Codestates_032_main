@@ -1,14 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import PhoneBtn from "../../Button/PhoneBtn";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as yup from "yup";
 import LargeBtn from "../../Button/LargeCheckBtn";
 import axios, { AxiosError } from "axios";
 import { iconImg } from "../../../Data/IconImg";
-import MobileVerify from "./MobileVerify";
-import e from "express";
 
 interface T {
   phoneNum: string;
@@ -130,7 +127,15 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <div style={{ marginTop: "12px", width: "100%" }}>
         <LargeBtn name={"회원가입"} />
-        {!errors.phone ? "" : <ErrMsg>{errors.phone.message}</ErrMsg>}
+        {!errors.phone ? (
+          err ? (
+            <ErrMsg>{err}</ErrMsg>
+          ) : (
+            ""
+          )
+        ) : (
+          <ErrMsg>{errors.phone.message}</ErrMsg>
+        )}
       </div>
     </SUForm>
   );

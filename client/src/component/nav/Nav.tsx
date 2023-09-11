@@ -7,7 +7,7 @@ import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
 import global from "../../Data/global.json";
 
-const { Primary, White, Gray } = global;
+const { Spacing, Primary, White, Gray, fontSize } = global;
 
 const BtnArr = [
   {
@@ -55,7 +55,7 @@ export const NavContainer = styled.nav`
   position: sticky;
   width: 100%;
   box-shadow: 0px 10px 34px #272c5614;
-  background-color: white;
+  background-color: ${global.White.value};
 `;
 
 const BaseStyledComponent = styled(Link)`
@@ -73,23 +73,23 @@ export const BookContainer = styled(BaseStyledComponent)`
     background-color: #d9d9d9;
 
     img {
-      width: 20px;
+      width: ${global.Spacing[20].value}px;
     }
     label {
-      font-size: 10px;
+      font-size: ${global.fontSize[10]}px;
     }
   }
 `;
 export const BookIcon = styled.img`
-  margin-top: 12px;
+  margin-top: ${global.Spacing[12].value}px;
   width: 24px;
   transition: width 0.2s;
 `;
 
 export const BookLb = styled.label`
   color: ${global.Primary.value};
-  margin-top: 7px;
-  font-size: 12px;
+  margin-top: ${global.Spacing[8].value}px;
+  font-size: ${global.fontSize[12].value}px;
   transition: font-size 0.2s;
 `;
 export const MyPageContainer = styled(BaseStyledComponent)`
@@ -97,8 +97,8 @@ export const MyPageContainer = styled(BaseStyledComponent)`
   flex-direction: column;
   align-items: center;
   width: 25%;
-  background-color: white;
+  background-color: ${global.White.value};
   &:active {
-    background-color: #d9d9d9;
+    background-color: ${global.Gray[7]};
   }
 `;
