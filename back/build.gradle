@@ -47,7 +47,7 @@ dependencies {
 
 	implementation 'net.nurigo:sdk:4.2.7'
 
-	implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+	implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
 
 	//websocket

@@ -15,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +31,7 @@ public class MemberService {
     private final WcBoardMapper wcBoardMapper;
 
 
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository,WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository, WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.membermapper = membermapper;
@@ -38,12 +40,15 @@ public class MemberService {
         this.wcBoardMapper = wcBoardMapper;
 
     }
+
     public Member createMember(Member member) {
-        if(verifyExistsEmail(member.getEmail())){
+        if (verifyExistsEmail(member.getEmail())) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
-        };
+        }
+        ;
         String encrytedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encrytedPassword);;
+        member.setPassword(encrytedPassword);
+        ;
         Member savedMember = memberRepository.save(member);
         return savedMember;
     }
@@ -53,12 +58,9 @@ public class MemberService {
         return member.isPresent();
     }
 
+    public Member updateMember(Member member, Long memberId) {
 
-    public Member updateMember(Member member) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        Member findMember = findVerifyMember(memberId);
         if (member.getNickName().trim().length() <= 3) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
@@ -67,29 +69,23 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public GetMemberDto getMember(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
-        GetMemberDto memberDtoGet = membermapper.memberToGetMemberDto(findMember);
-        return memberDtoGet;
-    }
-    // 진짜
-
-    public List<WcBoardDto.Response> getMembers(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->  new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+    public GetMemberDto getMember(Long memberId) {
+        Member findMember = findVerifyMember(memberId);
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
-        return wcBoardDtoGet;
+        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
+        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
+    }
 
+    public List<WcBoardDto.Response> getMembers(Long memberId) {
+        Member findMember = findVerifyMember(memberId);
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
+        return wcBoardDtoGet;
     }
 
 
-    public void deleteMember() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+    public void deleteMember(Long memberId) {
+        Member findMember = findVerifyMember(memberId);
         Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByMember(findMember);
         refreshTokenOptional.ifPresent(refreshToken -> {
             refreshTokenRepository.delete(refreshToken);
@@ -97,14 +93,32 @@ public class MemberService {
         memberRepository.delete(findMember);
     }
 
-    public void logoutAndRemoveRefreshToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+    public void logoutAndRemoveRefreshToken(Long memberId) {
+        Member findMember = findVerifyMember(memberId);
         Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByMember(findMember);
         refreshTokenOptional.ifPresent(refreshToken -> {
             refreshTokenRepository.delete(refreshToken);
         });
         SecurityContextHolder.clearContext(); // 기타 로그아웃 관련 처리를 수행합니다. 예를 들어, SecurityContext를 클리어하는 등
+    }
+
+    public Member findVerifyMember(Long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember = optionalMember.get();
+        return findMember;
+    }
+
+    public Member findMemberByPrincipal(String principal) {
+        Optional<Member> optionalMember = memberRepository.findByEmailOrKakaoId(principal, principal);
+        if (!optionalMember.isPresent()) {
+            return null;
+        }
+        Member member = optionalMember.get();
+        return member;
+
+//        public Member findMemberByEmail(String email) {
+//            return memberRepository.findByEmail(email).get();
+//        }
+//    }
     }
 }
