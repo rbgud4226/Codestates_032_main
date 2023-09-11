@@ -1,6 +1,9 @@
 package com.pettalk.wcboard.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
+import com.pettalk.member.entity.Member;
+import com.pettalk.member.mapper.MemberMapper;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.response.MultiResponseDto;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,15 +32,30 @@ import java.util.List;
 public class WcBoardController {
     private final WcBoardMapper mapper;
     private final WcBoardService service;
-    private final WcBoardRepository repository;
+    private final MemberService memberService;
+    private final MemberMapper memberMapper;
 
 
-    @PostMapping // 산책,돌봄 게시글 등록
+/**
+ * 프론트 개발상황에 맞춰 테스트용/서버용 로직 분리
+ * 글작성 로그인 검증 포함
+ *
+ * @PostMapping // 산책,돌봄 게시글 등록
     public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
                                   @LoginMemberId Long memberId){ //, @LoginMemberId Long memberId
-//        log.info(memberId + "MemberId");
-
+        log.info(memberId + "MemberId");
+        String nickName = member.getNickName();
         WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+    }
+ */
+
+    @PostMapping // 로그인 검증 로직 없음, 프론트 테스트 전용
+    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){ //, @LoginMemberId Long memberId
+//        log.info(memberId + "MemberId");
+        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto)); //memberId
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
@@ -48,12 +67,20 @@ public class WcBoardController {
                                     @LoginMemberId Long memberId) {
         log.info("memberId : " + memberId);
 
-        patchDto.addwcBoardId(wcboardId);
-        WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto), memberId);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(mapper.wcBoardResponseDtoToWcBoard(updatedWcBoardPost));
+        if("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("수정 권한이 없어요!");
+        }else{
+            patchDto.addwcBoardId(wcboardId);
+            WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto), memberId);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(mapper.wcBoardResponseDtoToWcBoard(updatedWcBoardPost));
+        }
     }
     /** 단일 게시글 조회
 
@@ -73,6 +100,15 @@ public class WcBoardController {
      * 태그로 필터링된 관련 게시글을 전체 로드 하면됨
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요 > 테스트 완료!
      */
+
+    @GetMapping("/{wcboard-id}")
+    public ResponseEntity findPost(@PathVariable("wcboard-id") @Positive Long wcboardId) {
+        WcBoard wcBoard = service.findWcBoardPost(wcboardId);
+        return new ResponseEntity<>(mapper.wcBoardResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
+    }
+
+
+
     @GetMapping // 메인 페이지 전체 게시글 로드 @@
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size) {
@@ -140,7 +176,6 @@ public class WcBoardController {
      return new ResponseEntity<>(
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
      }*/
-
 
     @GetMapping("/tag")
     public ResponseEntity findAllWithTags(
