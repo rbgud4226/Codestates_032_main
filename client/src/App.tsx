@@ -9,6 +9,7 @@ import SignUpDonePage from "./page/signup/SignUpDonePage";
 import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
+import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
+                <Route path="/petsitter" element={<PetSitterPage />} />
               </Routes>
             </Layout>
             <Nav />
