@@ -33,33 +33,39 @@ public class WcBoardController {
     private final WcBoardMapper mapper;
     private final WcBoardService service;
     private final MemberService memberService;
-    private final MemberMapper memberMapper;
 
 
-/**
- * 프론트 개발상황에 맞춰 테스트용/서버용 로직 분리
- * 글작성 로그인 검증 포함
- *
- * @PostMapping // 산책,돌봄 게시글 등록
+    @PostMapping
     public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
-                                  @LoginMemberId Long memberId){ //, @LoginMemberId Long memberId
+                                  @LoginMemberId Long memberId){ //LoginMemberId Long memberId
         log.info(memberId + "MemberId");
-        String nickName = member.getNickName();
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
-    }
- */
 
-    @PostMapping // 로그인 검증 로직 없음, 프론트 테스트 전용
-    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){ //, @LoginMemberId Long memberId
-//        log.info(memberId + "MemberId");
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto)); //memberId
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
+
+        if ("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("로그인을 해주세요!");
+        }else {
+            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+        }
+
+
     }
+
+//    로그인 검증 로직 없음, 프론트 테스트 전용
+//    @PostMapping
+//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
+//        log.info(memberId + "MemberId");
+//        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+//    }
 
     @PatchMapping("/{wcboard-id}")
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
@@ -70,11 +76,11 @@ public class WcBoardController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         memberService.findMemberByPrincipal(principal.toString());
 
-        if("anonymousUser".equals(principal)) {
+        if ("anonymousUser".equals(principal)) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("수정 권한이 없어요!");
-        }else{
+        }else {
             patchDto.addwcBoardId(wcboardId);
             WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto), memberId);
             return ResponseEntity
@@ -82,17 +88,6 @@ public class WcBoardController {
                     .body(mapper.wcBoardResponseDtoToWcBoard(updatedWcBoardPost));
         }
     }
-    /** 단일 게시글 조회
-
-    @GetMapping("/{wcBoard-id}")
-    public ResponseEntity WcbGet (@PathVariable("wcBoard-id") @Min(1) long wcBoardId) {
-        //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId(); 멤버 id 받아오기
-        WcBoard findPost = service.findWcBoardPost(wcBoardId); //authenticatedMemberId
-
-        return new ResponseEntity<> (mapper.wcBoardResponseDtoToWcBoard(findPost), HttpStatus.OK);
-    }
-
-    */
 
     /**
      * RequestParam 으로 tag에 대한 값을 받아오는데 굳이 DB에 있어야될 필요성이 있나?
@@ -125,6 +120,16 @@ public class WcBoardController {
         }
     }
 
+//    @GetMapping // 전체 게시글 조회 프론트 테스트용 (로그인 검증 로직 제외)
+//    public ResponseEntity findAllPosts(@Positive @RequestParam int page,
+//                                       @Positive @RequestParam int size) {
+//        log.info("page : " + page +", " + "size : " + size);
+//        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
+//        List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
+//            return new ResponseEntity<>(
+//                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+//    }
+
     /**
      * 태그를 활용한 검색의 주요 로직
      *
@@ -151,30 +156,6 @@ public class WcBoardController {
 
      return new ResponseEntity<>(
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-     }
-
-
-     @GetMapping("/animalkind") //동물 종류 선택시 필터
-     public ResponseEntity findPostsAnimalTag(@Positive @RequestParam int page,
-     @Positive @RequestParam int size,
-     @RequestParam String animalTag) {
-     Page<WcBoard> pageWcBoardPosts = service.findPostByAnimalTag(page - 1, size, animalTag);
-     List<WcBoard> posts = pageWcBoardPosts.getContent();
-
-     return new ResponseEntity<>(
-     new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-     }
-
-
-     @GetMapping("/area") // 지역 선택시 필터
-     public ResponseEntity findPostsAreaTag(@Positive @RequestParam int page,
-     @Positive @RequestParam int size,
-     @RequestParam String areaTag) {
-     Page<WcBoard> pageWcBoardPosts = service.findPostByAreaTag(page - 1, size, areaTag);
-     List<WcBoard> posts = pageWcBoardPosts.getContent();
-
-     return new ResponseEntity<>(
-     new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
      }*/
 
     @GetMapping("/tag")
@@ -191,8 +172,6 @@ public class WcBoardController {
         return new ResponseEntity<>(
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts),HttpStatus.OK);
     }
-
-
 
 
     @DeleteMapping("/{wcboard-id}")
