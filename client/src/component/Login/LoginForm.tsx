@@ -60,7 +60,7 @@ const LoginForm = () => {
       window.location.href = "/";
     } catch (e) {
       if (axios.isAxiosError(e)) {
-        if (e.response?.data.error.message) {
+        if (e) {
           setErrorMsg("로그인 정보를 확인하세요");
         }
       }

@@ -25,8 +25,8 @@ const MobileVerify = ({ setPhoneNum }: T) => {
 
   const phoneHdr = async (phone: DataForm) => {
     try {
-      const res = await axios.post(`${api}/sendSms`, phone);
-      console.log(res.data);
+      // const res = await axios.post(`${api}/sendSms`, phone);
+      // console.log(res.data);
       setPhoneNum(phone.phone);
     } catch (e) {
       console.log("에러낫으면 서버키값이 없을확률높음");

@@ -37,7 +37,7 @@ const schema = yup.object().shape({
       return this.parent.password === value;
     })
     .required("Pw is required"),
-  phone: yup.string().trim().required("전화번호인증 해야합니다."),
+  // phone: yup.string().trim().required("전화번호인증 해야합니다."),
 });
 
 const SignUpForm = ({ phoneNum }: T) => {
@@ -127,7 +127,7 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <div style={{ marginTop: "12px", width: "100%" }}>
         <LargeBtn name={"회원가입"} />
-        {!errors.phone ? (
+        {/* {!errors.phone ? (
           err ? (
             <ErrMsg>{err}</ErrMsg>
           ) : (
@@ -135,7 +135,7 @@ const SignUpForm = ({ phoneNum }: T) => {
           )
         ) : (
           <ErrMsg>{errors.phone.message}</ErrMsg>
-        )}
+        )} */}
       </div>
     </SUForm>
   );
