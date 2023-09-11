@@ -7,8 +7,6 @@ import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
 import global from "../../Data/global.json";
 
-const { Spacing, Primary, White, Gray, fontSize } = global;
-
 const BtnArr = [
   {
     text: "예약하기",
