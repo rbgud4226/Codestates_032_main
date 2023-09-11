@@ -14,24 +14,24 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class WcBoard {
+public class WcBoard { //..
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long wcboardId;
+    private Long wcboardId;
 
-    @Column
+    @Column(nullable = false)
     private String title;
-    @Column
+    @Column(nullable = false)
     private String content;
     @Column
     private String images;
 
 
-    @Column
+    @Column(nullable = false)
     private String wcTag;
-    @Column
+    @Column(nullable = false)
     private String animalTag;
-    @Column
+    @Column(nullable = false)
     private String areaTag;
 
 
