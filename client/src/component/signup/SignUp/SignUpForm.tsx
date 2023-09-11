@@ -44,7 +44,7 @@ const SignUpForm = () => {
     console.log(phoneNum);
     try {
       const res = await axios.post(
-        "https://d1ce-221-141-15-253.ngrok-free.app/sendSms",
+        "https://b428-218-155-160-190.ngrok-free.app/sendSms",
         {
           phone: phoneNum,
         },
@@ -59,7 +59,7 @@ const SignUpForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://d1ce-221-141-15-253.ngrok-free.app/registration?authCode=${certifyNum}&phone=${phoneNum}`,
+        `https://b428-218-155-160-190.ngrok-free.app/registration?authCode=${certifyNum}&phone=${phoneNum}`,
       );
       console.log(res.data);
       if (res.data) {
@@ -85,7 +85,7 @@ const SignUpForm = () => {
       console.log(data);
       //회원가입 api 주소 확인하고 변경해야함.  react Query 사용시 바꿔야할 가능성 높음.
       const res = await axios.post(
-        "https://7fdc-218-155-160-190.ngrok-free.app/members",
+        "https://b428-218-155-160-190.ngrok-free.app/members",
         data,
       );
       const successMsg = res.data;

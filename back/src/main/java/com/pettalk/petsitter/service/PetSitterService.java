@@ -17,6 +17,9 @@ import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -66,13 +69,13 @@ public class PetSitterService {
 //
 //        petSitter.setMember(findMember);
 
-            petSitter.setPetSitterId(findPetSitter.getPetSitterId());
-            petSitter.setName(findPetSitter.getName());
-            petSitter.setIntroduce(petSitter.getIntroduce());
-            petSitter.setNowJob(petSitter.getNowJob());
-            petSitter.setSmoking(petSitter.isSmoking());
-            petSitter.setExAnimal(petSitter.getExAnimal());
-            petSitter.setInfo(petSitter.getInfo());
+        petSitter.setPetSitterId(findPetSitter.getPetSitterId());
+        petSitter.setName(findPetSitter.getName());
+        petSitter.setIntroduce(petSitter.getIntroduce());
+        petSitter.setNowJob(petSitter.getNowJob());
+        petSitter.setSmoking(petSitter.isSmoking());
+        petSitter.setExAnimal(petSitter.getExAnimal());
+        petSitter.setInfo(petSitter.getInfo());
 
         return petSitterRepository.save(petSitter);
     }
@@ -82,7 +85,7 @@ public class PetSitterService {
         Optional<PetSitter> optionalPetSitter = petSitterRepository.findById(petSitterId);
 
         PetSitter findPetSitter = optionalPetSitter
-        .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
 
         return findPetSitter;
     }
@@ -97,11 +100,19 @@ public class PetSitterService {
     private PetSitter verifyExistPetSitter(long petSitterId) {
 
         PetSitter petSitter = petSitterRepository.findById(petSitterId)
-                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND));
 
         return petSitter;
     }
 
-//    private WcBoard
+    //    private WcBoard
+    public Page<WcBoard> getRecentInfo(PetSitter petSitter, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
+
+
+//        return wcBoardRepository.findByMember_MemberId(petSitterMemberId, pageRequest);
+        return wcBoardRepository.findByPetSitter_PetSitterId(petSitter.getPetSitterId(), pageRequest);
+        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그
+    }
 
 }

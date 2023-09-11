@@ -38,8 +38,8 @@ public class PetSitter {
     private Member member;
 
 
-//    @OneToMany(mappedBy = "wcboard", cascade = CascadeType.ALL)
-//    private List<WcBoard> wcBoard;
+    @OneToMany(mappedBy = "petSitter", cascade = CascadeType.ALL)
+    private List<WcBoard> wcBoard;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

@@ -7,7 +7,7 @@ export async function fetchData({ email, password }, setErrorMsg) {
       password: password,
     };
     const res = await axios.post(
-      "https://d1ce-221-141-15-253.ngrok-free.app/members/login",
+      "https://b428-218-155-160-190.ngrok-free.app/members/login",
       data,
     );
     console.log(res);

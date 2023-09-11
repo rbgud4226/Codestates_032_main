@@ -28,4 +28,5 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpe
     List<WcBoard> findByMember_MemberId(Long memberId); //M
 
     Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
+    Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
 }
