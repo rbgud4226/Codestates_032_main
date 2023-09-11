@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.dto;
 
 import com.pettalk.wcboard.dto.WcBoardDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -107,6 +108,13 @@ public class PetSitterDto {
         private LocalDateTime createdAt;
 
     }
-
-
+    @AllArgsConstructor
+    @Getter
+    public static class multiResponse{
+        private Long wcboardId;
+        private String wcTag;
+        private String nickName;
+        private String startTime;
+        private String endTime;
+    }
 }

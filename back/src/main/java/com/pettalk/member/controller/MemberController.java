@@ -8,12 +8,17 @@ import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.WcBoard;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -46,22 +51,28 @@ public class MemberController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
     @GetMapping
-    public ResponseEntity memberGet(@LoginMemberId Long memberId){
+    public ResponseEntity memberGet(@LoginMemberId Long memberId,
+                                    @RequestParam int page,
+                                    @RequestParam int size) {
+        System.out.println(memberId+"memberIdddd");
+        System.out.println(page+"pageeee");
+        System.out.println(size+"sizeeee");
         try {
-            GetMemberDto getMemberDto = memberService.getMember(memberId);
+            GetMemberDto getMemberDto = memberService.getMember(memberId,page,size);
             return new ResponseEntity<>(getMemberDto, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
     @GetMapping("/recent")
-    public ResponseEntity getMemberBoards(@LoginMemberId Long memberId) {
+    public ResponseEntity getMemberBoards(@LoginMemberId Long memberId,
+                                          @RequestParam int page,
+                                          @RequestParam int size) {
         try {
-            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers(memberId);
+            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers(memberId,page,size);
             return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

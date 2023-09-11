@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.controller;
 
 
+import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
@@ -41,6 +42,7 @@ public class PetSitterController {
     private final PetSitterService service;
     private final WcBoardRepository wcBoardRepository;
     private final WcBoardMapper wcBoardMapper;
+    private final MemberService memberService;
 
 //다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 존재함.
 
@@ -80,13 +82,28 @@ public class PetSitterController {
     }
 
 //    @GetMapping("/{pet-sitter-id}/recent")
-//    public  ResponseEntity getRecentWalkCare(@PathVariable("pet-sitter-id") @Positive long petsitterId) {
+//    public  ResponseEntity getRecentWalkCare(@PathVariable("pet-sitter-id") @Positive Long petsitterId, @RequestParam @Positive int page, @RequestParam @Positive int size) {
+//        PetSitter petSitter = service.findPetSitter(petsitterId);
 //
-//        List<WcBoard> (petsitterId);
-//        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
-//        return wcBoardDtoGet;
+//        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+//        List<WcBoard> wcBoardList = wcBoardPage.getContent();
 //
-//        //TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그와 펫시터의 이름.
+//        return new ResponseEntity<>(new MultiResponseDto<>(wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardList), wcBoardPage), HttpStatus.OK);
+//        //TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
 //
 //    }
+    @GetMapping("/recent")
+    public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
+                                             @RequestParam @Positive int page,
+                                             @RequestParam @Positive int size) {
+        Member member = memberService.findVerifyMember(memberId);
+        PetSitter petSitter = member.getPetSitter();
+
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+        List<WcBoard> wcBoardList = wcBoardPage.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
+        //TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+
+    }
 }

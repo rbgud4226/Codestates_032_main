@@ -104,13 +104,14 @@ public class PetSitterService {
         return petSitter;
     }
 
+    //    private WcBoard
     public Page<WcBoard> getRecentInfo(PetSitter petSitter, int page, int size) {
-
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
 
-        return wcBoardRepository.findByMember_MemberId(petSitter.getMember().getMemberId(), pageRequest);
 
-//닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그
+//        return wcBoardRepository.findByMember_MemberId(petSitterMemberId, pageRequest);
+        return wcBoardRepository.findByPetSitter_PetSitterId(petSitter.getPetSitterId(), pageRequest);
+        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그
     }
 
 }
