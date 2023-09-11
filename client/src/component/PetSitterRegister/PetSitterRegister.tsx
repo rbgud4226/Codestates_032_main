@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BasicInformation, { BasicInfoFormData } from "./BasicInformation";
 import Experience, { ExperienceFormData } from "./Experience";
@@ -11,6 +11,37 @@ const PetsitterRegister = () => {
   const [formData, setFormData] = useState<
     BasicInfoFormData | ExperienceFormData | null
   >(null);
+
+  useEffect(() => {
+    const fetchPetsitterInfo = async () => {
+      try {
+        const serverUrl1 =
+          "https://166a-222-102-41-193.ngrok-free.app/petsitter"; // 서버 API URL을 여기에 넣으세요
+        const response = await axios.get(serverUrl1, {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+          },
+        });
+        console.log(localStorage.getItem("accessToken"));
+
+        if (response.data.petSitterId) {
+          setFormData({
+            name: response.data.name,
+            introduce: response.data.introduce,
+            smoking: response.data.smoking,
+            nowJob: response.data.nowJob,
+            exAnimal: response.data.exAnimal,
+            info: response.data.info,
+            agreement: response.data.agreement,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching petsitter info:", error);
+      }
+    };
+
+    fetchPetsitterInfo();
+  }, []); // 페이지 로드 시 한 번만 실행
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === 0 ? 1 : 0);
@@ -40,9 +71,15 @@ const PetsitterRegister = () => {
   const handleRegister = async () => {
     if (formData) {
       console.log(formData);
+
+      //   const keys = Object.keys(formData);
+      //   console.log(keys); // ["exAnimal", "info", "agreement"]
+      //   const values = Object.values(formData);
+      //   console.log(values); // [[], "", ["개인정보 수집/이용에 동의합니다."]]
+
       try {
         const serverUrl =
-          "https://3239-222-102-41-193.ngrok-free.app/petsitter";
+          "https://166a-222-102-41-193.ngrok-free.app/petsitter";
 
         const response = await axios.post(serverUrl, formData);
 
@@ -102,6 +139,7 @@ const SlideContainer = styled.div`
   display: flex;
   overflow: hidden;
   width: 100%;
+  position: relative;
 `;
 
 const Slide = styled.div`
