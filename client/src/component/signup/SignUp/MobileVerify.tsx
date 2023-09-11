@@ -3,7 +3,7 @@ import styled from "styled-components";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import PhoneBtn from "../../Button/PhoneBtn";
 
 const api = process.env.REACT_APP_DB_HOST;
@@ -21,19 +21,15 @@ const schema = yup.object().shape({
 //전화번호 전송 함수.
 
 const MobileVerify = ({ setPhoneNum }: T) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  const { register, handleSubmit } = useForm({ resolver: yupResolver(schema) });
 
   const phoneHdr = async (phone: DataForm) => {
     try {
       const res = await axios.post(`${api}/sendSms`, phone);
       console.log(res.data);
       setPhoneNum(phone.phone);
-    } catch (e: AxiosError | unknown) {
-      console.log("근데 에러날 게 있나여기?");
+    } catch (e) {
+      console.log("에러낫으면 서버키값이 없을확률높음");
     }
   };
 

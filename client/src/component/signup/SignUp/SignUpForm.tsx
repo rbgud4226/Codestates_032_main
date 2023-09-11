@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as yup from "yup";
 import LargeBtn from "../../Button/LargeCheckBtn";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { iconImg } from "../../../Data/IconImg";
 
 interface T {
@@ -74,11 +74,11 @@ const SignUpForm = ({ phoneNum }: T) => {
           if (resData2) {
             window.location.replace("/signupDone");
           }
-        } catch (e: AxiosError | unknown) {
+        } catch (e) {
           setErr("알수 없는 에러가 발생");
         }
       }
-    } catch (e: AxiosError | unknown) {
+    } catch (e) {
       setEmailErr("중복된 email 입니다.");
     }
   };

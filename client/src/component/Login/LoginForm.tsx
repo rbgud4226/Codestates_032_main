@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import LargeBtn from "../Button/LargeCheckBtn";
 
 const api = process.env.REACT_APP_DB_HOST;
@@ -58,7 +58,7 @@ const LoginForm = () => {
       localStorage.setItem("refreshToken", userData.refreshToken);
       localStorage.setItem("accessToken", userData.accessToken);
       window.location.href = "/";
-    } catch (e: AxiosError | unknown) {
+    } catch (e) {
       if (axios.isAxiosError(e)) {
         if (e.response?.data.error.message) {
           setErrorMsg("로그인 정보를 확인하세요");
