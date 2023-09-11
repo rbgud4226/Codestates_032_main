@@ -47,9 +47,9 @@ public class WcBoard { //..
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-//    @JoinColumn(name = "petSitter_id")
-//    @ManyToOne
-//    private PetSitter petSitter;
+    @JoinColumn(name = "petSitter_id")
+    @ManyToOne
+    private PetSitter petSitter;
 
 
     @ManyToOne

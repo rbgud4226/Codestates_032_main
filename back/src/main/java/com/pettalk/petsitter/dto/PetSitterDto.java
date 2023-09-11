@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-//import com.pettalk.petsitter.entity.ExAnimal;
 
 public class PetSitterDto {
 
@@ -47,9 +46,6 @@ public class PetSitterDto {
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
-//        private boolean Cat;
-//        private boolean Dog;
-//        private boolean Other;
 
         private List<String> exAnimal; //맡아본 적 있는 동물.
 
@@ -79,9 +75,6 @@ public class PetSitterDto {
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
-//        private boolean Cat;
-//        private boolean Dog;
-//        private boolean Other;
 
         private List<String> exAnimal; //맡아본 적 있는 동물.
 
@@ -106,9 +99,6 @@ public class PetSitterDto {
         private String nowJob;
 
         private boolean smoking;
-//        private boolean Cat;
-//        private boolean Dog;
-//        private boolean Other;
 
         private List<String> exAnimal; //맡아본 적 있는 동물.
 
