@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class WcBoard {
+public class WcBoard { //..
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wcboardId;

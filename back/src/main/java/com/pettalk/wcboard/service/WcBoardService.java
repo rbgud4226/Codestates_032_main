@@ -4,6 +4,7 @@ import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
+
 import com.pettalk.member.service.MemberService;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;

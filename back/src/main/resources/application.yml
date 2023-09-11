@@ -16,10 +16,10 @@ spring:
       client:
         registration:
           kakao:
-            client_id:
-            client_secret:
+            client_id: sadfsadfsadfsad
+            client_secret: sdfdsafdsafsadf
             authorization-grant-type: authorization_code
-            redirect_uri:
+            redirect_uri: asfsadfsafasdf
             client-name: Kakao
         provider:
           kakao:

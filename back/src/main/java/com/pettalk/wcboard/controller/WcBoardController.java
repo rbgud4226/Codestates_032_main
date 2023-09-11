@@ -46,6 +46,7 @@ public class WcBoardController {
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
                                     @Positive @PathVariable("wcboard-id") Long wcboardId,
                                     @LoginMemberId Long memberId) {
+        log.info("memberId : " + memberId);
 
         patchDto.addwcBoardId(wcboardId);
         WcBoard updatedWcBoardPost = service.updateWcBoardPost(mapper.wcBoardPatchDtotoWcBoard(patchDto), memberId);

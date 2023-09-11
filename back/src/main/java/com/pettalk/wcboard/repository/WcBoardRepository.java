@@ -18,7 +18,9 @@ import java.util.Optional;
  * 기존 태그기반 검색기능 비활성화
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
+
     Optional<WcBoard> findById(long wcBoardId);
+
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
 //    Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
 //    Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
