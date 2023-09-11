@@ -29,21 +29,27 @@ public class WcBoardService {
     private final WcBoardRepository wcBoardRepository;
     private final MemberService memberService;
 
-//    public WcBoardService(WcBoardRepository wcBoardRepository, MemberService memberService){
-//        this.wcBoardRepository = wcBoardRepository;
-//        this.memberService = memberService;
-//    }
-
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
+    // 컨트롤러와 동일하게 멤버검증 부분 테스트와 서버용 분리
+    //멤버 검증 로직 포함
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
         //멤버 아이디 가져오기
         wcboard.setMember(memberService.findVerifyMember(memberId));
-
         wcboard.setCreatedAt(LocalDateTime.now());
         wcBoardRepository.save(wcboard);
         return wcboard;
     }
+
+    //테스트용
+//    public WcBoard createWcBoardPost (WcBoard wcboard){
+//        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+//        //멤버 아이디 가져오기
+//
+//        wcboard.setCreatedAt(LocalDateTime.now());
+//        wcBoardRepository.save(wcboard);
+//        return wcboard;
+//    }
 
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost (WcBoard wcboard, Long memberId) {

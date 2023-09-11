@@ -16,7 +16,7 @@ spring:
       client:
         registration:
           kakao:
-            client_id: sadfsadfsadfsad
+            client_id: sadfsadfsad
             client_secret: sdfdsafdsafsadf
             authorization-grant-type: authorization_code
             redirect_uri: asfsadfsafasdf
