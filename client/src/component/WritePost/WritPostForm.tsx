@@ -25,6 +25,9 @@ interface PostFormProps {
   StepChange: (newStep: number) => void;
   Submit: () => Promise<void>;
   AreaChange: (area: string | null) => void;
+  isSubmitting: boolean;
+  handleImageChange: (newImages: string[]) => void; // handleImageChange 추가
+  images: string[]; // images 추가
 }
 
 function PostForm({
@@ -36,8 +39,21 @@ function PostForm({
   StepChange,
   Submit,
   AreaChange,
+  handleImageChange,
+  images,
 }: PostFormProps) {
   const [Calende, setCalende] = useState(new Date());
+  const [selectedWcTag, setSelectedWcTag] = useState<string | null>(null);
+
+  const handleWcTagChange = (wcTag: string) => {
+    if (selectedWcTag === wcTag) {
+      // 이미 선택된 버튼을 클릭한 경우, 선택 취소
+      setSelectedWcTag(null);
+    } else {
+      // 다른 버튼을 클릭한 경우, 해당 버튼 선택
+      setSelectedWcTag(wcTag);
+    }
+  };
 
   return (
     <div>
@@ -47,21 +63,25 @@ function PostForm({
             예약
             <div>
               <WCButton
-                onClick={() => WcTagChange("산책")}
+                onClick={() => {
+                  WcTagChange("산책");
+                  handleWcTagChange("산책");
+                }}
                 style={{
-                  backgroundColor: post.wcTag.includes("산책")
-                    ? "#279eff" // 선택된 경우의 스타일
-                    : "white", // 선택되지 않은 경우의 스타일
+                  backgroundColor:
+                    selectedWcTag === "산책" ? "#279eff" : "white",
                 }}
               >
                 산책
               </WCButton>
               <WCButton
-                onClick={() => WcTagChange("돌봄")}
+                onClick={() => {
+                  WcTagChange("돌봄");
+                  handleWcTagChange("돌봄");
+                }}
                 style={{
-                  backgroundColor: post.wcTag.includes("돌봄")
-                    ? "#279eff" // 선택된 경우의 스타일
-                    : "white", // 선택되지 않은 경우의 스타일
+                  backgroundColor:
+                    selectedWcTag === "돌봄" ? "#279eff" : "white",
                 }}
               >
                 돌봄
@@ -72,7 +92,7 @@ function PostForm({
           <WritPostText>
             동물 선택
             <div>
-              <WCButton
+              <AButton
                 onClick={() => AnimalTagChange("강아지")}
                 style={{
                   backgroundColor: post.animalTag.includes("강아지")
@@ -81,9 +101,9 @@ function PostForm({
                 }}
               >
                 강아지
-              </WCButton>
+              </AButton>
 
-              <WCButton
+              <AButton
                 onClick={() => AnimalTagChange("고양이")}
                 style={{
                   backgroundColor: post.animalTag.includes("고양이")
@@ -92,8 +112,8 @@ function PostForm({
                 }}
               >
                 고양이
-              </WCButton>
-              <WCButton
+              </AButton>
+              <AButton
                 onClick={() => AnimalTagChange("기타동물")}
                 style={{
                   backgroundColor: post.animalTag.includes("기타동물")
@@ -102,7 +122,7 @@ function PostForm({
                 }}
               >
                 기타동물
-              </WCButton>
+              </AButton>
             </div>
           </WritPostText>
 
@@ -129,8 +149,9 @@ function PostForm({
             maxLength={200}
             placeholder="200자 이내로 입력해주세요."
           />
-
-          <StepButton onClick={() => StepChange(2)}>다음</StepButton>
+          <Container>
+            <StepButton onClick={() => StepChange(2)}>다음</StepButton>
+          </Container>
         </div>
       )}
 
@@ -138,10 +159,12 @@ function PostForm({
         <div>
           <h2>Step 2: 다음 단계 내용</h2>
           {/* 이 곳에 Step 2에 대한 내용을 추가하세요 */}
-          <ImageSubmit></ImageSubmit>
+          <ImageSubmit handleImageChange={handleImageChange} images={images} />
           <AreaSubmit onRegionSelect={AreaChange} />
-          <StepReButton onClick={() => StepChange(1)}>이전</StepReButton>
-          <StepButton onClick={Submit}>작성 완료</StepButton>
+          <Container>
+            <StepReButton onClick={() => StepChange(1)}>이전</StepReButton>
+            <StepSubimtButton onClick={Submit}>작성 완료</StepSubimtButton>
+          </Container>
         </div>
       )}
     </div>
@@ -150,8 +173,11 @@ function PostForm({
 export default PostForm;
 
 const Container = styled.div`
+  position: absolute;
+  bottom: 0px; /* 원하는 위치로 조정 */
   display: flex;
-  overflow: hidden;
+  justify-content: space-between; /* 이전과 작성 완료를 떨어뜨리기 위해 추가 */
+  width: 100%; /* 부모 요소 전체 너비로 확장 */
 `;
 
 const WritPostText = styled.div`
@@ -163,29 +189,48 @@ const WritPostText = styled.div`
 const WCButton = styled.button`
   color: black;
   font-size: 12px;
-  padding: 8px 12px;
+  padding: 16px 12px;
+  position: relative;
+  margin-left: 40px;
+  top: 10px;
+  width: 160px;
+  border: 2px solid 
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 40px;
+`;
+
+const AButton = styled.button`
+  color: black;
+  font-size: 12px;
+  padding: 12px 12px;
   position: relative;
   margin-left: 40px;
   top: 10px;
   width: 100px;
-  border: 2px solid #279eff;
+  border: 2px solid 
   cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 40px;
 `;
+
 const ContentText = styled.div`
-  font-size: 20px;
-  margin-bottom: 8px;
-  margin-top: 8px;
+  font-size: 28px;
+  margin-top: 40px;
+  margin-left: 8px;
 `;
 
 const ContentSText = styled.div`
   font-size: 12px;
   margin-top: 12px;
   margin-bottom: 8px;
+  margin-left: 12px;
 `;
 
 const InputName = styled.input`
-  width: 100%;
+  width: 90%;
   height: 124px;
+  margin-left: 24px;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #595959;
@@ -200,21 +245,23 @@ const ButtonContainer = styled.div`
 `;
 
 const InputInfo = styled.input`
-  width: 100%;
+  width: 90%;
   height: 40px;
   padding: 8px;
+  margin-left: 24px;
   border-radius: 4px;
   border: 1px solid #595959;
   text-align: left;
   overflow: auto;
   white-space: normal;
   resize: none;
+  margin-bottom: 40px;
 `;
 
 const StepButton = styled.button`
   position: absolute;
-  bottom: 100px;
-  right: 100px;
+  bottom: 0px;
+  left: 450px;
   background: none;
   border: none;
   cursor: pointer;
@@ -222,7 +269,16 @@ const StepButton = styled.button`
 const StepReButton = styled.button`
   position: absolute;
   bottom: 100px;
-  letf: 100px;
+  left: 0px; /* 수정: 오타 수정 */
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+const StepSubimtButton = styled.button`
+  position: absolute;
+  bottom: 100px;
+  left: 400px; /* 수정: 오타 수정 및 원하는 위치로 조정 */
   background: none;
   border: none;
   cursor: pointer;

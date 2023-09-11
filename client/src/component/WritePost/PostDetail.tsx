@@ -20,7 +20,7 @@ const BoardList = () => {
   const [posts, setPosts] = useState<Board[]>([]);
 
   useEffect(() => {
-    const apiUrl = "https://6b03-121-162-236-116.ngrok-free.app/wcboard"; // API 엔드포인트 URL
+    const apiUrl = "https://3c86-121-162-236-116.ngrok-free.app/wcboard"; // API 엔드포인트 URL
     const page = "1"; // 페이지 번호
     const size = "10"; // 한 페이지에 몇 개 게시글을 가져올지 지정
 
@@ -61,6 +61,16 @@ const BoardList = () => {
             <li key={post.wcboardId}>
               <div>{post.title}</div>
               <div>{post.animalTag}</div>
+              <div>{post.areaTag}</div>
+              <div>
+                {post.images && (
+                  <img
+                    src={post.images}
+                    alt="이미지"
+                    style={{ maxWidth: "100%", maxHeight: "300px" }}
+                  />
+                )}
+              </div>
             </li>
           ))}
         </ul>

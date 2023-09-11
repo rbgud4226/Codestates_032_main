@@ -8,23 +8,55 @@ interface AreaSubmitProps {
 function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
   const [regions, setRegions] = useState([
     {
+      name: "서울",
+    },
+    {
+      name: "경기",
+    },
+    {
       name: "인천",
     },
     {
-      name: "서울",
+      name: "강원",
+    },
+    {
+      name: "제주",
     },
     {
       name: "광주",
     },
     {
+      name: "충북",
+    },
+    {
       name: "충남",
     },
     {
-      name: "충북",
+      name: "부산",
+    },
+    {
+      name: "울산",
+    },
+    {
+      name: "경남",
+    },
+    {
+      name: "대구",
+    },
+    {
+      name: "경북",
+    },
+    {
+      name: "전남",
+    },
+    {
+      name: "전북",
     },
   ]);
 
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(
+    "지역검색",
+  );
 
   const handleRegionSelect = (regionName: string | null) => {
     setSelectedRegion(regionName);
@@ -35,10 +67,10 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
     <div>
       <AreaContentText>지역 선택</AreaContentText>
       <div>
-        <AreaListButton onClick={() => handleRegionSelect("지역")}>
-          {selectedRegion === "지역" ? "지역" : selectedRegion}
+        <AreaListButton onClick={() => handleRegionSelect("지역검색")}>
+          {selectedRegion === "지역검색" ? "지역검색" : selectedRegion}
         </AreaListButton>
-        {selectedRegion === "지역" && (
+        {selectedRegion === "지역검색" && (
           <AreaContainer>
             {regions.map(region => (
               <AreaSListButton
@@ -61,20 +93,20 @@ export default AreaSubmit;
 const AreaContentText = styled.div`
   font-size: 20px;
   margin-bottom: 12px;
-  margin-top: 12px;
+  margin-top: 40px;
 `;
 
 const AreaListButton = styled.button`
-  color: black;
-  background-color: white;
-  font-size: 12px;
-  padding: 8px 12px;
-  position: relative;
-  margin-left: 40px;
-  top: 10px;
-  width: 410px;
-  border: 2px solid #279eff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  background-color: #279eff;
+  border: none;
   cursor: pointer;
+  border-bottom: 1px solid #ccc;
 `;
 
 const AreaSListButton = styled.button`
@@ -83,7 +115,7 @@ const AreaSListButton = styled.button`
   font-size: 12px;
   padding: 4px 8px;
   position: relative;
-  margin-left: 40px;
+  margin-left: 24px;
   top: 10px;
   width: 50px;
   border: 2px solid #279eff;

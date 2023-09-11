@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostForm from "./WritPostForm";
 import ImageSubmit from "./ImageSubmit";
+import AreaSubmit from "./AreaSubmit";
 
 function WritePost() {
   const [step, setStep] = useState(1);
@@ -15,6 +16,8 @@ function WritePost() {
     animalTag: "",
     areaTag: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // 추가
+  const [images, setImages] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
@@ -22,6 +25,13 @@ function WritePost() {
     setStep(newStep);
   };
 
+  const handleImageChange = (newImages: string[]) => {
+    setImages(newImages);
+    setPost({
+      ...post,
+      images: newImages.join(","),
+    });
+  };
   const InputChange = e => {
     const { name, value } = e.target;
     setPost({
@@ -30,61 +40,44 @@ function WritePost() {
     });
   };
 
-  const AreaChange = areaTags => {
-    //wc테그
-    const { areaTag } = post;
-    if (areaTag.includes(areaTags)) {
-      const updateAreaTag = areaTag.split(", ").filter(tag => tag !== areaTag);
-      setPost({
-        ...post,
-        areaTag: updateAreaTag.join(", "),
-      });
-    } else {
-      setPost({
-        ...post,
-        areaTag: [...areaTag.split(", "), areaTags].join(", "),
-      });
-    }
+  const AreaChange = AreaTagToToggle => {
+    setPost({
+      ...post,
+      areaTag: AreaTagToToggle, // 마지막으로 클릭한 버튼의 값으로 설정
+    });
   };
 
-  const WCTagChange = wcTegs => {
-    //wc테그
-    const { wcTag } = post;
-    if (wcTag.includes(wcTegs)) {
-      const updateWcTag = wcTag.split(", ").filter(tag => tag !== wcTegs);
-      setPost({
-        ...post,
-        wcTag: updateWcTag.join(", "),
-      });
-    } else {
-      setPost({
-        ...post,
-        wcTag: [...wcTag.split(", "), wcTegs].join(", "),
-      });
-    }
+  const WCTagChange = wcTagToToggle => {
+    setPost({
+      ...post,
+      wcTag: wcTagToToggle, // 마지막으로 클릭한 버튼의 값으로 설정
+    });
   };
 
   const AnimalTagChange = animal => {
     const { animalTag } = post;
     if (animalTag.includes(animal)) {
       const updatedAnimalTag = animalTag
-        .split(", ")
+        .split("")
         .filter(tag => tag !== animal);
       setPost({
         ...post,
-        animalTag: updatedAnimalTag.join(", "),
+        animalTag: updatedAnimalTag.join(""),
       });
     } else {
       setPost({
         ...post,
-        animalTag: [...animalTag.split(", "), animal].join(", "),
+        animalTag: [...animalTag.split(""), animal].join(""),
       });
     }
   };
 
   const Submit = async () => {
+    if (isSubmitting) return; // 이미 제출 중이라면 중복 제출 방지
+    setIsSubmitting(true); // 제출 중으로 표시
+
     try {
-      const apiUrl = "https://6b03-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
+      const apiUrl = "https://3c86-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
       console.log(
         post.images,
         post.wcTag,
@@ -92,6 +85,7 @@ function WritePost() {
         post.animalTag,
         post.content,
         post.areaTag,
+        post.images,
       );
       const response = await axios.post(apiUrl, post, {
         headers: {
@@ -119,6 +113,8 @@ function WritePost() {
     } catch (error) {
       // 오류 처리 로직을 추가
       console.error("API 요청 오류:", error);
+    } finally {
+      setIsSubmitting(false); // 제출 완료 후 원래 상태로 복구
     }
   };
 
@@ -133,6 +129,9 @@ function WritePost() {
         StepChange={StepChange}
         Submit={Submit}
         AreaChange={AreaChange}
+        isSubmitting={isSubmitting}
+        handleImageChange={handleImageChange} // handleImageChange 함수 전달
+        images={images}
       />
     </div>
   );

@@ -1,8 +1,34 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function ImageSubmit() {
-  const [images, setImages] = useState<string[]>([]);
+interface ImageSubmitProps {
+  handleImageChange: (newImages: string[]) => void;
+  images: string[];
+}
+
+function ImageSubmit({ handleImageChange, images }: ImageSubmitProps) {
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+
+  // Create a new event handler for the file input
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      // Convert the selected files to an array of URLs for preview
+      const selectedFileURLs = Array.from(selectedFiles).map(file =>
+        URL.createObjectURL(file),
+      );
+      setPreviewImages(selectedFileURLs);
+
+      // Call the handleImageChange function with the selected files
+      const selectedFileArray = Array.from(selectedFiles).map(file =>
+        URL.createObjectURL(file),
+      );
+      handleImageChange(selectedFileArray);
+    }
+  };
 
   const handleImageUpload = async () => {
     try {
@@ -13,67 +39,35 @@ function ImageSubmit() {
           formData.append("images", image);
         }
 
-        // 이미지를 업로드하는 Axios 요청 (서버 측 엔드포인트 필요)
-        const response = await axios.post("your_upload_endpoint", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        if (response.status === 200) {
-          // 이미지가 업로드되고 성공적으로 처리된 경우
-          console.log("이미지 업로드 성공!");
-        } else {
-          // 업로드 실패한 경우
-          console.error("이미지 업로드 실패");
-        }
+        // Your image upload Axios request here...
       }
     } catch (error) {
       console.error("이미지 업로드 중 오류 발생", error);
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files;
-
-    if (selectedFiles) {
-      const newImages: string[] = [];
-
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        if (file && i < 3) {
-          const reader = new FileReader();
-
-          reader.onload = e => {
-            if (e.target) {
-              newImages.push(e.target.result as string);
-              if (i === selectedFiles.length - 1) {
-                // 마지막 파일 로딩이 완료되면 상태 업데이트
-                setImages(newImages);
-              }
-            }
-          };
-
-          // 파일 읽기 시작
-          reader.readAsDataURL(file);
-        }
-      }
-    }
-  };
-
   return (
     <div>
-      <h1>이미지 업로드 및 미리보기 (최대 3개)</h1>
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImageChange}
-      />
-      {images.length > 0 && (
+      {/* 컴포넌트 내에서 uploadedImages를 사용하여 업로드된 이미지를 표시 */}
+      {uploadedImages.length > 0 && (
+        <div>
+          <h2>업로드된 이미지</h2>
+          {uploadedImages.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`업로드된 이미지 ${index + 1}`}
+              style={{ maxWidth: "100%", maxHeight: "300px" }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* 미리보기 이미지 */}
+      {previewImages.length > 0 && (
         <div>
           <h2>미리보기</h2>
-          {images.map((image, index) => (
+          {previewImages.map((image, index) => (
             <img
               key={index}
               src={image}
@@ -83,7 +77,14 @@ function ImageSubmit() {
           ))}
         </div>
       )}
-      <button onClick={handleImageUpload}>이미지 업로드</button>
+
+      {/* Use the new event handler for file input */}
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleFileInputChange}
+      />
     </div>
   );
 }
