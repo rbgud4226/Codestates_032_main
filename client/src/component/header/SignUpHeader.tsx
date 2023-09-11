@@ -1,20 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
 const SignUpHeader = () => {
-  return (
-    <SignUpLink>
-      <SignUp>signup</SignUp>
-    </SignUpLink>
-  );
+  return <SignUp to={"/memberAgree"}>Sign up</SignUp>;
 };
 
 export default SignUpHeader;
 
-export const SignUpLink = styled.a`
-  padding-right: 20px;
-`;
-
-export const SignUp = styled.div`
+export const SignUp = styled(Link)`
+  margin-right: 24px;
   color: #279eff;
 `;

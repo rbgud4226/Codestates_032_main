@@ -20,11 +20,10 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     }
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*");
-//        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS();
-//        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*").withSockJS(); // 웹소켓 연결주소, sockjs를 통해 버전이 낮은 브라우저에서도 적용 가능.
-//        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*"); // 웹소켓 연결주소
+        registry.addEndpoint("/ws-stomp").setAllowedOrigins("http://localhost:8080").withSockJS();// 웹소켓 연결주소, sockjs를 통해 버전이 낮은 브라우저에서도 적용 가능.
+        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*"); // 웹소켓 연결주소
         // 주소 ws://localhost:8080/ws-stomp
+
 
     }
 }
