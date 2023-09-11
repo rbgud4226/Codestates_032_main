@@ -7,6 +7,7 @@ import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import MainPage from "./page/MainPage";
 import WritePost from "./component/WritePost/WritePost";
+import PostDetail from "./component/WritePost/PostDetail";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
                 <Route path="/writpost" element={<WritePost />} />
+                <Route path="/mainPage" element={<PostDetail />} />
               </Routes>
             </Layout>
             <Nav />

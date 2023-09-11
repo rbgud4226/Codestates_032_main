@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostForm from "./WritPostForm";
+import ImageSubmit from "./ImageSubmit";
 
 function WritePost() {
   const [step, setStep] = useState(1);
@@ -27,6 +28,23 @@ function WritePost() {
       ...post,
       [name]: value,
     });
+  };
+
+  const AreaChange = areaTags => {
+    //wc테그
+    const { areaTag } = post;
+    if (areaTag.includes(areaTags)) {
+      const updateAreaTag = areaTag.split(", ").filter(tag => tag !== areaTag);
+      setPost({
+        ...post,
+        areaTag: updateAreaTag.join(", "),
+      });
+    } else {
+      setPost({
+        ...post,
+        areaTag: [...areaTag.split(", "), areaTags].join(", "),
+      });
+    }
   };
 
   const WCTagChange = wcTegs => {
@@ -66,8 +84,15 @@ function WritePost() {
 
   const Submit = async () => {
     try {
-      const apiUrl = "https://b44c-221-141-15-253.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
-      console.log(post.content, post.title, post.animalTag);
+      const apiUrl = "https://6b03-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
+      console.log(
+        post.images,
+        post.wcTag,
+        post.title,
+        post.animalTag,
+        post.content,
+        post.areaTag,
+      );
       const response = await axios.post(apiUrl, post, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
@@ -89,6 +114,8 @@ function WritePost() {
         images: "",
         areaTag: "",
       });
+
+      navigate("/mainPage");
     } catch (error) {
       // 오류 처리 로직을 추가
       console.error("API 요청 오류:", error);
@@ -102,8 +129,10 @@ function WritePost() {
         post={post}
         InputChange={InputChange}
         AnimalTagChange={AnimalTagChange}
+        WcTagChange={WCTagChange}
         StepChange={StepChange}
         Submit={Submit}
+        AreaChange={AreaChange}
       />
     </div>
   );
