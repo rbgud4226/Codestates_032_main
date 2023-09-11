@@ -104,7 +104,7 @@ public class WcBoardController {
 
 
 
-    @GetMapping // 메인 페이지 전체 게시글 로드 @@
+    @GetMapping // 메인 페이지 전체 게시글 로드 @@ㅇ
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size) {
         log.info("page : " + page +", " + "size : " + size);
