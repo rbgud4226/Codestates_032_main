@@ -37,7 +37,6 @@ const BoardList = () => {
           },
           params: { page, size },
         });
-
         setPosts(response.data.data);
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
@@ -46,6 +45,7 @@ const BoardList = () => {
 
     fetchData();
 
+    // 로그인 여부 확인
     const checkLoginStatus = () => {
       const accessToken = localStorage.getItem("accessToken");
       setIsLoggedIn(!!accessToken);
@@ -59,7 +59,9 @@ const BoardList = () => {
       navigate("/writpost");
       console.log("로그인O");
     } else {
+      // 로그인하지 않은 경우 로그인 페이지로 이동
       navigate("/login");
+      alert("로그인해주세요");
       console.log("로그인X");
     }
   };
