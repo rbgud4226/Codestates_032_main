@@ -4,8 +4,17 @@ import imgIcon from "../../../asset/ChatAsset/image-icon.png";
 import sendIcon from "../../../asset/ChatAsset/message-icon.png";
 import SendChatDesign from "./SendChatDesign";
 import RecieveChatDesign from "./RecieveChatDesign";
+import Stomp, { Client } from "@stomp/stompjs";
+import SockJS from "sockjs";
 
-const WebSocketChat: React.FC = () => {
+const updateCurrentTime = (): string => {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  return `${hours}-${minutes}`;
+};
+
+const Chat: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [messageForm, setMessageForm] = useState<
     Array<{
@@ -15,68 +24,62 @@ const WebSocketChat: React.FC = () => {
     }>
   >([]);
   const [input, setInput] = useState<string>("");
-  const [socket, setSocket] = useState<WebSocket | null>(null);
 
-  const updateCurrentTime = (): string => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    return `${hours}-${minutes}`;
-  };
+  //현재 시간을 xx-xx로 가져오는 함수
 
   useEffect(() => {
-    const newSocket = new WebSocket("ws://localhost:8080"); // WebSocket 서버 주소로 변경하세요.
-    // headers: {
-    //   Authorization: `Bearer ${token}`, // 토큰을 헤더에 첨부
-    // },
-
-    newSocket.onopen = () => {
-      console.log("WebSocket 연결이 열렸습니다.");
+    const client = new Client({
+      brokerURL: "ws://3.35.193.208:8080/ws-stomp",
+      debug: (str: string) => {
+        console.log(str);
+      },
+      reconnectDelay: 5000,
+    });
+    //서버구독설정(메세지받음) {} 는 헤더설정.
+    client.onConnect = () => {
+      console.log("연결되었습니다");
+      client.subscribe(`/sub/room/1`, msg => {
+        console.log(msg.body);
+        const recieveMsgForm = {
+          isClient: false,
+          message: msg.body,
+          createAt: updateCurrentTime(),
+        };
+        setMessageForm(messageForm.concat(recieveMsgForm));
+      });
     };
-
-    newSocket.onmessage = event => {
-      // const message = event.data;
-      const rcForm = {
-        isClient: false,
-        message: event.data,
-        createAt: updateCurrentTime(),
-      };
-      setMessageForm(messageForm.concat(rcForm));
-      // setMessages(prevMessages => [...prevMessages, message]);
-    };
-
-    newSocket.onclose = () => {
-      console.log("WebSocket 연결이 닫혔습니다.");
-    };
-
-    setSocket(newSocket);
 
     return () => {
-      newSocket.close();
+      client.deactivate(); // 컴포넌트 언마운트 시 웹소켓 연결 해제
     };
   }, []);
-
+  //메세지 보내는 함수
   const sendMessage = () => {
-    const msForm = {
-      isClient: true,
-      message: input,
-      createAt: updateCurrentTime(),
-    };
-    if (socket && input.trim() !== "") {
-      socket.send(input);
-      setMessageForm(messageForm.concat(msForm));
+    if (input.trim() !== "") {
+      const client = new Client({
+        brokerURL: "ws://3.35.193.208:8080/ws-stomp",
+        debug: (str: string) => {
+          console.log(str);
+        },
+        reconnectDelay: 5000,
+      });
+      client.publish()
+
+      const sendForm = {
+        isClient: true,
+        message: input,
+        createAt: updateCurrentTime(),
+      };
+      
+      setMessageForm(messageForm.concat(sendForm));
       setMessages(messages.concat(input));
       setInput("");
+      client.disconnect();
     }
   };
   const setSendHdr = e => {
     setInput(e.target.value);
   };
-  //   <div>
-  //   {messages.map((message, index) => (
-  //     <div key={index}>{message}</div>
-  //   ))}
-  // </div>
 
   return (
     <MessageSection>
@@ -115,7 +118,7 @@ const WebSocketChat: React.FC = () => {
   );
 };
 
-export default WebSocketChat;
+export default Chat;
 
 export const MessageSection = styled.section`
   width: 100%;
