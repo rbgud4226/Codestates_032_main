@@ -1,9 +1,9 @@
 package com.pettalk.config;
 
 
-import com.pettalk.jwt.JwtAuthenticationFilter;
-import com.pettalk.jwt.JwtTokenizer;
-import com.pettalk.jwt.JwtVerificationFilter;
+import com.pettalk.jwt.filter.JwtAuthenticationFilter;
+import com.pettalk.jwt.token.JwtTokenizer;
+import com.pettalk.jwt.filter.JwtVerificationFilter;
 import com.pettalk.member.repository.RefreshTokenRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

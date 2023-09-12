@@ -1,7 +1,8 @@
-package com.pettalk.jwt;
+package com.pettalk.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.jwt.token.JwtTokenizer;
 import com.pettalk.member.dto.LoginDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.entity.RefreshToken;
@@ -16,6 +17,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +43,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return authenticationManager.authenticate(authenticationToken);
     }
-
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -49,28 +50,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException {
         Member member = (Member) authResult.getPrincipal();
         String accessToken = delegateAccessToken(member);
+
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenTime());
+        String TokenExpirationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(expiration);
+        response.setHeader("TokenExpiration", TokenExpirationDate);
+
         String refreshToken = delegateRefreshToken(member);
         String nickName = member.getNickName();
         String profileImage = member.getProfileImage();
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
-
-        Map<String, String> reponseMessage = new HashMap<>();
-        reponseMessage.put("nickName", nickName);
-        reponseMessage.put("profileImage", profileImage);
-        String responseBody = new ObjectMapper().writeValueAsString(reponseMessage);
+        Map<String, Object> responseMessage = new HashMap<>();
+        responseMessage.put("nickName", nickName);
+        responseMessage.put("profileImage", profileImage);
+        String responseBody = new ObjectMapper().writeValueAsString(responseMessage);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(responseBody);
     }
-//        JSON응답 Body에 access, refresh Token을 넣어서 보낼때
-//        Map<String, String> tokenMap = new HashMap<>();
-//        tokenMap.put("accessToken", accessToken);
-//        tokenMap.put("refreshToken", refreshToken);
-//        String responseBody = new ObjectMapper().writeValueAsString(tokenMap);
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(responseBody);
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
