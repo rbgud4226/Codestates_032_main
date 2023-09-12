@@ -52,12 +52,14 @@ public class PetSitterController {
 
     }
 
-    @PatchMapping("/{pet-sitter-id}")
-    public ResponseEntity patchPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId,
+    @PatchMapping
+    public ResponseEntity patchPetSitter(@LoginMemberId Long memberId,
             @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
 
-        PetSitter petSitter = mapper.patchToPetSitter(patchDto);
+        Member member = memberService.findVerifyMember(memberId);
+        Long petSitterId = member.getPetSitter().getPetSitterId();
 
+        PetSitter petSitter = mapper.patchToPetSitter(patchDto);
         petSitter.setPetSitterId(petSitterId);
 
         PetSitter response = service.updatePetSitter(petSitter);
@@ -65,8 +67,12 @@ public class PetSitterController {
         return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{pet-sitter-id}")
-    public ResponseEntity getPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId) {
+    @GetMapping
+    public ResponseEntity getPetSitter(@LoginMemberId Long memberId) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        Long petSitterId = member.getPetSitter().getPetSitterId();
+
         try{
         PetSitter petSitter = service.findPetSitter(petSitterId);
         return new ResponseEntity<>(petSitter, HttpStatus.OK);
