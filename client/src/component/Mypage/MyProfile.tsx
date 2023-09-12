@@ -9,8 +9,7 @@ import { fetchMyPageData } from "./MypageService";
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState("");
-
-  console.log("토큰받음");
+  const api = process.env.REACT_APP_DB_HOST;
 
   //서버 통신 임시 구현
   const [userData, setUserData] = useState({
@@ -25,7 +24,7 @@ const MyProfile = () => {
   useEffect(() => {
     // 어딘가에서 accessToken을 얻어온다고 가정
     const accessToken = localStorage.getItem("accessToken");
-
+    console.log(accessToken);
     if (!accessToken) {
       console.error("accessToken이 없습니다.");
       return;
@@ -58,7 +57,6 @@ const MyProfile = () => {
 
   const handleSaveClick = async () => {
     try {
-      const serverUrl = "https://a068-121-162-236-116.ngrok-free.app/members";
       const accessToken = localStorage.getItem("accessToken");
       const ngrokSkipBrowserWarning = "69420";
       const page = 1; // 페이지 번호
@@ -66,7 +64,7 @@ const MyProfile = () => {
 
       console.log(newNickname);
       const response = await axios.patch(
-        serverUrl,
+        `${api}/members`,
         {
           nickName: newNickname,
         },

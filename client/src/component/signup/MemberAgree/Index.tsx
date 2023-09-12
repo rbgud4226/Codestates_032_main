@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import PetTalkLogo from "../../petalkLogo/PetTalkLogo";
 import MemberAgreeForm from "./MemberAgreeForm";
 import CheckLogin from "./CheckLogin";
+
 const MemberAgree = () => {
   return (
     <MAContainer>
@@ -19,5 +20,5 @@ export const MAContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 242px;
+  margin-top: 60px;
 `;

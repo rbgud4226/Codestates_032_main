@@ -11,14 +11,13 @@ const PetsitterRegister = () => {
   const [formData, setFormData] = useState<
     BasicInfoFormData | ExperienceFormData | null
   >(null);
+  const api = process.env.REACT_APP_DB_HOST;
 
   useEffect(() => {
     const fetchPetsitterInfo = async () => {
       try {
-        const serverUrl1 =
-          "https://a068-121-162-236-116.ngrok-free.app/petsitter";
         const ngrokSkipBrowserWarning = "69420";
-        const response = await axios.get(serverUrl1, {
+        const response = await axios.get(`${api}/petsitter`, {
           headers: {
             Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
             Accept: "application/json",

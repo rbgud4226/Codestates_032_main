@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const serverUrl = "https://a068-121-162-236-116.ngrok-free.app/members";
+const api = process.env.REACT_APP_DB_HOST;
 
 // 마이페이지 데이터를 가져오는 함수
 export async function fetchMyPageData(accessToken: string) {
@@ -9,7 +8,7 @@ export async function fetchMyPageData(accessToken: string) {
     const page = 1; // 페이지 번호
     const size = 1; // 페이지당 아이템 수
 
-    const response = await axios.get(serverUrl, {
+    const response = await axios.get(`${api}/members`, {
       headers: {
         Authorization: `${accessToken}`,
         Accept: "application/json",

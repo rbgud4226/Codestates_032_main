@@ -16,6 +16,6 @@ export default SignUpDone;
 export const DoneCtn = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 269px;
+  margin-top: 60px;
   align-items: center;
 `;

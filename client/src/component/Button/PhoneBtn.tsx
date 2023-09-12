@@ -1,21 +1,17 @@
 import React from "react";
 import { styled } from "styled-components";
 
-interface SendBtnProps {
-  isDisable: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+interface T {
+  name: string;
+  onSubmit?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
-const SendBtn: React.FC<SendBtnProps> = ({ isDisable, onClick }) => {
-  return (
-    <SBtn onClick={onClick} disabled={isDisable}>
-      전송
-    </SBtn>
-  );
+const PhoneBtn = ({ name, onSubmit }: T) => {
+  return <Btn onSubmit={onSubmit}>{name}</Btn>;
 };
 
-export default SendBtn;
+export default PhoneBtn;
 
-export const SBtn = styled.button`
+export const Btn = styled.button`
   width: 54px;
   height: 30px;
   display: flex;

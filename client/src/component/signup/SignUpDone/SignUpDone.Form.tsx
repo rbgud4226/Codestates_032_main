@@ -1,13 +1,10 @@
 import React from "react";
 import { styled } from "styled-components";
-import LoginBtn from "../../Button/LoginBtn";
-import { useNavigate } from "react-router-dom";
+import LargeBtn from "../../Button/LargeCheckBtn";
 
 const SignUpDoneForm = () => {
-  const navigate = useNavigate();
-
   const loginBtnHdr = () => {
-    navigate("/login");
+    window.location.replace("/login");
   };
   return (
     <SDSection>
@@ -17,8 +14,8 @@ const SignUpDoneForm = () => {
         <DoneSpan>완료</DoneSpan>
       </div>
       <WelcomeSpan>환영합니다!</WelcomeSpan>
-      <LoginCtn>
-        <LoginBtn onClick={loginBtnHdr} />
+      <LoginCtn onClick={() => loginBtnHdr()}>
+        <LargeBtn name={"로그인"} />
       </LoginCtn>
     </SDSection>
   );
@@ -56,5 +53,6 @@ export const WelcomeSpan = styled.span`
 `;
 
 export const LoginCtn = styled.div`
+  width: 240px;
   margin-top: 80px;
 `;
