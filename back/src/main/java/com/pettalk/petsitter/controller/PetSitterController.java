@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.controller;
 
 
+import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
@@ -14,6 +15,7 @@ import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,8 @@ public class PetSitterController {
     private final PetSitterService service;
     private final WcBoardRepository wcBoardRepository;
     private final WcBoardMapper wcBoardMapper;
+    @Autowired
+    private MemberService memberService;
 
 //다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 존재함.
 
@@ -53,18 +57,33 @@ public class PetSitterController {
 
     }
 
-    @PatchMapping("/{pet-sitter-id}")
-    public ResponseEntity patchPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId,
-            @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
+    @PatchMapping
+    public ResponseEntity patchPetSitter(@LoginMemberId Long memberId,
+                                         @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        Long petSitterId = member.getPetSitter().getPetSitterId();
 
         PetSitter petSitter = mapper.patchToPetSitter(patchDto);
-
         petSitter.setPetSitterId(petSitterId);
 
-        PetSitter response = service.updatePetSitter(petSitter);
+        PetSitter response = service.updatePetSitter(petSitter, memberId);
 
         return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
     }
+
+//    @PatchMapping("/{pet-sitter-id}")
+//    public ResponseEntity patchPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId,
+//            @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
+//
+//        PetSitter petSitter = mapper.patchToPetSitter(patchDto);
+//
+//        petSitter.setPetSitterId(petSitterId);
+//
+//        PetSitter response = service.updatePetSitter(petSitter);
+//
+//        return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
+//    }
 
     @GetMapping("/{pet-sitter-id}")
     public ResponseEntity getPetSitter(@PathVariable("pet-sitter-id") @Positive long petSitterId) {

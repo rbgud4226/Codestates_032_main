@@ -58,14 +58,14 @@ public class PetSitterService {
         return petSitterRepository.save(petSitter);
     }
 
-    public PetSitter updatePetSitter(PetSitter petSitter) {
+    public PetSitter updatePetSitter(PetSitter petSitter, Long memberId) {
 
         PetSitter findPetSitter = findVerifiedPetSitter(petSitter.getPetSitterId());
-//        Member findMember = memberRepository.findById(petSitter.getMember().getMemberId())
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-//
-//        petSitter.setMember(findMember);
 
+        Member findMember = memberRepository.findById(memberId)
+               .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+            petSitter.setMember(findMember);
             petSitter.setPetSitterId(findPetSitter.getPetSitterId());
             petSitter.setName(findPetSitter.getName());
             petSitter.setIntroduce(petSitter.getIntroduce());

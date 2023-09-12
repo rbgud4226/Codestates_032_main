@@ -2,7 +2,6 @@ package com.pettalk.jwt.service;
 
 import com.pettalk.jwt.token.JwtTokenizer;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;

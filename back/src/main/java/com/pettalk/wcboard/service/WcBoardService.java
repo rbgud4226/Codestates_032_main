@@ -35,9 +35,10 @@ public class WcBoardService {
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
         //멤버 아이디 가져오기
+        wcboard.setMember(memberService.findVerifyMember(memberId)); // *******
         wcboard.getMember().getNickName();
         wcboard.getMember().getProfileImage();
-        wcboard.setMember(memberService.findVerifyMember(memberId));
+//        wcboard.setMember(memberService.findVerifyMember(memberId));
         wcboard.setCreatedAt(LocalDateTime.now());
         wcBoardRepository.save(wcboard);
         return wcboard;
@@ -126,6 +127,7 @@ public class WcBoardService {
             throw new BusinessLogicException(ExceptionCode.NOT_RESOURCE_OWNER); // 삭제 불가능 예외처리
         }
         */
+
         wcBoardRepository.delete(findPost);
     }
 

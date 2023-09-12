@@ -35,36 +35,36 @@ public class WcBoardController {
     private final MemberService memberService;
 
 
-//    @PostMapping
-//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
-//                                  @LoginMemberId Long memberId){ //LoginMemberId Long memberId
-//        log.info(memberId + "MemberId");
-//
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        memberService.findMemberByPrincipal(principal.toString());
-//
-//        if ("anonymousUser".equals(principal)) {
-//            return ResponseEntity
-//                    .status(HttpStatus.BAD_REQUEST)
-//                    .body("로그인을 해주세요!");
-//        }else {
-//            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
-//            return ResponseEntity
-//                    .status(HttpStatus.CREATED)
-//                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
-//        }
-//
-//
-//    }
+    @PostMapping
+    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto, // *******
+                                  @LoginMemberId Long memberId){ //LoginMemberId Long memberId
+        log.info(memberId + "MemberId");
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
+
+        if ("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("로그인을 해주세요!");
+        }else {
+            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+        }
+
+
+    }
 
 //    로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
-    @PostMapping
-    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
-    }
+//    @PostMapping
+//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
+//        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+//    }
 
     @PatchMapping("/{wcboard-id}")
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,

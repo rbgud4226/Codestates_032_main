@@ -76,6 +76,7 @@ public class WcBoardDto {
         private String startTime;
         private String endTime;
 
+
     }
 
 
