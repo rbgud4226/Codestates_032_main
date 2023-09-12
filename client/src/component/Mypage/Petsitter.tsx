@@ -32,7 +32,7 @@ const Petsitter: React.FC<PetsitterProps> = ({ checkPetSitter }) => {
 
   // const fetchData = async () => {
   //   try {
-  //     const response = await axios.get("/멀까요"); // 서버의 엔드포인트에 맞게 수정해야 함
+  //     const response = await axios.get("/멀까요");
   //     setUserData(response.data);
   //   } catch (error) {
   //     console.error("Error fetching user data:", error);
@@ -45,8 +45,11 @@ const Petsitter: React.FC<PetsitterProps> = ({ checkPetSitter }) => {
         <PetSitterContainer checkPetSitter={checkPetSitter}>
           <NameWrapper>
             <NameText>펫시터 {dummyData.name}</NameText>
-            <EditIcon src={edit} alt="Name Edit" />
-            {/* 수정버튼 클릭시 펫시터 수정 페이지로 이동 구현해야함*/}
+            <EditIcon
+              src={edit}
+              onClick={() => navigate("/petsitter/edit")}
+              alt="Name Edit"
+            />
           </NameWrapper>
           <InfoWrapper>
             <Item>

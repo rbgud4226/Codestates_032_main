@@ -26,7 +26,7 @@ const BtnArr = [
   {
     text: "마이페이지",
     src: myPageIcon,
-    link: "/mypage",
+    link: "/members",
   },
 ];
 

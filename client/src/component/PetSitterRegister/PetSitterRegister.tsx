@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import BasicInformation, { BasicInfoFormData } from "./BasicInformation";
 import Experience, { ExperienceFormData } from "./Experience";
 import axios from "axios"; // Axios를 import
@@ -12,38 +13,40 @@ const PetsitterRegister = () => {
     BasicInfoFormData | ExperienceFormData | null
   >(null);
   const api = process.env.REACT_APP_DB_HOST;
+  const { pathname } = useLocation();
+  console.log(pathname);
+  // useEffect(() => {
+  //   const fetchPetsitterInfo = async () => {
+  //     try {
+  //       const ngrokSkipBrowserWarning = "69420";
+  //       console.log(localStorage.getItem("accessToken"));
+  //       const response = await axios.get(`${api}/petsitter`, {
+  //         headers: {
+  //           Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+  //           Accept: "application/json",
+  //           "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+  //         },
+  //       });
 
-  useEffect(() => {
-    const fetchPetsitterInfo = async () => {
-      try {
-        const ngrokSkipBrowserWarning = "69420";
-        const response = await axios.get(`${api}/petsitter`, {
-          headers: {
-            Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
-            Accept: "application/json",
-            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
-          },
-        });
-        console.log(localStorage.getItem("accessToken"));
+  //       if (response.data.petSitterId) {
+  //         console.log("펫시터 수정");
+  //         setFormData({
+  //           name: response.data.name,
+  //           introduce: response.data.introduce,
+  //           smoking: response.data.smoking,
+  //           nowJob: response.data.nowJob,
+  //           exAnimal: response.data.exAnimal,
+  //           info: response.data.info,
+  //           agreement: response.data.agreement,
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("에러:", error);
+  //     }
+  //   };
 
-        if (response.data.petSitterId) {
-          setFormData({
-            name: response.data.name,
-            introduce: response.data.introduce,
-            smoking: response.data.smoking,
-            nowJob: response.data.nowJob,
-            exAnimal: response.data.exAnimal,
-            info: response.data.info,
-            agreement: response.data.agreement,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching petsitter info:", error);
-      }
-    };
-
-    fetchPetsitterInfo();
-  }, []); // 페이지 로드 시 한 번만 실행
+  //   fetchPetsitterInfo();
+  // }, []); // 페이지 로드 시 한 번만 실행
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === 0 ? 1 : 0);
@@ -73,26 +76,32 @@ const PetsitterRegister = () => {
   const handleRegister = async () => {
     if (formData) {
       console.log(formData);
-
-      //   const keys = Object.keys(formData);
-      //   console.log(keys); // ["exAnimal", "info", "agreement"]
-      //   const values = Object.values(formData);
-      //   console.log(values); // [[], "", ["개인정보 수집/이용에 동의합니다."]]
-
       try {
-        const serverUrl =
-          "https://a068-121-162-236-116.ngrok-free.app/petsitter";
         const ngrokSkipBrowserWarning = "69420";
 
-        const response = await axios.post(serverUrl, formData, {
-          headers: {
-            Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
-            Accept: "application/json",
-            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
-          },
-        });
+        if (pathname === "/petsitter/edit") {
+          console.log("수정이다잇");
+          const response = await axios.patch(`${api}/petsitter`, formData, {
+            headers: {
+              Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+              Accept: "application/json",
+              "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+            },
+          });
 
-        console.log("서버 응답:", response.data);
+          console.log("서버 응답:", response.data);
+        } else {
+          // 다른 경로에서는 POST 요청을 보냄
+          const response = await axios.post(`${api}/petsitter`, formData, {
+            headers: {
+              Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+              Accept: "application/json",
+              "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+            },
+          });
+
+          console.log("서버 응답:", response.data);
+        }
       } catch (error) {
         console.error("서버 요청 중 오류 발생:", error);
       }
