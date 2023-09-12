@@ -9,9 +9,7 @@ const TokenProvider = async ({ email, password }, setErrorMsg) => {
   //   };
   localStorage.setItem("nickName", res?.nickName);
   localStorage.setItem("profileImage", res?.profileImage);
-
   localStorage.setItem("refreshToken", res?.refreshToken);
-
   localStorage.setItem("accessToken", res?.accessToken);
 
   console.log(res);

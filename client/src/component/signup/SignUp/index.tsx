@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import PetTalkLogo from "../../petalkLogo/PetTalkLogo";
 import SignUpForm from "./SignUpForm";
+import MobileVerify from "./MobileVerify";
+import VerifyNumber from "./VerifyNumber";
 
 const SignUp = () => {
+  const [phoneNum, setPhoneNum] = useState("");
   return (
     <SignUpCtn>
       <PetTalkLogo />
-      <SignUpForm />
+      <MobileVerify setPhoneNum={setPhoneNum} />
+      <VerifyNumber phoneNum={phoneNum} />
+      <SignUpForm phoneNum={phoneNum} />
     </SignUpCtn>
   );
 };
@@ -18,5 +23,5 @@ export const SignUpCtn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 201px;
+  margin-top: 60px;
 `;

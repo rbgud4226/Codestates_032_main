@@ -18,5 +18,5 @@ export const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 226px;
+  margin-top: 60px;
 `;
