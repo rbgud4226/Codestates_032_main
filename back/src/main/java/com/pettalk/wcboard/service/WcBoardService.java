@@ -35,6 +35,8 @@ public class WcBoardService {
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
         //멤버 아이디 가져오기
+        wcboard.getMember().getNickName();
+        wcboard.getMember().getProfileImage();
         wcboard.setMember(memberService.findVerifyMember(memberId));
         wcboard.setCreatedAt(LocalDateTime.now());
         wcBoardRepository.save(wcboard);
@@ -42,14 +44,14 @@ public class WcBoardService {
     }
 
     //테스트용
-//    public WcBoard createWcBoardPost (WcBoard wcboard){
-//        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
-//        //멤버 아이디 가져오기
-//
-//        wcboard.setCreatedAt(LocalDateTime.now());
-//        wcBoardRepository.save(wcboard);
-//        return wcboard;
-//    }
+    public WcBoard createWcBoardPost (WcBoard wcboard){
+        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+        //멤버 아이디 가져오기
+
+        wcboard.setCreatedAt(LocalDateTime.now());
+        wcBoardRepository.save(wcboard);
+        return wcboard;
+    }
 
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost (WcBoard wcboard, Long memberId) {
