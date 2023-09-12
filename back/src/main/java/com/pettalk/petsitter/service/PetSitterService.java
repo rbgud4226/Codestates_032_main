@@ -5,20 +5,11 @@ import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
-import com.pettalk.member.service.MemberDetailService;
-import com.pettalk.member.service.MemberService;
-import com.pettalk.petsitter.dto.PetSitterDto;
-import com.pettalk.petsitter.dto.PetSitterRecentDto;
 import com.pettalk.petsitter.entity.PetSitter;
-import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.repository.PetSitterRepository;
-import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
-import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
-import com.pettalk.wcboard.service.WcBoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -36,10 +26,8 @@ import java.util.*;
 public class PetSitterService {
 
     private final PetSitterRepository petSitterRepository;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final WcBoardRepository wcBoardRepository;
-    private final WcBoardService wcBoardService;
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
@@ -111,7 +99,7 @@ public class PetSitterService {
 
 //        return wcBoardRepository.findByMember_MemberId(petSitterMemberId, pageRequest);
         return wcBoardRepository.findByPetSitter_PetSitterId(petSitter.getPetSitterId(), pageRequest);
-        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그
+        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
     }
 
 }

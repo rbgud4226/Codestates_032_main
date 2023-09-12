@@ -1,31 +1,16 @@
 package com.pettalk.petsitter.dto;
 
-import com.pettalk.wcboard.dto.WcBoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import javax.persistence.ElementCollection;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PetSitterDto {
-
-//    private final List<WcBoardDto.Response> wcBoardDtoGet;
-//
-//    public GetPetSitterDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet) {
-//        this.nickName = nickName;
-//        this.email = email;
-//        this.phone = phone;
-//        this.profileImage = profileImage;
-//        this.wcBoardDtoGet = wcBoardDtoGet;
-//    }
 
 
     @Getter
@@ -68,6 +53,8 @@ public class PetSitterDto {
         @NotBlank(message = "이름을 적어주세요.")
         private String name;
 
+        private String petSitterImage;
+
         @NotBlank(message = "자기소개를 작성해 주세요.")
         private String introduce;
 
@@ -95,6 +82,8 @@ public class PetSitterDto {
 
         private String name;
 
+        private String petSitterImage;
+
         private String introduce;
 
         private String nowJob;
@@ -116,5 +105,6 @@ public class PetSitterDto {
         private String nickName;
         private String startTime;
         private String endTime;
+        private String memberImage;
     }
 }

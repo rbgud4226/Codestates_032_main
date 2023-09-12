@@ -3,14 +3,12 @@ package com.pettalk.petsitter.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.entity.Member;
-import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.dto.PetSitterDto;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.service.PetSitterService;
 import com.pettalk.response.MultiResponseDto;
-import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
@@ -22,12 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.Path;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.net.URI;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*") //모든 출처와 헤더에 대해 허용된 상태이므로 나중에 고칠 것.
@@ -89,7 +84,7 @@ public class PetSitterController {
 //        List<WcBoard> wcBoardList = wcBoardPage.getContent();
 //
 //        return new ResponseEntity<>(new MultiResponseDto<>(wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardList), wcBoardPage), HttpStatus.OK);
-//        //TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+//        TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
 //
 //    }
     @GetMapping("/recent")
@@ -97,13 +92,16 @@ public class PetSitterController {
                                              @RequestParam @Positive int page,
                                              @RequestParam @Positive int size) {
         Member member = memberService.findVerifyMember(memberId);
+        String memberImage = member.getProfileImage();
         PetSitter petSitter = member.getPetSitter();
 
         Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
         List<WcBoard> wcBoardList = wcBoardPage.getContent();
 
+        List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
+
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
-        //TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
 
     }
 }
