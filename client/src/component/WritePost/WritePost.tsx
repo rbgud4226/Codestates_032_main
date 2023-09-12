@@ -62,7 +62,7 @@ function WritePost() {
         .filter(tag => tag !== animal);
       setPost({
         ...post,
-        animalTag: updatedAnimalTag.join(","),
+        animalTag: updatedAnimalTag.join(""),
       });
     } else {
       setPost({

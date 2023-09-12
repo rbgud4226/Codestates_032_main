@@ -40,6 +40,7 @@ export const HeaderContainer = styled.header`
   /* width: 100%;  이거 설정하면 컨테이너 뚫고 나감*/
   box-shadow: 0px 10px 34px #272c5614;
   background-color: white;
+  z-index: 999;
 `;
 export const LogoLink = styled(Link)`
   margin-left: 20px;

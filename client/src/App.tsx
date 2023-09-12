@@ -11,9 +11,8 @@ import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
+import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
-import PostListPage from "./page/PostListPage";
-import PostDetail from "./component/WritePost/PostDetail";
 
 function App() {
   return (
@@ -31,10 +30,10 @@ function App() {
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
-                <Route path="/mainpage" element={<PostListPage />} />
-                <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
-                <Route path="/board/:wcboardId" element={<PostDetail />} />
+                <Route path="/petsitter/edit" element={<PetSitterPage />} />
+                <Route path="/mainpage" element={<BorderListPage />} />
+                <Route path="/writpost" element={<WritePostPage />} />
               </Routes>
             </Layout>
             <Nav />

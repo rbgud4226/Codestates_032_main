@@ -1,7 +1,7 @@
 import React from "react";
 import BoardList from "../component/WritePost/PostList";
 
-const PostListPage = () => {
+const borderListPage = () => {
   return (
     <div>
       <BoardList />
@@ -9,4 +9,4 @@ const PostListPage = () => {
   );
 };
 
-export default PostListPage;
+export default borderListPage;

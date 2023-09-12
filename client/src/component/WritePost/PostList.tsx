@@ -38,9 +38,6 @@ const BoardList = () => {
           params: { page, size },
         });
 
-        const isUserLoggedIn = true;
-        setIsLoggedIn(isUserLoggedIn);
-
         setPosts(response.data.data);
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);

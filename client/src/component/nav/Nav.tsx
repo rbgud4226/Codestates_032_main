@@ -11,7 +11,7 @@ const BtnArr = [
   {
     text: "예약하기",
     src: bookIcon,
-    link: "/reservation",
+    link: "/mainpage",
   },
   {
     text: "예약확인",
@@ -21,12 +21,12 @@ const BtnArr = [
   {
     text: "검색",
     src: searchIcon,
-    link: "/search",
+    link: "/mainpage",
   },
   {
     text: "마이페이지",
     src: myPageIcon,
-    link: "/mypage",
+    link: "/members",
   },
 ];
 
