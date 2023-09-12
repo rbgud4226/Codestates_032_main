@@ -8,7 +8,7 @@ public enum ExceptionCode {
     CHAT_NOT_FOUND(404, "Chat not found"),
     POST_NOT_FOUND(404, "Chat not found"),
     MEMBER_EXISTS(409, "Member exists"),
-    ANSWER_EXISTS(409, "Answer exists"),
+    ALREADY_SUBMIT(409, "Already submit"),
     QUESTION_EXISTS(409, "Question exists"),
     COMMENT_EXISTS(409, "Comment exists"),
     QUESTION_VOTE_EXISTS(409, "QuestionVote exists"),

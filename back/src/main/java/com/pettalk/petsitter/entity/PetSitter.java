@@ -1,6 +1,8 @@
 package com.pettalk.petsitter.entity;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.wcboard.entity.PetSitterApplicant;
+import com.pettalk.wcboard.entity.WcBoard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,29 +22,30 @@ public class PetSitter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long petSitterId;
-
+    private Long petSitterId;
+    private String name;
+    private String petSitterImage;
     private String introduce;
-
     private String nowJob;
-
     private boolean smoking;
+    private String info;
 
     @ElementCollection
     private List<String> exAnimal;
-
-    private String info;
 
     @JoinColumn(name = "member_id")
     @OneToOne
     private Member member;
 
-//    @JoinColumn
-//    @ManyToOne
-//    private WcBoard wcBoard;
 
+    @OneToMany(mappedBy = "petSitter", cascade = CascadeType.ALL)
+    private List<WcBoard> wcBoard;
 
-    private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "petSitter", cascade = CascadeType.ALL)
+    private List<PetSitterApplicant> petSitterApplicant;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     //    @OneToMany(mappedBy = "petSitter")
     //    private List<ChatRoom> room = new ArrayList<>();
 

@@ -1,13 +1,18 @@
 package com.pettalk.wcboard.dto;
 
+import com.pettalk.petsitter.entity.PetSitter;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
+@Setter
 public class WcBoardDto {
     @AllArgsConstructor
     @Getter
@@ -67,12 +72,22 @@ public class WcBoardDto {
         private String startTime;
         private String endTime;
     }
-    @AllArgsConstructor
     @Getter
-    public static class Submit {
+    @Setter
+    public static class SubmitResponse{
+        private Long wcboardId;
+//        private String name;
+//        private String nowJob;
+//        private String petSitterImage;
+//        private boolean smoking;
+    }
+
+    @Getter
+    @Setter
+    public static class petSitterApplicantResponse {
         private String name;
         private String nowJob;
-        private String profileImage;
         private boolean smoking;
+        private String petSitterImage;
     }
 }

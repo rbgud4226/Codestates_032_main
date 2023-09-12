@@ -3,6 +3,8 @@ package com.pettalk.petsitter.service;
 
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
+import com.pettalk.member.entity.Member;
+import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.repository.PetSitterRepository;
@@ -18,8 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PetSitterService {
 
-    @Autowired
     private final PetSitterRepository petSitterRepository;
+    private final MemberRepository memberRepository;
 
 //    private final MemberService memberService;
 
@@ -36,10 +38,23 @@ public class PetSitterService {
     public PetSitter updatePetSitter(PetSitter petSitter) {
 
         PetSitter findPetSitter = findVerifiedPetSitter(petSitter.getPetSitterId());
+        System.out.println(findPetSitter + "파인드 펫시터");
+        Member findMember = memberRepository.findById(petSitter.getMember().getMemberId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        System.out.println(findMember + ":findmember123124123w");
 
-        return findPetSitter;
+        petSitter.setMember(findMember);
+
+        petSitter.setPetSitterId(findPetSitter.getPetSitterId());
+        petSitter.setName(findPetSitter.getName());
+        petSitter.setIntroduce(petSitter.getIntroduce());
+        petSitter.setNowJob(petSitter.getNowJob());
+        petSitter.setSmoking(petSitter.isSmoking());
+        petSitter.setExAnimal(petSitter.getExAnimal());
+        petSitter.setInfo(petSitter.getInfo());
+
+        return petSitterRepository.save(petSitter);
     }
-
     @Transactional(readOnly = true)
     public PetSitter findVerifiedPetSitter(long petSitterId) {
         Optional<PetSitter> optionalPetSitter = petSitterRepository.findById(petSitterId);

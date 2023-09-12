@@ -4,14 +4,17 @@ import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
+import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.response.MultiResponseDto;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.service.WcBoardService;
 import com.pettalk.wcboard.specification.WcBoardSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,7 +40,7 @@ public class WcBoardController {
 
 //    @PostMapping
 //    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
-//                                  @LoginMemberId Long memberId){ //LoginMemberId Long memberId
+//                                  @LoginMemberId Long memberId){
 //        log.info(memberId + "MemberId");
 //
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -48,7 +51,7 @@ public class WcBoardController {
 //                    .status(HttpStatus.BAD_REQUEST)
 //                    .body("로그인을 해주세요!");
 //        }else {
-//            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId); //memberId
+//            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId);
 //            return ResponseEntity
 //                    .status(HttpStatus.CREATED)
 //                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
@@ -56,11 +59,6 @@ public class WcBoardController {
 //
 //
 //    }
-
-    @PostMapping("/submit")
-    public ResponseEntity PetSitterSubmit (@Valid @RequestBody WcBoardDto.Submit submit){
-        return null;
-    }
 
 
 //    로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
@@ -70,6 +68,17 @@ public class WcBoardController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+    }
+
+    //게시글에 펫시터 신청
+    @PostMapping("/submit")
+    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
+                                          @Valid @RequestBody WcBoardDto.SubmitResponse submitResponse) {
+        WcBoard convertedResponse = service.whoPetSitterId(submitResponse, memberId);
+
+        return ResponseEntity
+                .ok()
+                .body("신청 완료!");
     }
 
     @PatchMapping("/{wcboard-id}")
@@ -101,13 +110,19 @@ public class WcBoardController {
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요 > 테스트 완료!
      */
 
+    @GetMapping("/submit/{wcboard-id}")
+    public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
+        List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
+
+
+        return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
+    }
+
     @GetMapping("/{wcboard-id}")
     public ResponseEntity findPost(@PathVariable("wcboard-id") @Positive Long wcboardId) {
         WcBoard wcBoard = service.findWcBoardPost(wcboardId);
         return new ResponseEntity<>(mapper.wcBoardResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
     }
-
-
 
     @GetMapping // 메인 페이지 전체 게시글 로드 @@ㅇ
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
@@ -161,7 +176,8 @@ public class WcBoardController {
 
      return new ResponseEntity<>(
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-     }*/
+     }
+     */
 
     @GetMapping("/tag")
     public ResponseEntity findAllWithTags(

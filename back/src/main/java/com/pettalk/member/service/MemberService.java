@@ -69,12 +69,12 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public GetMemberDto getMember(Long memberId) {
-        Member findMember = findVerifyMember(memberId);
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
-        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
-        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
-    }
+//    public GetMemberDto getMember(Long memberId) {
+//        Member findMember = findVerifyMember(memberId);
+//        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+//        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
+//        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
+//    }
 
     public List<WcBoardDto.Response> getMembers(Long memberId) {
         Member findMember = findVerifyMember(memberId);
