@@ -126,5 +126,6 @@ public class PetSitterDto {
         private String nickName;
         private String startTime;
         private String endTime;
+        private String memberImage;
     }
 }
