@@ -60,7 +60,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 //        configuration.setAllowedOrigins(Arrays.asList("*")); //직접입력
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000","https://a068-121-162-236-116.ngrok-free.app")); //직접입력
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000","https://d92e-121-162-236-116.ngrok-free.app")); //직접입력
         configuration.setAllowedMethods(Arrays.asList("*")); // 직접입력
         configuration.setAllowedHeaders(Arrays.asList("*")); // 직접입력
         configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh")); //직접입력

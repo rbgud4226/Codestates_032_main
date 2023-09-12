@@ -32,13 +32,9 @@ public class WcBoardDto {
         private String areaTag;
 
         private String startTime;
-
         private String endTime;
-
         private String createdAt;
-
         private String postStatus;
-
     }
     @AllArgsConstructor
     @Getter
@@ -50,18 +46,13 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
-
         private String startTime;
-
         private String endTime;
-
         private String postStatus;
-
         public void addwcBoardId(Long wcboardId) {
             this.wcboardId = wcboardId;
         }
     }
-
     @AllArgsConstructor
     @Getter
     public static class Response {
@@ -75,8 +66,13 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
-
     }
-
-
+    @AllArgsConstructor
+    @Getter
+    public static class Submit {
+        private String name;
+        private String nowJob;
+        private String profileImage;
+        private boolean smoking;
+    }
 }

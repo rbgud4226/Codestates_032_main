@@ -57,6 +57,12 @@ public class WcBoardController {
 //
 //    }
 
+    @PostMapping("/submit")
+    public ResponseEntity PetSitterSubmit (@Valid @RequestBody WcBoardDto.Submit submit){
+        return null;
+    }
+
+
 //    로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
     @PostMapping
     public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
