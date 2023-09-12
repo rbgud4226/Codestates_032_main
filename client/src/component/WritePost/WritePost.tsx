@@ -77,7 +77,7 @@ function WritePost() {
     setIsSubmitting(true); // 제출 중으로 표시
 
     try {
-      const apiUrl = "https://3c86-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
+      const apiUrl = "https://d92e-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
       console.log(
         post.images,
         post.wcTag,

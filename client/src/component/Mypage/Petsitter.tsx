@@ -4,9 +4,11 @@ import styled from "styled-components";
 import petssiterImg from "../../asset/MainAsset/MainImage1.png";
 import edit from "../../asset/MypageAsset/edit.png";
 import score from "../../asset/MypageAsset/Mypagescore.png";
+import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 
 const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
+  const navigate = useNavigate();
   const dummyData = {
     name: "홍길동",
     careActivities: 10,
@@ -70,8 +72,9 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
               <h2>펫시터 등록하기</h2>
               <p>원할 때 일해봐요!</p>
             </LeftAlignedText>
-            <RegisterButton>등록하기</RegisterButton>
-            {/* 등록버튼 클릭시 펫시터 등록 페이지로 이동 구현해야함 */}
+            <RegisterButton onClick={() => navigate("/petsitter")}>
+              등록하기
+            </RegisterButton>
           </RegisterContainer>
         </PetSitterContainer>
       )}

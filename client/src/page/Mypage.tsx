@@ -5,7 +5,7 @@ import Petsitter from "../component/Mypage/Petsitter";
 
 const Mypage = () => {
   // 'petSitter'가 등록되었다고 가정 추후 변경
-  const isPetSitterRegistered = true;
+  const isPetSitterRegistered = false;
 
   return (
     <div>
