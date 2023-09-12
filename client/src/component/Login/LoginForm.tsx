@@ -21,26 +21,6 @@ const LoginForm = () => {
     } else {
       navigate("/");
     }
-
-    // try {
-    //   const res = await axios.post("http://localhost:8080/members/login", {
-    //     email: email,
-    //     password: password,
-    //   });
-    //   const token = res;
-    //   console.log(token);
-    // } catch (error) {
-    //   if (axios.isAxiosError(error)) {
-    //     const axiosError = error as AxiosError;
-    //     if (axiosError.response) {
-    //       console.log("로그인 정보 확인바람", axiosError.response.data);
-    //     } else {
-    //       console.error("요청 실패함", axiosError.message);
-    //     }
-    //   } else {
-    //     console.error("알수 없는 에러가 발생");
-    //   }
-    // }
   };
   return (
     <LoginContainer>

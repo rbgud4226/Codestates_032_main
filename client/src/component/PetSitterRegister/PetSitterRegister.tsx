@@ -16,10 +16,13 @@ const PetsitterRegister = () => {
     const fetchPetsitterInfo = async () => {
       try {
         const serverUrl1 =
-          "https://166a-222-102-41-193.ngrok-free.app/petsitter"; // 서버 API URL을 여기에 넣으세요
+          "https://a068-121-162-236-116.ngrok-free.app/petsitter";
+        const ngrokSkipBrowserWarning = "69420";
         const response = await axios.get(serverUrl1, {
           headers: {
             Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
           },
         });
         console.log(localStorage.getItem("accessToken"));
@@ -79,9 +82,16 @@ const PetsitterRegister = () => {
 
       try {
         const serverUrl =
-          "https://166a-222-102-41-193.ngrok-free.app/petsitter";
+          "https://a068-121-162-236-116.ngrok-free.app/petsitter";
+        const ngrokSkipBrowserWarning = "69420";
 
-        const response = await axios.post(serverUrl, formData);
+        const response = await axios.post(serverUrl, formData, {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+        });
 
         console.log("서버 응답:", response.data);
       } catch (error) {

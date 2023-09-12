@@ -17,7 +17,7 @@ const EmailCheckBtn: React.FC<EmailCheckBtnProps> = ({
   const validEmailhdr = async () => {
     try {
       const res = await axios.post(
-        "https://7fdc-218-155-160-190.ngrok-free.app/check",
+        "https://a068-121-162-236-116.ngrok-free.app/check",
         {
           email: email,
         },

@@ -42,24 +42,24 @@ const SignUpForm = () => {
     e.preventDefault();
     imageHdr();
     console.log(phoneNum);
-    // try {
-    //   const res = await axios.post(
-    //     " https://7fdc-218-155-160-190.ngrok-free.app/sendSms",
-    //     {
-    //       phone: phoneNum,
-    //     },
-    //   );
-    //   console.log(res.data);
-    // } catch (err) {
-    //   console.log("인증 실패");
-    // }
+    try {
+      const res = await axios.post(
+        "https://a068-121-162-236-116.ngrok-free.app/sendSms",
+        {
+          phone: phoneNum,
+        },
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.log("인증 실패");
+    }
   };
   //전송버튼 클릭시 수행 api주소 바꿀것. 위에 활성화 시키면 이후 밑에 ConfirmBtn컴포넌트의 주석처리한거 해제하면됨.
   const sendHdr = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        ` https://7fdc-218-155-160-190.ngrok-free.app/registration?authCode=${certifyNum}&phone=${phoneNum}`,
+        `https://a068-121-162-236-116.ngrok-free.app/registration?authCode=${certifyNum}&phone=${phoneNum}`,
       );
       console.log(res.data);
       if (res.data) {
@@ -85,7 +85,7 @@ const SignUpForm = () => {
       console.log(data);
       //회원가입 api 주소 확인하고 변경해야함.  react Query 사용시 바꿔야할 가능성 높음.
       const res = await axios.post(
-        "https://7fdc-218-155-160-190.ngrok-free.app/members",
+        "https://a068-121-162-236-116.ngrok-free.app/members",
         data,
       );
       const successMsg = res.data;
