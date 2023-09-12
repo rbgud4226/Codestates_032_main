@@ -1,10 +1,10 @@
 import React from "react";
-import BoardList from "../../component/WritePost/PostDetail";
+import PostDetail from "../component/WritePost/PostDetail";
 
 const PostListPage = () => {
   return (
     <div>
-      <BoardList />
+      <PostDetail />
     </div>
   );
 };

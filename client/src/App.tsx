@@ -12,7 +12,8 @@ import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
 import WritePostPage from "./page/WritePostPage";
-import PostListPage from "./page/signup/PostListPage";
+import PostListPage from "./page/PostListPage";
+import PostDetail from "./component/WritePost/PostDetail";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/mainpage" element={<PostListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
+                <Route path="/board/:wcboardId" element={<PostDetail />} />
               </Routes>
             </Layout>
             <Nav />
