@@ -1,43 +1,54 @@
 import React from "react";
 import styled from "styled-components";
-import { useState } from "react";
-// import axios from "axios";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import edit from "../../asset/MypageAsset/edit.png";
-import ProfileImg from "./ProfileImg";
+// import ProfileImg from "./ProfileImg";
+import { fetchMyPageData } from "./MypageService";
 
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState("");
-  const userData = {
-    nickName: "홍길동",
-    email: "hgd123@gmail.com",
-    phone: "01012345678",
-  };
+  const api = process.env.REACT_APP_DB_HOST;
+
+  //서버 통신 임시 구현
+  const [userData, setUserData] = useState({
+    nickName: "",
+    email: "",
+    phone: "",
+    profileImage: "",
+    // wcBoardDtoGet: [],
+    // checkPetSitter: true,
+  });
+
+  useEffect(() => {
+    // 어딘가에서 accessToken을 얻어온다고 가정
+    const accessToken = localStorage.getItem("accessToken");
+    console.log(accessToken);
+    if (!accessToken) {
+      console.error("accessToken이 없습니다.");
+      return;
+    }
+
+    // fetchMyPageData 함수를 사용하여 서버에서 데이터를 가져옴
+    fetchMyPageData(accessToken)
+      .then(response => {
+        // 서버에서 받아온 응답 데이터로 userData 상태를 초기화
+        setUserData(response);
+
+        // 데이터를 가져오는 동안 로딩 상태를 처리할 수도 있습니다.
+      })
+      .catch(error => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []);
+
+  console.log("응답 데이터: ", userData);
 
   const formattedPhoneNumber = userData.phone.replace(
     /(\d{3})(\d{4})(\d{4})/,
     "$1-$2-$3",
   );
-  //서버 통신 임시 구현
-  // const [userData, setUserData] = useState({
-  //   nickName: "",
-  //   email: "",
-  //   phone: "",
-  //   petSitter: false,
-  // });
-
-  // useEffect(() => {
-  //   fetchUserData();
-  // }, []);
-
-  // const fetchUserData = async () => {
-  //   try {
-  //     const response = await axios.get("/members"); // 서버의 엔드포인트에 맞게 수정해야 함
-  //     setUserData(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching user data:", error);
-  //   }
-  // };
 
   const handleEditClick = () => {
     setNewNickname(userData.nickName); // 편집 시작 시 현재 닉네임으로 초기화
@@ -46,22 +57,41 @@ const MyProfile = () => {
 
   const handleSaveClick = async () => {
     try {
-      // const response = await axios.put("/members", {
-      //   newNickname,
-      // });
+      const accessToken = localStorage.getItem("accessToken");
+      const ngrokSkipBrowserWarning = "69420";
+      const page = 1; // 페이지 번호
+      const size = 1; // 페이지당 아이템 수
 
-      // if (response.data.success) {
-      //   setUserData({ ...userData, nickName: newNickname });
-      //   setIsEditing(false);
-      // } else {
-      //   console.error("Nickname update failed.");
-      // }
+      console.log(newNickname);
+      const response = await axios.patch(
+        `${api}/members`,
+        {
+          nickName: newNickname,
+        },
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+          params: {
+            page: page,
+            size: size,
+          },
+        },
+      );
 
-      // setUserData({ ...userData, nickName: newNickname });
+      if (response.data.success) {
+        setUserData({ ...userData, nickName: newNickname });
+        setIsEditing(false);
+      } else {
+        console.error("Nickname update failed.");
+      }
+
+      setUserData({ ...userData, nickName: newNickname });
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating nickname:", error);
-      // 업데이트에 실패한 경우에 대한 처리
     }
   };
 
@@ -73,7 +103,10 @@ const MyProfile = () => {
     <Container>
       <HeaderText>마이페이지</HeaderText>
       <ImgContainer>
-        <ProfileImg />
+        <ProfileImage
+          src={userData.profileImage} // 서버에서 받아온 프로필 이미지 URL을 사용
+          alt="Profile Image"
+        />
       </ImgContainer>
       <UserInfo>
         <UserName>
@@ -115,7 +148,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 100%; */
 `;
 
 const HeaderText = styled.p`
@@ -134,6 +166,11 @@ const ImgContainer = styled.div`
   margin-bottom: 8px;
   background-color: #279eff;
   border-radius: 50%;
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const UserInfo = styled.div`

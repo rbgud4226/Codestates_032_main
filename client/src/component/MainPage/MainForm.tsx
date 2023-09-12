@@ -178,9 +178,6 @@ const WalkSbutton = styled.button`
   cursor: pointer;
 `;
 
-const WhiteBoxMargin = styled.div`
-  margin-bottom: 4px; /* 원하는 마진 값으로 조절하세요 */
-`;
 const WhiteBoxContainer = styled.div`
   background-color: white;
   position: relative;
@@ -213,7 +210,7 @@ const MainImage = styled.img`
 `;
 const h1 = styled.div`
   color: "#279eff";
-  margintop: "30%";
+  margin-top: "30%";
 `;
 const MainLogoImage = styled.img`
   display: flex;

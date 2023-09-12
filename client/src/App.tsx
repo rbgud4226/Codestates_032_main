@@ -29,6 +29,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/members" element={<Mypage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
+                <Route path="/petsitter/edit" element={<PetSitterPage />} />
               </Routes>
             </Layout>
             <Nav />

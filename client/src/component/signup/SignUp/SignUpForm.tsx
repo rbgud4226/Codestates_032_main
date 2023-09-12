@@ -12,7 +12,7 @@ interface T {
 }
 
 const api = process.env.REACT_APP_DB_HOST;
-
+console.log(api);
 type FormData = {
   email: string;
   nickName: string;

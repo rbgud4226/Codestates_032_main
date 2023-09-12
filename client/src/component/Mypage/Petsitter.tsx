@@ -6,8 +6,11 @@ import edit from "../../asset/MypageAsset/edit.png";
 import score from "../../asset/MypageAsset/Mypagescore.png";
 import { useNavigate } from "react-router-dom";
 // import axios from "axios";
+type PetsitterProps = {
+  checkPetSitter: boolean;
+};
 
-const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
+const Petsitter: React.FC<PetsitterProps> = ({ checkPetSitter }) => {
   const navigate = useNavigate();
   const dummyData = {
     name: "홍길동",
@@ -29,7 +32,7 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
 
   // const fetchData = async () => {
   //   try {
-  //     const response = await axios.get("/멀까요"); // 서버의 엔드포인트에 맞게 수정해야 함
+  //     const response = await axios.get("/멀까요");
   //     setUserData(response.data);
   //   } catch (error) {
   //     console.error("Error fetching user data:", error);
@@ -37,13 +40,16 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
   // };
 
   return (
-    <Container petSitter={petSitter}>
-      {petSitter ? (
-        <PetSitterContainer petSitter={petSitter}>
+    <Container checkPetSitter={checkPetSitter}>
+      {checkPetSitter ? (
+        <PetSitterContainer checkPetSitter={checkPetSitter}>
           <NameWrapper>
             <NameText>펫시터 {dummyData.name}</NameText>
-            <EditIcon src={edit} alt="Name Edit" />
-            {/* 수정버튼 클릭시 펫시터 수정 페이지로 이동 구현해야함*/}
+            <EditIcon
+              src={edit}
+              onClick={() => navigate("/petsitter/edit")}
+              alt="Name Edit"
+            />
           </NameWrapper>
           <InfoWrapper>
             <Item>
@@ -66,7 +72,7 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
           </InfoWrapper>
         </PetSitterContainer>
       ) : (
-        <PetSitterContainer petSitter={petSitter}>
+        <PetSitterContainer checkPetSitter={checkPetSitter}>
           <RegisterContainer>
             <LeftAlignedText>
               <h2>펫시터 등록하기</h2>
@@ -84,18 +90,20 @@ const Petsitter = ({ petSitter }: { petSitter: boolean }) => {
 
 export default Petsitter;
 
-const Container = styled.div<{ petSitter: boolean }>`
+const Container = styled.div<{ checkPetSitter: boolean }>`
   margin-top: 16px;
   text-align: center;
 `;
 
-const PetSitterContainer = styled.div<{ petSitter: boolean }>`
+const PetSitterContainer = styled.div<{ checkPetSitter: boolean }>`
   display: flex;
   flex-direction: column;
   border: 1px solid #595959;
   border-radius: 8px;
   background-image: ${props =>
-    props.petSitter ? "none" : `url(${petssiterImg})`}; // 프로필 이미지 적용
+    props.checkPetSitter
+      ? "none"
+      : `url(${petssiterImg})`}; // 프로필 이미지 적용
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
