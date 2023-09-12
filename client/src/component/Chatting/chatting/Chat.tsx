@@ -4,9 +4,10 @@ import imgIcon from "../../../asset/ChatAsset/image-icon.png";
 import sendIcon from "../../../asset/ChatAsset/message-icon.png";
 import SendChatDesign from "./SendChatDesign";
 import RecieveChatDesign from "./RecieveChatDesign";
-import Stomp, { Client } from "@stomp/stompjs";
-import SockJS from "sockjs";
+import * as StompJS from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
+//현재 시간을 xx-xx로 가져오는 함수
 const updateCurrentTime = (): string => {
   const now = new Date();
   const hours = now.getHours().toString().padStart(2, "0");
@@ -15,7 +16,7 @@ const updateCurrentTime = (): string => {
 };
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [input, setInput] = useState<string>("");
   const [messageForm, setMessageForm] = useState<
     Array<{
       isClient: boolean;
@@ -23,60 +24,65 @@ const Chat: React.FC = () => {
       createAt: string;
     }>
   >([]);
-  const [input, setInput] = useState<string>("");
 
-  //현재 시간을 xx-xx로 가져오는 함수
+  //연결 소켓 설정
+  const client = new StompJS.Client({
+    brokerURL: "ws://3.35.193.208:8080/ws-stomp",
+    debug: (str: string) => {
+      console.log(str);
+    },
+    reconnectDelay: 5000,
+  });
 
-  useEffect(() => {
-    const client = new Client({
-      brokerURL: "ws://3.35.193.208:8080/ws-stomp",
-      debug: (str: string) => {
-        console.log(str);
-      },
-      reconnectDelay: 5000,
-    });
-    //서버구독설정(메세지받음) {} 는 헤더설정.
-    client.onConnect = () => {
-      console.log("연결되었습니다");
-      client.subscribe(`/sub/room/1`, msg => {
-        console.log(msg.body);
-        const recieveMsgForm = {
-          isClient: false,
-          message: msg.body,
-          createAt: updateCurrentTime(),
-        };
-        setMessageForm(messageForm.concat(recieveMsgForm));
-      });
-    };
+  client.onConnect = () => {
+    client.subscribe(`/sub/room/1`, callback);
+  };
 
-    return () => {
-      client.deactivate(); // 컴포넌트 언마운트 시 웹소켓 연결 해제
-    };
-  }, []);
-  //메세지 보내는 함수
-  const sendMessage = () => {
+  //연결시 callback 함수
+  const callback = message => {
+    if (message.body) {
+      console.log(message.body);
+      const msgForm = {
+        isClient: false,
+        message: message.body.message,
+        createAt: updateCurrentTime(),
+      };
+      console.log(messageForm);
+      setMessageForm(messageForm.concat(msgForm));
+    }
+  };
+
+  //메세지 전달 함수.
+  const sendChat = () => {
     if (input.trim() !== "") {
-      const client = new Client({
-        brokerURL: "ws://3.35.193.208:8080/ws-stomp",
-        debug: (str: string) => {
-          console.log(str);
-        },
-        reconnectDelay: 5000,
-      });
-      client.publish()
-
-      const sendForm = {
+      const msgForm = {
         isClient: true,
         message: input,
         createAt: updateCurrentTime(),
       };
-      
-      setMessageForm(messageForm.concat(sendForm));
-      setMessages(messages.concat(input));
+      setMessageForm(messageForm.concat(msgForm));
+      try {
+        if (client.connected) {
+          client.publish({
+            destination: `/pub/1`,
+            body: JSON.stringify({
+              userType: "신청자",
+              message: input,
+            }),
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
       setInput("");
-      client.disconnect();
+      console.log(messageForm);
     }
   };
+  useEffect(() => {
+    client.activate();
+  }, []);
+
   const setSendHdr = e => {
     setInput(e.target.value);
   };
@@ -100,7 +106,7 @@ const Chat: React.FC = () => {
           ),
         )}
       </div>
-      <MessageWrapper>
+      <MessageForm>
         <ImgBtn>
           <img src={imgIcon} alt="이미지"></img>
         </ImgBtn>
@@ -110,10 +116,10 @@ const Chat: React.FC = () => {
           value={input}
           onChange={e => setSendHdr(e)}
         />
-        <SendButton onClick={sendMessage}>
+        <SendButton onClick={() => sendChat()}>
           <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
         </SendButton>
-      </MessageWrapper>
+      </MessageForm>
     </MessageSection>
   );
 };
@@ -124,7 +130,7 @@ export const MessageSection = styled.section`
   width: 100%;
 `;
 
-export const MessageWrapper = styled.div`
+export const MessageForm = styled.form`
   display: flex;
   flex-direction: row;
   width: 100%;
