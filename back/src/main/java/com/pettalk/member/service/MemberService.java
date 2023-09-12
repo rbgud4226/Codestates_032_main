@@ -126,5 +126,10 @@ public class MemberService {
         }
         Member member = optionalMember.get();
         return member;
+
+//        public Member findMemberByEmail(String email) {
+//            return memberRepository.findByEmail(email).get();
+//        }
+//    }
     }
 }

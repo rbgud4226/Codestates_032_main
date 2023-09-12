@@ -2,22 +2,24 @@ package com.pettalk.wcboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Getter
 public class WcBoardDto {
     @AllArgsConstructor
     @Getter
+    @Setter
     public static class Post { // 0829 위치는 어떤 정보를 줘야할까..
-        private long wcboardId;
+        private Long wcboardId;
         @NotNull (message = "공백이 아니어야 합니다")
         private String title;
 
         @NotNull (message = "공백이 아니어야 합니다")
         private String content;
 
-        @NotBlank
         private String images;
 
         @NotNull (message = "1개 이상 선택해주세요")
@@ -41,7 +43,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     public static class Patch {
-        private long wcboardId;
+        private Long wcboardId;
         private String title;
         private String content;
         private String images;
@@ -55,7 +57,7 @@ public class WcBoardDto {
 
         private String postStatus;
 
-        public void addwcBoardId(long wcboardId) {
+        public void addwcBoardId(Long wcboardId) {
             this.wcboardId = wcboardId;
         }
     }
@@ -63,7 +65,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     public static class Response {
-        private long wcboardId;
+        private Long wcboardId;
         private String title;
         private String content;
         private String images;
@@ -73,6 +75,7 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
+
     }
 
 
