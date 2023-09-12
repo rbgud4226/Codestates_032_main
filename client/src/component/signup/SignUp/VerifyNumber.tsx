@@ -49,7 +49,6 @@ export const MVForm = styled.form`
   flex-direction: row;
   width: 240px;
   margin-bottom: 8px;
-  margin-top: 20px;
 `;
 
 export const TextInput = styled.input`

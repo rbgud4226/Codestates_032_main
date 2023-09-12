@@ -29,7 +29,7 @@ const MobileVerify = ({ setPhoneNum }: T) => {
       // console.log(res.data);
       setPhoneNum(phone.phone);
     } catch (e) {
-      console.log("에러낫으면 서버키값이 없을확률높음");
+      console.log("에러낫으면 서버키값이 없을확률높음", e);
     }
   };
 
@@ -49,7 +49,6 @@ export default MobileVerify;
 export const MVCtn = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 240px;
 `;
 
