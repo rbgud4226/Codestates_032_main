@@ -15,7 +15,9 @@ const PersonInfo = () => {
           <img style={{ height: "40px" }} src={userData.profileImage}></img>
         </ProfileImgWrapper>
         <InfoCtn>
-          <p style={{ fontSize: "16px", marginLeft: "25px" }}>홍길동</p>
+          <p style={{ fontSize: "16px", marginLeft: "25px" }}>
+            {userData.nickName}
+          </p>
           <p style={{ fontSize: "14px", color: "#595959" }}>{userData.phone}</p>
           <p
             style={{

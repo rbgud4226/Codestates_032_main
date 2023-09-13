@@ -6,6 +6,7 @@ import SendChatDesign from "./SendChatDesign";
 import RecieveChatDesign from "./RecieveChatDesign";
 import * as StompJS from "@stomp/stompjs";
 import global from "../../../Data/global";
+import PersonInfo from "./PersonInfo";
 
 //현재 시간을 xx-xx로 가져오는 함수
 const updateCurrentTime = (): string => {
@@ -105,23 +106,27 @@ const Chat: React.FC = () => {
 
   return (
     <MessageSection>
-      <div>
-        {messageForm.map((el, index) =>
-          el.isClient ? (
-            <SendChatDesign
-              key={index}
-              input={el.message}
-              createAt={el.createAt}
-            />
-          ) : (
-            <RecieveChatDesign
-              key={index}
-              input={el.message}
-              createAt={el.createAt}
-            />
-          ),
-        )}
-      </div>
+      <InfoMsgCtn>
+        <PersonInfo />
+        <MsgCtn>
+          {messageForm.map((el, index) =>
+            el.isClient ? (
+              <SendChatDesign
+                key={index}
+                input={el.message}
+                createAt={el.createAt}
+              />
+            ) : (
+              <RecieveChatDesign
+                key={index}
+                input={el.message}
+                createAt={el.createAt}
+              />
+            ),
+          )}
+        </MsgCtn>
+      </InfoMsgCtn>
+
       <MessageForm onSubmit={e => submitHdr(e)}>
         <ImgBtn>
           <img src={imgIcon} alt="이미지"></img>
@@ -143,12 +148,20 @@ const Chat: React.FC = () => {
 export default Chat;
 
 export const MessageSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
   width: 100%;
+`;
+export const InfoMsgCtn = styled.div``;
+
+export const MsgCtn = styled.div`
+  justify-content: space-between;
 `;
 
 export const MessageForm = styled.form`
   display: flex;
-  flex-direction: row;
   width: 100%;
   border: 1px solid grey;
   position: sticky;
@@ -192,7 +205,7 @@ export const SendButton = styled.button`
   background-color: ${global.Primary.value};
   cursor: pointer;
   &:active {
-    background-color: ${global.PraimaryActive.value};
+    background-color: ${global.PrimaryActive.value};
   }
 `;
 

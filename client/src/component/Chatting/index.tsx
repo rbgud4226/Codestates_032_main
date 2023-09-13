@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import ChatForm from "./ChatForm";
+import global from "../../Data/global";
 
 const Chat = () => {
   const [isChat, setIsChat] = useState(true);
@@ -14,10 +15,18 @@ const Chat = () => {
   };
   return (
     <Ctn>
-      <PetalkBtnCtn>
-        <PetalkChat onClick={() => chatHdr()}>펫톡쳇</PetalkChat>
-        <PetalkMap onClick={() => mapHdr()}>펫톡맵</PetalkMap>
-      </PetalkBtnCtn>
+      {isChat ? (
+        <PetalkBtnCtn>
+          <ActiveBtn onClick={() => chatHdr()}>펫톡쳇</ActiveBtn>
+          <DiactiveBtn onClick={() => mapHdr()}>펫톡맵</DiactiveBtn>
+        </PetalkBtnCtn>
+      ) : (
+        <PetalkBtnCtn>
+          <DiactiveBtn onClick={() => chatHdr()}>펫톡쳇</DiactiveBtn>
+          <ActiveBtn onClick={() => mapHdr()}>펫톡맵</ActiveBtn>
+        </PetalkBtnCtn>
+      )}
+
       {isChat ? <ChatForm /> : ""}
     </Ctn>
   );
@@ -28,22 +37,19 @@ export default Chat;
 export const Ctn = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid green;
   height: 100%;
-`;
-
-export const PetalkCtn = styled.div`
-  display: flex;
-  flex-direction: column;
+  background-color: white;
 `;
 
 export const PetalkBtnCtn = styled.div`
   display: flex;
-  margin-top: 12px;
   justify-content: space-around;
+  background-color: ${global.White.value};
+  top: 0px;
+  position: sticky;
 `;
 
-export const PetalkChat = styled.button`
+export const ActiveBtn = styled.button`
   justify-content: center;
   text-align: center;
   width: 155px;
@@ -51,15 +57,15 @@ export const PetalkChat = styled.button`
   border-radius: 4px;
   border: 0px;
   font-weight: 600;
-  color: white;
-  background-color: #279eff;
+  color: ${global.White.value};
+  background-color: ${global.Primary.value};
   cursor: pointer;
   &:active {
-    background-color: #1d8ce7;
+    background-color: ${global.PrimaryActive.value};
   }
 `;
 
-export const PetalkMap = styled.button`
+export const DiactiveBtn = styled.button`
   justify-content: center;
   text-align: center;
   width: 155px;
