@@ -71,16 +71,15 @@ public class PetSitterController {
         Member member = memberService.findVerifyMember(memberId);
         Long petSitterId = member.getPetSitter().getPetSitterId();
 
-        try{
-        PetSitter petSitter = service.findPetSitter(petSitterId);
-        return new ResponseEntity<>(mapper.petSitterToResponse(petSitter), HttpStatus.OK);
-        }
-        catch (Exception e) {
+        try {
+            PetSitter petSitter = service.findPetSitter(petSitterId);
+            return new ResponseEntity<>(mapper.petSitterToResponse(petSitter), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
-//    @GetMapping("/{pet-sitter-id}/recent")
+    //    @GetMapping("/{pet-sitter-id}/recent")
 //    public  ResponseEntity getRecentWalkCare(@PathVariable("pet-sitter-id") @Positive Long petsitterId, @RequestParam @Positive int page, @RequestParam @Positive int size) {
 //        PetSitter petSitter = service.findPetSitter(petsitterId);
 //
@@ -92,14 +91,14 @@ public class PetSitterController {
 //
 //    }
     @GetMapping("/recent")
-    public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
-                                             @RequestParam @Positive int page,
-                                             @RequestParam @Positive int size) {
+    public ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
+                                            @RequestParam @Positive int page,
+                                            @RequestParam @Positive int size) {
         Member member = memberService.findVerifyMember(memberId);
         String memberImage = member.getProfileImage();
         PetSitter petSitter = member.getPetSitter();
 
-        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page - 1, size);
         List<WcBoard> wcBoardList = wcBoardPage.getContent();
 
         List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
