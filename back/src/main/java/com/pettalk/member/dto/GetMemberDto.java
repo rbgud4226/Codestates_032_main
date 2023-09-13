@@ -27,12 +27,15 @@ public class GetMemberDto {
 
     private boolean checkPetSitter;
 
-    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet , boolean checkPetSitter) {
+    private Long petSitterId;
+
+    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet , boolean checkPetSitter, Long petSitterId) {
         this.nickName = nickName;
         this.email = email;
         this.phone = phone;
         this.profileImage = profileImage;
         this.wcBoardDtoGet = wcBoardDtoGet;
         this.checkPetSitter = checkPetSitter;
+        this.petSitterId = petSitterId;
     }
 }

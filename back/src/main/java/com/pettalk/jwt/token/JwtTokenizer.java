@@ -1,4 +1,4 @@
-package com.pettalk.jwt;
+package com.pettalk.jwt.token;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -50,13 +50,13 @@ public class JwtTokenizer {
 
     public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
-
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
                 .signWith(key)
                 .compact();
+
     }
 
     public Jws<Claims> getClaims(String jws, String base64EncodedSecretKey) {
@@ -81,5 +81,22 @@ public class JwtTokenizer {
         byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
         Key key = Keys.hmacShaKeyFor(keyBytes);
         return key;
+    }
+
+    public Map<String, Object> verifyJwsFromRefreshToken(String refreshToken) {
+
+        String base64EncodedSecretKey = encodeBase64SecretKey(getSecretKey());
+
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(base64EncodedSecretKey)
+                    .build()
+                    .parseClaimsJws(refreshToken.replace("Bearer ", ""))
+                    .getBody();
+
+            return claims;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

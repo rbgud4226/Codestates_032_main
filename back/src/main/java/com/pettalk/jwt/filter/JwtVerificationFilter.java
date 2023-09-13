@@ -1,6 +1,7 @@
-package com.pettalk.jwt;
+package com.pettalk.jwt.filter;
 
 
+import com.pettalk.jwt.token.JwtTokenizer;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,11 +31,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
             Map<String, Object> claims = verifyJws(request);
             String username = (String) claims.get("username");
             String kakaoId = (String) claims.get("sub"); // 카카오 ID 추출
-
             if (username != null || kakaoId != null) {
 
                 List<GrantedAuthority> authorities = new ArrayList<>();
-
                 Authentication authentication = new UsernamePasswordAuthenticationToken(username != null ? username : kakaoId, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -53,7 +52,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }
-
         filterChain.doFilter(request, response);
     }
 

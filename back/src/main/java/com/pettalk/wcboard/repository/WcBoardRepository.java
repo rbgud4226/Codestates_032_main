@@ -19,14 +19,15 @@ import java.util.Optional;
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
 
-    Optional<WcBoard> findById(long wcBoardId);
+    Optional<WcBoard> findById(Long wcboardId);
 
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
 //    Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
 //    Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
 //    Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
-    List<WcBoard> findByMember_MemberId(Long memberId); //M
+
 
     Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
+    Page<WcBoard> findByMember_MemberIdAndPostStatus(Long memberId, WcBoard.PostStatus complete, Pageable pageable);
     Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
 }

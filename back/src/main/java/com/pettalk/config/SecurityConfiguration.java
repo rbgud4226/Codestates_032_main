@@ -1,9 +1,9 @@
 package com.pettalk.config;
 
 
-import com.pettalk.jwt.JwtAuthenticationFilter;
-import com.pettalk.jwt.JwtTokenizer;
-import com.pettalk.jwt.JwtVerificationFilter;
+import com.pettalk.jwt.filter.JwtAuthenticationFilter;
+import com.pettalk.jwt.token.JwtTokenizer;
+import com.pettalk.jwt.filter.JwtVerificationFilter;
 import com.pettalk.member.repository.RefreshTokenRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +43,10 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-//                        .antMatchers(HttpMethod.POST, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.PATCH, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.DELETE, "/members/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/members/**").permitAll()
                         .anyRequest().permitAll());
         return http.build();
     }
@@ -56,13 +59,13 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080", "https://c277-221-141-15-253.ngrok-free.app"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("*")); //직접입력
+        configuration.setAllowedMethods(Arrays.asList("*")); // 직접입력
+        configuration.setAllowedHeaders(Arrays.asList("*")); // 직접입력
+        configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh")); //직접입력
+        configuration.setAllowCredentials(false); // true일 경우 * 가 작동안함
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);//직접입력
         return source;
     }
 
