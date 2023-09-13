@@ -13,20 +13,17 @@ const menuList = [
 ];
 
 const Header = () => {
-  const token = window.localStorage.getItem("accessToken");
-
   const logoutHdr = async () => {
     try {
       const res = await axios.post(`${api}/members/logout`, {
         headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
+          Authorization: `${localStorage.getItem("accessToken")}`,
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
         },
       });
       console.log(res);
       window.localStorage.clear();
-      window.location.href = "/";
     } catch (error) {
       console.log("로그아웃에러", error);
     }
@@ -38,7 +35,7 @@ const Header = () => {
         <HeadLogo src={petalkText} alt="petTalk"></HeadLogo>
       </LogoLink>
       <HeaderBtnContainer>
-        {token ? (
+        {!window.localStorage.getItem("accessToken") ? (
           menuList.map(el => (
             <MenuLink to={el.link} key={el.text}>
               {el.text}
@@ -49,6 +46,7 @@ const Header = () => {
             style={{
               marginRight: `${global.Spacing[24].value}px`,
               color: `${global.Primary.value}`,
+              cursor: "pointer",
             }}
             onClick={() => logoutHdr()}
           >

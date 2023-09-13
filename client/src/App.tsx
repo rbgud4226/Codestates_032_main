@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
@@ -33,7 +33,16 @@ function App() {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
-                <Route path="/members" element={<Mypage />} />
+                <Route
+                  path="/members"
+                  element={
+                    window.localStorage.getItem("accessToken") ? (
+                      <Mypage />
+                    ) : (
+                      <LoginPage />
+                    )
+                  }
+                />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
 
