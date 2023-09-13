@@ -10,17 +10,12 @@ import PersonInfo from "./PersonInfo";
 import axios from "axios";
 
 //현재 시간을 xx-xx로 가져오는 함수
-const updateCurrentTime = (): string => {
-  const now = new Date();
-  const hours = now.getHours().toString().padStart(2, "0");
-  const minutes = now.getMinutes().toString().padStart(2, "0");
-  return `${hours}-${minutes}`;
-};
 
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [client, setClient] = useState(null);
   const [msgList, setMsgList] = useState([]);
+
   const connect = () => {
     try {
       const clientData = new StompJS.Client({
@@ -49,11 +44,6 @@ const Chat: React.FC = () => {
   //메세지 전달 함수.
   const sendChat = () => {
     if (input.trim() !== "") {
-      // const msgForm = {
-      //   isClient: true,
-      //   message: input,
-      //   createAt: updateCurrentTime(),
-      // };
       try {
         if (client.connected) {
           client.publish({
@@ -100,6 +90,8 @@ const Chat: React.FC = () => {
     <MessageSection>
       <InfoMsgCtn>
         <PersonInfo />
+      </InfoMsgCtn>
+      <div>
         <MsgCtn>
           {msgList.map((el, index) =>
             el.userType === "신청자" ? (
@@ -117,22 +109,22 @@ const Chat: React.FC = () => {
             ),
           )}
         </MsgCtn>
-      </InfoMsgCtn>
 
-      <MessageForm onSubmit={e => submitHdr(e)}>
-        <ImgBtn>
-          <img src={imgIcon} alt="이미지"></img>
-        </ImgBtn>
-        <MessageInput
-          type="text"
-          placeholder="메시지 입력"
-          value={input}
-          onChange={e => setSendHdr(e)}
-        />
-        <SendButton onClick={() => sendChat()}>
-          <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
-        </SendButton>
-      </MessageForm>
+        <MessageForm onSubmit={e => submitHdr(e)}>
+          <ImgBtn>
+            <img src={imgIcon} alt="이미지"></img>
+          </ImgBtn>
+          <MessageInput
+            type="text"
+            placeholder="메시지 입력"
+            value={input}
+            onChange={e => setSendHdr(e)}
+          />
+          <SendButton onClick={() => sendChat()}>
+            <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
+          </SendButton>
+        </MessageForm>
+      </div>
     </MessageSection>
   );
 };
@@ -149,7 +141,10 @@ export const MessageSection = styled.section`
 export const InfoMsgCtn = styled.div``;
 
 export const MsgCtn = styled.div`
-  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+
+  position: sticky;
 `;
 
 export const MessageForm = styled.form`
@@ -157,7 +152,7 @@ export const MessageForm = styled.form`
   width: 100%;
   border: 1px solid grey;
   position: sticky;
-  bottom: 70px;
+  bottom: 71px;
 `;
 
 export const ImgBtn = styled.div`
