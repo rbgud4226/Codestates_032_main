@@ -1,9 +1,11 @@
 package com.pettalk.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pettalk.petsitter.entity.PetSitter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -41,7 +43,7 @@ public class Member implements Serializable{
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private PetSitter petSitter;
 
 }
