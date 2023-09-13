@@ -12,6 +12,12 @@ import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
 
+import BorderListPage from "./page/PostList";
+import WritePostPage from "./page/WritePostPage";
+import PostDetailPage from "./page/PostDetailPage";
+
+
+
 function App() {
   return (
     <>
@@ -30,6 +36,10 @@ function App() {
                 <Route path="/members" element={<Mypage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
+
+                <Route path="/mainpage" element={<BorderListPage />} />
+                <Route path="/writpost" element={<WritePostPage />} />
+                <Route path="/board" element={<PostDetailPage />} />
               </Routes>
             </Layout>
             <Nav />
