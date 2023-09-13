@@ -41,7 +41,7 @@ public class Member implements Serializable{
     @CreationTimestamp
     private Timestamp createdAt;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private PetSitter petSitter;
 
 }
