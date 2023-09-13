@@ -138,7 +138,7 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <div style={{ marginTop: "12px", width: "100%" }}>
         <LargeBtn name={"회원가입"} />
-        {phoneErr ? <ErrMsg>전화번호를 인증해주세요</ErrMsg> : ""}
+        {!phoneNum ? <ErrMsg>{phoneErr}</ErrMsg> : ""}
         {/* {!errors.phone ? (
           err ? (
             <ErrMsg>{err}</ErrMsg>
