@@ -24,7 +24,6 @@ export const ChatCtn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border: 1px solid red;
   margin-top: 8px;
   margin-bottom: 8px;
   margin-left: 13px;

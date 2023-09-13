@@ -7,6 +7,7 @@ import RecieveChatDesign from "./RecieveChatDesign";
 import * as StompJS from "@stomp/stompjs";
 import global from "../../../Data/global";
 import PersonInfo from "./PersonInfo";
+import axios from "axios";
 
 //현재 시간을 xx-xx로 가져오는 함수
 const updateCurrentTime = (): string => {
@@ -19,14 +20,7 @@ const updateCurrentTime = (): string => {
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [client, setClient] = useState(null);
-  const [messageForm, setMessageForm] = useState<
-    Array<{
-      isClient: boolean;
-      message: string;
-      createAt: string;
-    }>
-  >([]);
-  //연결
+  const [msgList, setMsgList] = useState([]);
   const connect = () => {
     try {
       const clientData = new StompJS.Client({
@@ -34,30 +28,16 @@ const Chat: React.FC = () => {
         debug: (str: string) => {
           console.log(str);
         },
-        reconnectDelay: 10000,
+        reconnectDelay: 100,
       });
 
       clientData.onConnect = () => {
-        clientData.subscribe(`/sub/room/1`, callback);
+        clientData.subscribe(`/sub/room/1`, msgGet);
       };
       clientData.activate();
       setClient(clientData);
     } catch (e) {
       console.log(e);
-    }
-  };
-
-  //연결시 callback 함수
-  const callback = message => {
-    if (message.body) {
-      console.log(message.body);
-      const msgForm = {
-        isClient: false,
-        message: message.body.message,
-        createAt: updateCurrentTime(),
-      };
-      console.log(messageForm);
-      setMessageForm(messageForm.concat(msgForm));
     }
   };
 
@@ -69,11 +49,11 @@ const Chat: React.FC = () => {
   //메세지 전달 함수.
   const sendChat = () => {
     if (input.trim() !== "") {
-      const msgForm = {
-        isClient: true,
-        message: input,
-        createAt: updateCurrentTime(),
-      };
+      // const msgForm = {
+      //   isClient: true,
+      //   message: input,
+      //   createAt: updateCurrentTime(),
+      // };
       try {
         if (client.connected) {
           client.publish({
@@ -87,17 +67,29 @@ const Chat: React.FC = () => {
       } catch (e) {
         console.log(e);
       }
-      setMessageForm(messageForm.concat(msgForm));
       setInput("");
-      console.log(messageForm);
     }
   };
+
+  //메세지 리스트 get 함수
+  const msgGet = async () => {
+    try {
+      const msg = await axios.get("http://3.35.193.208:8080/chat/1");
+      console.log(msg.data);
+      setMsgList(msg.data);
+    } catch (e) {
+      console.log("오류발생", e);
+    }
+  };
+
   useEffect(() => {
+    msgGet();
     connect();
   }, []);
 
   const submitHdr = e => {
     e.preventDefault();
+    sendChat();
   };
 
   const setSendHdr = e => {
@@ -109,18 +101,18 @@ const Chat: React.FC = () => {
       <InfoMsgCtn>
         <PersonInfo />
         <MsgCtn>
-          {messageForm.map((el, index) =>
-            el.isClient ? (
+          {msgList.map((el, index) =>
+            el.userType === "신청자" ? (
               <SendChatDesign
                 key={index}
                 input={el.message}
-                createAt={el.createAt}
+                createAt={el.createdAt.slice(11, 16)}
               />
             ) : (
               <RecieveChatDesign
                 key={index}
                 input={el.message}
-                createAt={el.createAt}
+                createAt={el.createdAt.slice(11, 16)}
               />
             ),
           )}
