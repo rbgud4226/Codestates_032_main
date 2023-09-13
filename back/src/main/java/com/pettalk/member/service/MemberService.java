@@ -74,6 +74,7 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+
     public GetMemberDto getMember(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
         boolean checkPetSitter = findMember.getPetSitter() != null;

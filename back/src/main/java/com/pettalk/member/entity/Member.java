@@ -43,5 +43,4 @@ public class Member implements Serializable{
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private PetSitter petSitter;
-
 }
