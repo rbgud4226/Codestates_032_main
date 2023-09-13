@@ -35,7 +35,7 @@ public interface WcBoardMapper {
 //          return submitResponse;
 //     }
 
-
+     //엔티티 생성으로 인한 PetSitterApplicant 수동 매핑
      default List<WcBoardDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
           if ( petSitterApplicant == null ) {
                return null;

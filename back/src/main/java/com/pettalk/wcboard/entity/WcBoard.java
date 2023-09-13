@@ -49,8 +49,8 @@ public class WcBoard { //..
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-//    @OneToMany(mappedBy = "wcboard")
-//    private List<PetSitterApplicant> petSitterApplicant;
+    @OneToMany(mappedBy = "wcboard")
+    private List<PetSitterApplicant> petSitterApplicant;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")

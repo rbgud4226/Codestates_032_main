@@ -97,6 +97,7 @@ public class WcBoardService {
         //토큰에서 petsitterId를 가져왔기 때문에 검증 필요 없음
         //가져온 petsitterId가 null이면 펫시터 등록을 안한 상태
         Member member = memberService.findVerifyMember(memberId);
+
         Long petSitterId = member.getPetSitter().getPetSitterId();
 
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
@@ -114,6 +115,8 @@ public class WcBoardService {
             return findWcBoard;
         }
     }
+
+
 
     /** 0908 태그 다중적용이 안되어 일시 비활성화 처리
     public Page<WcBoard> findPostByWcTag(int page, int size, String wcTag) {
