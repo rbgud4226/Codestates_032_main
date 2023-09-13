@@ -136,7 +136,7 @@ public class WcBoardService {
         return wcBoardRepository.findByAreaTagContaining(areaTag, pageRequest);
     }
      */
-
+    //태그사용 조회
     public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag, Long memberId) {
         Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
 
