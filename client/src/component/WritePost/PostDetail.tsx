@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+const api = process.env.REACT_APP_DB_HOST;
+
 const PostDetail = () => {
   const { wcboardId } = useParams();
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    const apiUrl = `https://d92e-121-162-236-116.ngrok-free.app/wcboard/${wcboardId}`;
-
     const fetchData = async () => {
       try {
-        const response = await axios.get(apiUrl, {
+        const response = await axios.get(`${api}/wcboard/${wcboardId}`, {
           headers: {
             "Content-Type": "application/json;charset=UTF-8",
             Accept: "application/json",

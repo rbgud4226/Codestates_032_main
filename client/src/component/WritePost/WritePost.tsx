@@ -6,6 +6,8 @@ import PostForm from "./WritPostForm";
 import ImageSubmit from "./ImageSubmit";
 import AreaSubmit from "./AreaSubmit";
 
+const api = process.env.REACT_APP_DB_HOST;
+
 function WritePost() {
   const [step, setStep] = useState(1);
   const [post, setPost] = useState({
@@ -77,7 +79,6 @@ function WritePost() {
     setIsSubmitting(true); // 제출 중으로 표시
 
     try {
-      const apiUrl = "https://d92e-121-162-236-116.ngrok-free.app/wcboard"; // 실제 API 엔드포인트로 대체해야 합니다.
       console.log(
         post.images,
         post.wcTag,
@@ -87,7 +88,7 @@ function WritePost() {
         post.areaTag,
         post.images,
       );
-      const response = await axios.post(apiUrl, post, {
+      const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
