@@ -1,6 +1,5 @@
 package com.pettalk.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pettalk.petsitter.entity.PetSitter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
