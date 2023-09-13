@@ -6,23 +6,53 @@ interface AreaSubmitProps {
 }
 
 function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
-  const regions = [
-    "서울",
-    "경기",
-    "인천",
-    "강원",
-    "제주",
-    "광주",
-    "충북",
-    "충남",
-    "부산",
-    "울산",
-    "경남",
-    "대구",
-    "경북",
-    "전남",
-    "전북",
-  ];
+  const [regions, setRegions] = useState([
+    {
+      name: "서울",
+    },
+    {
+      name: "경기",
+    },
+    {
+      name: "인천",
+    },
+    {
+      name: "강원",
+    },
+    {
+      name: "제주",
+    },
+    {
+      name: "광주",
+    },
+    {
+      name: "충북",
+    },
+    {
+      name: "충남",
+    },
+    {
+      name: "부산",
+    },
+    {
+      name: "울산",
+    },
+    {
+      name: "경남",
+    },
+    {
+      name: "대구",
+    },
+    {
+      name: "경북",
+    },
+    {
+      name: "전남",
+    },
+    {
+      name: "전북",
+    },
+  ]);
 
   const [selectedRegion, setSelectedRegion] = useState<string | null>(
     "지역검색",
@@ -44,11 +74,11 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
           <AreaContainer>
             {regions.map(region => (
               <AreaSListButton
-                key={region}
-                onClick={() => handleRegionSelect(region)}
-                className={selectedRegion === region ? "selected" : ""}
+                key={region.name}
+                onClick={() => handleRegionSelect(region.name)}
+                className={selectedRegion === region.name ? "selected" : ""}
               >
-                {region}
+                {region.name}
               </AreaSListButton>
             ))}
           </AreaContainer>
