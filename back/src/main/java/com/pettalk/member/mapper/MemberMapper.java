@@ -1,7 +1,6 @@
 package com.pettalk.member.mapper;
 
 
-import com.pettalk.member.dto.GetMemberDto;
 import com.pettalk.member.dto.PatchMemberDto;
 import com.pettalk.member.dto.PostMemberDto;
 import com.pettalk.member.entity.Member;
@@ -11,5 +10,4 @@ import org.mapstruct.ReportingPolicy;
 public interface MemberMapper {
     Member memberPostToMember(PostMemberDto requestBody);
     Member memberPatchToMember(PatchMemberDto requestBody);
-    GetMemberDto memberToGetMemberDto(Member member);
 }

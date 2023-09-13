@@ -1,10 +1,10 @@
 package com.pettalk.petsitter.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -12,19 +12,23 @@ import java.util.List;
 
 public class PetSitterDto {
 
+
     @Getter
     @Setter
     public static class PostDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
 
-//        private long member_id;
+//        private long memberId;
+
+        @NotBlank(message = "이름을 적어주세요.")
+        private String name;
 
         @NotBlank(message = "자기소개를 작성해 주세요.")
         private String introduce;
 
-        @NotBlank(message = "현재 하시는 일을 작성해주세요.")
-        private String now_job;
+        @NotNull(message = "현재 직업을 선택해주세요.")
+        private String nowJob;
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
@@ -35,20 +39,27 @@ public class PetSitterDto {
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private LocalDateTime created_at;
+        private LocalDateTime createdAt;
     }
+
+
 
     @Getter
     @Setter
     public static class PatchDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
+
+        @NotBlank(message = "이름을 적어주세요.")
+        private String name;
+
+        private String petSitterImage;
 
         @NotBlank(message = "자기소개를 작성해 주세요.")
         private String introduce;
 
-        @NotBlank(message = "현재 하시는 일을 작성해주세요.")
-        private String now_job;
+        @NotBlank(message = "현재 직업을 선택해주세요.")
+        private String nowJob;
 
         @NotNull(message = "흡연 여부를 체크해주세요.")
         private boolean smoking;
@@ -58,8 +69,6 @@ public class PetSitterDto {
         @NotBlank(message = "반려 경험 및 경력을 작성해주세요.")
         @Size(max = 200, message = "최대 200자까지 작성 가능합니다.")
         private String info; //케어 경험 혹은 경력 200자 이내
-
-        private LocalDateTime created_at;
 
     }
 
@@ -67,13 +76,15 @@ public class PetSitterDto {
     @Setter
     public static class ResponseDto {
 
-        private long pet_sitter_id;
+        private long petSitterId;
 
-//        private long member_id;
+        private String name;
+
+        private String petSitterImage;
 
         private String introduce;
 
-        private String now_job;
+        private String nowJob;
 
         private boolean smoking;
 
@@ -81,15 +92,17 @@ public class PetSitterDto {
 
         private String info; //케어 경험 혹은 경력 200자 이내
 
-        private LocalDateTime created_at;
+        private LocalDateTime createdAt;
 
     }
-
-//    @Getter
-//    @Setter
-//    public static class ResentCareDto {
-//
-//        private List<String> WcBoard;
-//
-//    }
+    @AllArgsConstructor
+    @Getter
+    public static class multiResponse{
+        private Long wcboardId;
+        private String wcTag;
+        private String nickName;
+        private String startTime;
+        private String endTime;
+        private String memberImage;
+    }
 }

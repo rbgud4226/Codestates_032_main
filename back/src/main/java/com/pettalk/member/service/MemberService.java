@@ -8,14 +8,18 @@ import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
+import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
+import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
 import com.pettalk.wcboard.repository.WcBoardRepository;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Pageable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +42,7 @@ public class MemberService {
         this.refreshTokenRepository = refreshTokenRepository;
         this.wcBoardRepository = wcBoardRepository;
         this.wcBoardMapper = wcBoardMapper;
+
 
     }
 
@@ -69,20 +74,35 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public GetMemberDto getMember(Long memberId) {
+    public GetMemberDto getMember(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+        boolean checkPetSitter = findMember.getPetSitter() != null;
+
+        Long petSitterId = null;
+        String petSitterProfileImage = null;
+        if (checkPetSitter) {
+            petSitterId = findMember.getPetSitter().getPetSitterId();
+            petSitterProfileImage = findMember.getPetSitter().getMember().getProfileImage();
+        }
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatus(findMember.getMemberId(), WcBoard.PostStatus.COMPLETE, pageable);
+
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
-        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet);
+        return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet, checkPetSitter, petSitterId);
     }
 
-    public List<WcBoardDto.Response> getMembers(Long memberId) {
+    public List<WcBoardDto.Response> getMembers(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardRepository.findByMember_MemberId(findMember.getMemberId()));
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberId(findMember.getMemberId(), pageable);
+
+
+        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
         return wcBoardDtoGet;
     }
-
 
     public void deleteMember(Long memberId) {
         Member findMember = findVerifyMember(memberId);
@@ -104,8 +124,11 @@ public class MemberService {
 
     public Member findVerifyMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.get();
-        return findMember;
+        if(optionalMember.isEmpty()){
+            return null;
+        }
+
+        return optionalMember.get();
     }
 
     public Member findMemberByPrincipal(String principal) {
@@ -115,5 +138,10 @@ public class MemberService {
         }
         Member member = optionalMember.get();
         return member;
+
+//        public Member findMemberByEmail(String email) {
+//            return memberRepository.findByEmail(email).get();
+//        }
+//    }
     }
 }

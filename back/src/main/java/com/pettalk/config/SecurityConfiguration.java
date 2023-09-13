@@ -1,9 +1,9 @@
 package com.pettalk.config;
 
 
-import com.pettalk.jwt.JwtAuthenticationFilter;
-import com.pettalk.jwt.JwtTokenizer;
-import com.pettalk.jwt.JwtVerificationFilter;
+import com.pettalk.jwt.filter.JwtAuthenticationFilter;
+import com.pettalk.jwt.token.JwtTokenizer;
+import com.pettalk.jwt.filter.JwtVerificationFilter;
 import com.pettalk.member.repository.RefreshTokenRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,17 +59,13 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*")); //직접입력
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000","https://9d18-221-141-15-253.ngrok-free.app")); //직접입력
+        configuration.setAllowedOrigins(Arrays.asList("*")); //직접입력
         configuration.setAllowedMethods(Arrays.asList("*")); // 직접입력
         configuration.setAllowedHeaders(Arrays.asList("*")); // 직접입력
         configuration.setExposedHeaders(Arrays.asList("*","Authorization","Refresh")); //직접입력
-//        configuration.setAllowCredentials(false); // true일 경우 * 가 작동안함
-        configuration.setAllowCredentials(true); // true일 경우 * 가 작동안함
+        configuration.setAllowCredentials(false); // true일 경우 * 가 작동안함
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);//직접입력
-        source.registerCorsConfiguration("/ws/**", configuration); // 웹소켓 경로에 대한 CORS 설정
-
         return source;
     }
 

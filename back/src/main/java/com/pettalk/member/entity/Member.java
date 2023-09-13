@@ -1,5 +1,6 @@
 package com.pettalk.member.entity;
 
+import com.pettalk.petsitter.entity.PetSitter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,4 +40,8 @@ public class Member implements Serializable{
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private PetSitter petSitter;
+
 }
