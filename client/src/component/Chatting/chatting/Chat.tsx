@@ -91,7 +91,9 @@ const Chat: React.FC = () => {
       <InfoMsgCtn>
         <PersonInfo />
       </InfoMsgCtn>
-      <div>
+      <div
+        style={{ border: "1px solid red", position: "relative", bottom: "120" }}
+      >
         <MsgCtn>
           {msgList.map((el, index) =>
             el.userType === "신청자" ? (
@@ -109,22 +111,22 @@ const Chat: React.FC = () => {
             ),
           )}
         </MsgCtn>
-
-        <MessageForm onSubmit={e => submitHdr(e)}>
-          <ImgBtn>
-            <img src={imgIcon} alt="이미지"></img>
-          </ImgBtn>
-          <MessageInput
-            type="text"
-            placeholder="메시지 입력"
-            value={input}
-            onChange={e => setSendHdr(e)}
-          />
-          <SendButton onClick={() => sendChat()}>
-            <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
-          </SendButton>
-        </MessageForm>
       </div>
+
+      <MessageForm onSubmit={e => submitHdr(e)}>
+        <ImgBtn>
+          <img src={imgIcon} alt="이미지"></img>
+        </ImgBtn>
+        <MessageInput
+          type="text"
+          placeholder="메시지 입력"
+          value={input}
+          onChange={e => setSendHdr(e)}
+        />
+        <SendButton onClick={() => sendChat()}>
+          <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
+        </SendButton>
+      </MessageForm>
     </MessageSection>
   );
 };
