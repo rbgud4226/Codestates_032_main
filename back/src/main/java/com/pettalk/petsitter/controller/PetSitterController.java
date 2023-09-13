@@ -54,7 +54,7 @@ public class PetSitterController {
 
     @PatchMapping
     public ResponseEntity patchPetSitter(@LoginMemberId Long memberId,
-            @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
+                                         @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
 
         Member member = memberService.findVerifyMember(memberId);
         Long petSitterId = member.getPetSitter().getPetSitterId();
@@ -62,7 +62,7 @@ public class PetSitterController {
         PetSitter petSitter = mapper.patchToPetSitter(patchDto);
         petSitter.setPetSitterId(petSitterId);
 
-        PetSitter response = service.updatePetSitter(petSitter);
+        PetSitter response = service.updatePetSitter(petSitter, memberId);
 
         return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
     }
@@ -75,7 +75,7 @@ public class PetSitterController {
 
         try{
         PetSitter petSitter = service.findPetSitter(petSitterId);
-        return new ResponseEntity<>(petSitter, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.petSitterToResponse(petSitter), HttpStatus.OK);
         }
         catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

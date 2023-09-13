@@ -48,22 +48,18 @@ public class PetSitterService {
         return petSitterRepository.save(petSitter);
     }
 
-    public PetSitter updatePetSitter(PetSitter petSitter) {
-
+    public PetSitter updatePetSitter(PetSitter petSitter, Long memberId) {
         PetSitter findPetSitter = findVerifiedPetSitter(petSitter.getPetSitterId());
-        Member findMember = memberRepository.findById(petSitter.getMember().getMemberId())
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-
         petSitter.setMember(findMember);
-
-            petSitter.setPetSitterId(findPetSitter.getPetSitterId());
-            petSitter.setName(findPetSitter.getName());
-            petSitter.setIntroduce(petSitter.getIntroduce());
-            petSitter.setNowJob(petSitter.getNowJob());
-            petSitter.setSmoking(petSitter.isSmoking());
-            petSitter.setExAnimal(petSitter.getExAnimal());
-            petSitter.setInfo(petSitter.getInfo());
-
+        petSitter.setPetSitterId(findPetSitter.getPetSitterId());
+        petSitter.setName(petSitter.getName());
+        petSitter.setIntroduce(petSitter.getIntroduce());
+        petSitter.setNowJob(petSitter.getNowJob());
+        petSitter.setSmoking(petSitter.isSmoking());
+        petSitter.setExAnimal(petSitter.getExAnimal());
+        petSitter.setInfo(petSitter.getInfo());
         return petSitterRepository.save(petSitter);
     }
 

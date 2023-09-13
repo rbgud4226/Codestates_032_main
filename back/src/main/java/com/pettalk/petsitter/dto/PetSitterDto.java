@@ -78,8 +78,6 @@ public class PetSitterDto {
 
         private long petSitterId;
 
-//        private long memberId;
-
         private String name;
 
         private String petSitterImage;
