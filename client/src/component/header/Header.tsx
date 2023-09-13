@@ -19,16 +19,19 @@ const Header = () => {
 export default Header;
 
 export const HeaderContainer = styled.header`
-  position: fixed;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 70px;
+  width: 100%;
+  top: 0;
+  position: sticky;
   min-width: 320px;
-  width: 393px;
+  max-width: 500px;
   /* width: 100%;  이거 설정하면 컨테이너 뚫고 나감*/
   box-shadow: 0px 10px 34px #272c5614;
   background-color: white;
+  z-index: 999;
 `;
 
 export const HeaderBtnContainer = styled.div`

@@ -17,7 +17,7 @@ public class OauthController {
     @Autowired
     private MemberRepository memberRepository;
 
-    @PostMapping("/login/kakao")
+    @PostMapping("/login")
     public ResponseEntity<?> loginKakaoUnified(@RequestBody Map<String, String> payload) {
         String authorizationCode = payload.get("authorizationCode");
 
@@ -55,7 +55,7 @@ public class OauthController {
             member.setProfileImage(String.valueOf(properties.get("profile_image")));  // 프로필 이미지
         }
         memberRepository.save(member);
-        
+
         Map<String, String> response = new HashMap<>();
         response.put("jwtToken", "Bearer " + jwtToken);
 

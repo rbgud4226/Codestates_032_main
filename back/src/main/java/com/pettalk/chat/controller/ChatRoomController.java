@@ -55,7 +55,10 @@ public class ChatRoomController {
     @MessageMapping("/{roomId}")
     public void message(@DestinationVariable("roomId") Long roomId, ChatRoomRequestDto chatMessage){
         log.info(String.valueOf(roomId));
+        log.info(String.valueOf(chatMessage.getUserType()));
+        log.info(String.valueOf(chatMessage.getMessage()));
         if(!chatRoomService.chatRoomExists(roomId)){
+            log.info("Chat Room not found");
             throw new ChatRoomNotFoundException("Chat Room not found");
         }
         simpMessageSendingOperations.convertAndSend("/sub/room/" + roomId, chatMessage);

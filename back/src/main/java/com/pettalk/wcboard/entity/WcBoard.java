@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.entity;
 
+import com.pettalk.PettalkApplication;
 import com.pettalk.chat.entity.ChatRoom;
 import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,10 +49,8 @@ public class WcBoard { //..
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-//    @JoinColumn(name = "petSitter_id")
-//    @ManyToOne
-//    private PetSitter petSitter;
-
+    @OneToMany(mappedBy = "wcboard", cascade = CascadeType.ALL)
+    private List<PetSitterApplicant> petSitterApplicant;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
