@@ -36,7 +36,7 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
 
   return (
     <div>
-      <AreaContentText>지역 선택</AreaContentText>
+      <AreaContentText>지역선택</AreaContentText>
       <div>
         <AreaListButton onClick={() => handleRegionSelect("지역검색")}>
           {selectedRegion === "지역검색" ? "지역검색" : selectedRegion}
