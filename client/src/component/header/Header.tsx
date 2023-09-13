@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
 import petalkText from "../../asset/LogoAsset/petalk-text.png";
-import global from "../../Data/global.json";
+import global from "../../Data/global.js";
 import axios from "axios";
 
 const api = process.env.REACT_APP_DB_HOST;

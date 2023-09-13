@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import global from "../../Data/global.json";
+import global from "../../Data/global.js";
 
 interface ConsfirmBtnProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;

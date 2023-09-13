@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import PhoneBtn from "../../Button/PhoneBtn";
+import global from "../../../Data/global";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -36,7 +37,7 @@ const MobileVerify = ({ setPhoneNum }: T) => {
   return (
     <MVCtn>
       <MVForm onSubmit={handleSubmit(phoneHdr)}>
-        <TextInput placeholder="전화번호" {...register("phone")} />
+        <TextInput placeholder="전화번호를 입력하세요" {...register("phone")} />
         <PhoneBtn name={"인증"} />
       </MVForm>
       <Span>전화번호를 입력하세요</Span>
@@ -62,7 +63,7 @@ export const MVForm = styled.form`
 export const TextInput = styled.input`
   height: 31px;
   width: 100%;
-  border: 1px inset #595959;
+  border: 1px inset ${global.Gray[1].value};
   border-radius: 4px;
   padding-left: 10px;
   &:focus {
@@ -73,7 +74,7 @@ export const TextInput = styled.input`
 export const Span = styled.span`
   justify-content: flex-start;
   margin-top: 4px;
-  color: #279eff;
+  color: ${global.Primary.value};
   font-size: 10px;
   margin-bottom: 6px;
 `;
