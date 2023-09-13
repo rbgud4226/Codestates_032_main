@@ -95,8 +95,8 @@ public class MemberController {
     @DeleteMapping
     public ResponseEntity memberDeleteConfirm(@LoginMemberId Long memberId, @RequestBody LoginDto request) {
         try {
-            boolean isConfirmed = memberService.confirmDelete(request.getEmail(), request.getPassword());
-            if (isConfirmed) {
+            boolean comfirmDelete = memberService.confirmDelete(request.getEmail(), request.getPassword());
+            if (comfirmDelete) {
                 memberService.deleteMember(memberId);
                 return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
             } else {
@@ -106,7 +106,7 @@ public class MemberController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
+// 지우면 안됩니다!!
 //    @DeleteMapping
 //    public ResponseEntity memberDelete(@LoginMemberId Long memberId) {
 //        try {

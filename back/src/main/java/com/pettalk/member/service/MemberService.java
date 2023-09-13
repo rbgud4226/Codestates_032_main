@@ -136,6 +136,7 @@ public class MemberService {
         Member member = optionalMember.get();
         return member;
     }
+
     public boolean confirmDelete(String email, String password) {
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         if (passwordEncoder.matches(password, member.getPassword())) {
