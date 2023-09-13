@@ -13,17 +13,24 @@ const Chat = () => {
     setIsChat(false);
   };
   return (
-    <>
+    <Ctn>
       <PetalkBtnCtn>
         <PetalkChat onClick={() => chatHdr()}>펫톡쳇</PetalkChat>
         <PetalkMap onClick={() => mapHdr()}>펫톡맵</PetalkMap>
       </PetalkBtnCtn>
       {isChat ? <ChatForm /> : ""}
-    </>
+    </Ctn>
   );
 };
 
 export default Chat;
+
+export const Ctn = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid green;
+  height: 100%;
+`;
 
 export const PetalkCtn = styled.div`
   display: flex;

@@ -5,7 +5,7 @@ import sendIcon from "../../../asset/ChatAsset/message-icon.png";
 import SendChatDesign from "./SendChatDesign";
 import RecieveChatDesign from "./RecieveChatDesign";
 import * as StompJS from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import global from "../../../Data/global";
 
 //현재 시간을 xx-xx로 가져오는 함수
 const updateCurrentTime = (): string => {
@@ -17,6 +17,7 @@ const updateCurrentTime = (): string => {
 
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
+  const [client, setClient] = useState(null);
   const [messageForm, setMessageForm] = useState<
     Array<{
       isClient: boolean;
@@ -24,18 +25,25 @@ const Chat: React.FC = () => {
       createAt: string;
     }>
   >([]);
+  //연결
+  const connect = () => {
+    try {
+      const clientData = new StompJS.Client({
+        brokerURL: "ws://3.35.193.208:8080/ws-stomp",
+        debug: (str: string) => {
+          console.log(str);
+        },
+        reconnectDelay: 10000,
+      });
 
-  //연결 소켓 설정
-  const client = new StompJS.Client({
-    brokerURL: "ws://3.35.193.208:8080/ws-stomp",
-    debug: (str: string) => {
-      console.log(str);
-    },
-    reconnectDelay: 5000,
-  });
-
-  client.onConnect = () => {
-    client.subscribe(`/sub/room/1`, callback);
+      clientData.onConnect = () => {
+        clientData.subscribe(`/sub/room/1`, callback);
+      };
+      clientData.activate();
+      setClient(clientData);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   //연결시 callback 함수
@@ -52,6 +60,11 @@ const Chat: React.FC = () => {
     }
   };
 
+  //연결끊기
+  const disconnect = () => {
+    client.deactivate();
+  };
+
   //메세지 전달 함수.
   const sendChat = () => {
     if (input.trim() !== "") {
@@ -60,7 +73,6 @@ const Chat: React.FC = () => {
         message: input,
         createAt: updateCurrentTime(),
       };
-      setMessageForm(messageForm.concat(msgForm));
       try {
         if (client.connected) {
           client.publish({
@@ -74,14 +86,18 @@ const Chat: React.FC = () => {
       } catch (e) {
         console.log(e);
       }
-
+      setMessageForm(messageForm.concat(msgForm));
       setInput("");
       console.log(messageForm);
     }
   };
   useEffect(() => {
-    client.activate();
+    connect();
   }, []);
+
+  const submitHdr = e => {
+    e.preventDefault();
+  };
 
   const setSendHdr = e => {
     setInput(e.target.value);
@@ -106,7 +122,7 @@ const Chat: React.FC = () => {
           ),
         )}
       </div>
-      <MessageForm>
+      <MessageForm onSubmit={e => submitHdr(e)}>
         <ImgBtn>
           <img src={imgIcon} alt="이미지"></img>
         </ImgBtn>
@@ -135,6 +151,8 @@ export const MessageForm = styled.form`
   flex-direction: row;
   width: 100%;
   border: 1px solid grey;
+  position: sticky;
+  bottom: 70px;
 `;
 
 export const ImgBtn = styled.div`
@@ -143,10 +161,10 @@ export const ImgBtn = styled.div`
   align-items: center;
   height: 48px;
   width: 60px;
-  background-color: white;
+  background-color: ${global.White.value};
   cursor: pointer;
   &:active {
-    background-color: #d9d9d9;
+    background-color: ${global.WhiteButtonActive.value};
   }
 `;
 
@@ -171,14 +189,14 @@ export const SendButton = styled.button`
   height: 48px;
   width: 60px;
   border: 0px;
-  background-color: #279eff;
+  background-color: ${global.Primary.value};
   cursor: pointer;
   &:active {
-    background-color: #1d8ce7;
+    background-color: ${global.PraimaryActive.value};
   }
 `;
 
 export const SendIconImg = styled.img`
   display: flex;
-  color: white;
+  color: ${global.White.value};
 `;
