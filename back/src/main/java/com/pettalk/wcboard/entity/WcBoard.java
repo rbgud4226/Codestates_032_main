@@ -49,8 +49,7 @@ public class WcBoard { //..
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-    @OneToMany(mappedBy = "wcboard", cascade = CascadeType.ALL)
-    private List<PetSitterApplicant> petSitterApplicant;
+
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")

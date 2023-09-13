@@ -26,6 +26,7 @@ public class PetSitter {
     private String name;
     private String petSitterImage;
     private String introduce;
+    @Column
     private String nowJob;
     private boolean smoking;
     private String info;

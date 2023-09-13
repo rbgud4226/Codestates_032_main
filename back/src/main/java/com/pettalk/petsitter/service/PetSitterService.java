@@ -5,6 +5,7 @@ import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -28,12 +29,13 @@ public class PetSitterService {
     private final PetSitterRepository petSitterRepository;
     private final MemberRepository memberRepository;
     private final WcBoardRepository wcBoardRepository;
+    private final MemberService memberService;
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (String) authentication.getPrincipal();
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+        String principal = (String) authentication.getPrincipal();
+        Member findMember = memberService.findMemberByPrincipal(principal);
 
         petSitter.setMember(findMember);
         petSitter.setPetSitterId(petSitter.getPetSitterId());

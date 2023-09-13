@@ -75,6 +75,17 @@ public class SmsController {
         }
     }
 
+    @PostMapping("/check/nickname")
+    public ResponseEntity checkNickName(@RequestBody Map<String, String> request) {
+        String nickname = request.get("nickname");
+        boolean isExist = memberRepository.existsByNickName(nickname);
+        if (isExist) {
+            return new ResponseEntity<>("이미 존재하는 닉네임입니다.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("사용 가능한 닉네임입니다.", HttpStatus.OK);
+        }
+    }
+
     private String randomAuthCode() {
         Random random = new Random();
         return String.format("%04d", random.nextInt(10000));
