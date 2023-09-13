@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.entity;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,9 @@ public class PetSitter {
 
     @OneToMany(mappedBy = "petSitter", cascade = CascadeType.ALL)
     private List<WcBoard> wcBoard;
+
+    @OneToMany(mappedBy = "petSitter", cascade = CascadeType.ALL)
+    private List<PetSitterApplicant> petSitterApplicant;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
