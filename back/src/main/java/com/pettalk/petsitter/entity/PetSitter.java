@@ -1,5 +1,6 @@
 package com.pettalk.petsitter.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pettalk.member.entity.Member;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
