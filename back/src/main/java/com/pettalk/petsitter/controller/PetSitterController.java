@@ -35,8 +35,6 @@ public class PetSitterController {
 
     private final PetSitterMapper mapper;
     private final PetSitterService service;
-    private final WcBoardRepository wcBoardRepository;
-    private final WcBoardMapper wcBoardMapper;
     private final MemberService memberService;
 
 //다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 존재함.
