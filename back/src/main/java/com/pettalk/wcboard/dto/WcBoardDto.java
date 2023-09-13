@@ -17,7 +17,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class Post { // 0829 위치는 어떤 정보를 줘야할까..
+    public static class Post {
         private Long wcboardId;
         @NotNull (message = "공백이 아니어야 합니다")
         private String title;
@@ -38,8 +38,8 @@ public class WcBoardDto {
 
         private String startTime;
         private String endTime;
-        private String createdAt;
         private String postStatus;
+
     }
     @AllArgsConstructor
     @Getter
@@ -58,8 +58,10 @@ public class WcBoardDto {
             this.wcboardId = wcboardId;
         }
     }
-    @AllArgsConstructor
+
+
     @Getter
+    @Setter
     public static class Response {
         private Long wcboardId;
         private String title;
@@ -71,15 +73,14 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
+        private String nickName;
     }
+
+
     @Getter
     @Setter
     public static class SubmitResponse{
         private Long wcboardId;
-//        private String name;
-//        private String nowJob;
-//        private String petSitterImage;
-//        private boolean smoking;
     }
 
     @Getter

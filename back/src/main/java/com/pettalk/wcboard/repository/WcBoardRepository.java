@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.repository;
 
+import com.pettalk.member.entity.Member;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,6 @@ import java.util.Optional;
  * 기존 태그기반 검색기능 비활성화
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
-
     Optional<WcBoard> findById(Long wcboardId);
 
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회

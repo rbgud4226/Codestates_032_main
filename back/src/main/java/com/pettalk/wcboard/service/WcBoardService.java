@@ -37,32 +37,32 @@ import java.util.Optional;
 public class WcBoardService {
     private final WcBoardRepository wcBoardRepository;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final PetSitterService petSitterService;
     private final PetSitterApplicantRepository paRepository;
 
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
     // 컨트롤러와 동일하게 멤버검증 부분 테스트와 서버용 분리
     //멤버 검증 로직 포함
-//    public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
+    public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
+        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+        wcboard.setCreatedAt(LocalDateTime.now());
+        //멤버 아이디 가져오기
+        wcboard.setMember(memberService.findVerifyMember(memberId));
+//        memberService.findNickName(memberId);
+        wcBoardRepository.save(wcboard);
+        return wcboard;
+    }
+
+    //테스트용
+//    public WcBoard createWcBoardPost(WcBoard wcboard) {
 //        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
 //        //멤버 아이디 가져오기
-//        wcboard.getMember().getNickName();
-//        wcboard.getMember().getProfileImage();
-//        wcboard.setMember(memberService.findVerifyMember(memberId));
+//
 //        wcboard.setCreatedAt(LocalDateTime.now());
 //        wcBoardRepository.save(wcboard);
 //        return wcboard;
 //    }
-
-    //테스트용
-    public WcBoard createWcBoardPost(WcBoard wcboard) {
-        wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
-        //멤버 아이디 가져오기
-
-        wcboard.setCreatedAt(LocalDateTime.now());
-        wcBoardRepository.save(wcboard);
-        return wcboard;
-    }
 
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost(WcBoard wcboard, Long memberId) {
@@ -75,7 +75,7 @@ public class WcBoardService {
             Optional.ofNullable(wcboard.getContent())
                     .ifPresent(content -> findPost.setContent(content)); // TODO : 타이틀과 내용말고 다른것도 수정 추가 필요
         } else {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND); // TODO : 수정불가 에러코드로 변경 예정
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
         return wcBoardRepository.save(findPost);
     }
@@ -86,10 +86,12 @@ public class WcBoardService {
     }
 
     //전체 글 조회 (최신순 정렬)
-    public Page<WcBoard> findAllPosts(int page, int size) {
+    public Page<WcBoard> findAllPosts(int page, int size, Long memberId) {
+        memberService.findNickName(memberId);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findAll(pageRequest);
     }
+
 
 
     //게시글에 펫시터 신청
@@ -135,7 +137,7 @@ public class WcBoardService {
     }
      */
 
-    public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag) {
+    public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag, Long memberId) {
         Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
 
         if (wcTag != null)
@@ -148,6 +150,7 @@ public class WcBoardService {
             spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
 
         Pageable pageable = PageRequest.of(page, size);
+        memberService.findNickName(memberId);
         return wcBoardRepository.findAll(spec, pageable);
     }
 
@@ -158,10 +161,10 @@ public class WcBoardService {
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED); // 삭제 불가능 예외처리 TODO : 에러코드 수정 필요
         }
         /** 멤버와 연결후 구현 / 게시글 작성자만 삭제 가능한 로직
-        if(!findPost.getMember().getMemberId().equals(MemberService.getLoginUserId())) { // 게시글 작성자만 삭제 가능
-            throw new BusinessLogicException(ExceptionCode.NOT_RESOURCE_OWNER); // 삭제 불가능 예외처리
-        }
-        */
+         if(!findPost.getMember().getMemberId().equals(MemberService.getLoginUserId())) { // 게시글 작성자만 삭제 가능
+         throw new BusinessLogicException(ExceptionCode.NOT_RESOURCE_OWNER); // 삭제 불가능 예외처리
+         }
+         */
         wcBoardRepository.delete(findPost);
     }
 
@@ -172,7 +175,7 @@ public class WcBoardService {
 
         WcBoard findWcBoardPost =
                 optionalPOST.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.POST_NOT_FOUND)); // TODO : 게시글 없음으로 에러 변경
+                        new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
         return findWcBoardPost;
     }
 

@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.mapper;
 
+import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
@@ -7,8 +8,10 @@ import com.pettalk.wcboard.entity.WcBoard;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,24 +20,61 @@ public interface WcBoardMapper {
 //     @Mapping(source = "memberId", target = "member.memberId") // 추후에 member에 맞게 수정
      WcBoard wcBoardPostDtoToWcBoard(WcBoardDto.Post postDto);
      WcBoard wcBoardPatchDtotoWcBoard(WcBoardDto.Patch patchDto);
-     //     WcBoard WcBoardToWcBoardSubmitDto(WcBoardDto.SubmitResponse submitResponse);
      WcBoardDto.Response wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
-     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
+//     WcBoardDto.postResponse wcBoardPostResponseDtoToWcBoard(WcBoard wcBoard);
+//     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
 
-//     default WcBoardDto.SubmitResponse submitDtoToWcBoard (WcBoard wcBoard) {
-//          WcBoardDto.SubmitResponse submitResponse =
-//                  WcBoardDto.SubmitResponse.builder()
-//                          .wcboardId(wcBoard.getWcboardId())
-//                          .petSitterId(wcBoard.getPetSitter().getPetSitterId())
-//                          .name(wcBoard.getPetSitter().getName())
-//                          .nowJob(wcBoard.getPetSitter().getNowJob())
-//                          .petSitterImage(wcBoard.getPetSitter().getPetSitterImage())
-//                          .smoking(wcBoard.getPetSitter().isSmoking())
-//                          .submitTime(LocalDateTime.now())
-//                          .build();
-//          return submitResponse;
-//     }
 
+/**
+     default WcBoardDto.postResponse wcBoardPostResponseDtoToWcBoard(WcBoard wcBoard) {
+          if ( wcBoard == null ) {
+               return null;
+          }
+
+          Long wcboardId = null;
+          String title = null;
+          String content = null;
+          String images = null;
+          String wcTag = null;
+          String animalTag = null;
+          String areaTag = null;
+          String postStatus = null;
+          String startTime = null;
+          String endTime = null;
+          String createdAt = null;
+
+          wcboardId = wcBoard.getWcboardId();
+          title = wcBoard.getTitle();
+          content = wcBoard.getContent();
+          images = wcBoard.getImages();
+          wcTag = wcBoard.getWcTag();
+          animalTag = wcBoard.getAnimalTag();
+          areaTag = wcBoard.getAreaTag();
+          if ( wcBoard.getPostStatus() != null ) {
+               postStatus = wcBoard.getPostStatus().name();
+          }
+          if ( wcBoard.getStartTime() != null ) {
+               startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
+          }
+          if ( wcBoard.getEndTime() != null ) {
+               endTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
+          }
+
+          if ( wcBoard.getCreatedAt() != null ) {
+               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
+          }
+
+          String nickName = null;
+          String profileImage = null;
+
+          nickName = wcBoard.getMember().getNickName();
+          profileImage = wcBoard.getMember().getProfileImage();
+
+          WcBoardDto.postResponse postResponse = new WcBoardDto.postResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName, profileImage );
+
+          return postResponse;
+     }
+*/
      //엔티티 생성으로 인한 PetSitterApplicant 수동 매핑
      default List<WcBoardDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
           if ( petSitterApplicant == null ) {
@@ -48,6 +88,9 @@ public interface WcBoardMapper {
 
           return list;
      }
+
+
+
 
      private WcBoardDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
           if ( petSitterApplicant == null ) {
@@ -63,6 +106,51 @@ public interface WcBoardMapper {
 
 
           return petSitterApplicantResponse;
+     }
+
+     default List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard(List<WcBoard> wcBoards) {
+          if ( wcBoards == null ) {
+               return null;
+          }
+
+          List<WcBoardDto.Response> list = new ArrayList<WcBoardDto.Response>( wcBoards.size() );
+          for ( WcBoard wcBoard : wcBoards ) {
+               list.add( wcBoardsResponseDtoToWcBoards( wcBoard ) );
+          }
+
+          return list;
+     }
+
+     private WcBoardDto.Response wcBoardsResponseDtoToWcBoards(WcBoard wcBoard) {
+          if (wcBoard == null) {
+               return null;
+          }
+
+          WcBoardDto.Response response = new WcBoardDto.Response();
+          Member member = wcBoard.getMember();
+
+          response.setWcboardId(wcBoard.getWcboardId());
+          response.setTitle(wcBoard.getTitle());
+          response.setContent(wcBoard.getContent());
+          response.setImages(wcBoard.getImages());
+          response.setWcTag(wcBoard.getWcTag());
+          response.setAnimalTag(wcBoard.getAnimalTag());
+          response.setAreaTag(wcBoard.getAreaTag());
+          response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
+          response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
+          response.setPostStatus(wcBoard.getPostStatus().name());
+          response.setNickName(member.getNickName());
+
+          return response;
+     }
+
+
+     private String formatLocalDateTime(LocalDateTime dateTime) {
+          if (dateTime != null) {
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+               return dateTime.format(formatter);
+          }
+          return null;
      }
 
 
