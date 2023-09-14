@@ -5,6 +5,7 @@ import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.repository.MemberRepository;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -35,17 +36,22 @@ public class PetSitterService {
         String email = (String) authentication.getPrincipal();
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
 
-        petSitter.setMember(findMember);
-        petSitter.setPetSitterId(petSitter.getPetSitterId());
-        petSitter.setName(petSitter.getName());
-        petSitter.setIntroduce(petSitter.getIntroduce());
-        petSitter.setNowJob(petSitter.getNowJob());
-        petSitter.setSmoking(petSitter.isSmoking());
-        petSitter.setExAnimal(petSitter.getExAnimal());
-        petSitter.setInfo(petSitter.getInfo());
-        petSitter.setCreatedAt(LocalDateTime.now());
+        if(findMember.getPetSitter() != null && findMember.getPetSitter().getPetSitterId() != null) {
+            throw new BusinessLogicException(ExceptionCode.PETSITTER_EXISTS);
+        }
+        else {
+            petSitter.setMember(findMember);
+            petSitter.setPetSitterId(petSitter.getPetSitterId());
+            petSitter.setName(petSitter.getName());
+            petSitter.setIntroduce(petSitter.getIntroduce());
+            petSitter.setNowJob(petSitter.getNowJob());
+            petSitter.setSmoking(petSitter.isSmoking());
+            petSitter.setExAnimal(petSitter.getExAnimal());
+            petSitter.setInfo(petSitter.getInfo());
+            petSitter.setCreatedAt(LocalDateTime.now());
 
-        return petSitterRepository.save(petSitter);
+            return petSitterRepository.save(petSitter);
+        }
     }
 
     public PetSitter updatePetSitter(PetSitter petSitter, Long memberId) {
