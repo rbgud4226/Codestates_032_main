@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
@@ -134,54 +135,32 @@ public class WcBoardService {
         }
     }
 
+    /**
+     * Todo 방어로직
+     * 1. 자신이 게시글에 신청할 경우 > 완료
+     * 2. 펫시터 아이디가 없는 경우 > 완료
+     * 3. 동일한 시간대에 여러게시글에 신청
+     */
+    public ResponseEntity submitPetSitter(Long memberId, WcBoardDto.SubmitPost submitPost, Long wcboardId) {
+        Member findMember = memberService.findVerifyMember(memberId);
+        WcBoard findPost = findVerifyPost(wcboardId);
 
-
-    //게시글에 펫시터 신청
-//    public WcBoard whoPetSitterId(WcBoardDto.SubmitPost wcboard, Long memberId) {
-//        Member loginMemberId = memberService.findVerifyMember(memberId); //로그인한 멤버아이디
-//        WcBoard findWcBoard = findWcBoardPost(wcboard.getWcboardId());
-//        Long postMemberId = findWcBoard.getMember().getMemberId(); // 게시글 작성자의 멤버아이디
-//
-//        boolean checkPetSitter = loginMemberId.getPetSitter().getPetSitterId() != null;
-//
-//        if (loginMemberId.equals(postMemberId)){
-//            throw new BusinessLogicException(ExceptionCode.ALREADY_SUBMIT);
-//        } else if (!checkPetSitter) {
-//            throw new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND);
-//        } else {
-//            PetSitterApplicant petSitterApplicant = new PetSitterApplicant();
-//            petSitterApplicant.setWcboardId(wcboard.getWcboardId());
-//            petSitterApplicant.setPetSitter(petSitter);
-//            postMemberId.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
-//            paRepository.save(petSitterApplicant);
-//            return findWcBoard;
-//        }
-//    }
-
-    /** 잠시.. 보류 기억안날대 열어보기..
-    public WcBoard compareLoginMemberIdPostMemberId (WcBoard wcBoard){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Member findMember = memberService.findMemberByPrincipal(principal.toString()); // 로그인한 멤버의 이메일로 멤버 정보 조회
-
-        Long loginMemberId = findMember.getMemberId();//로그인한 멤버의 멤버아이디
-        Long postMemberId = wcBoard.getMember().getMemberId(); //게시글 작성자의 멤버아이디
-
-        boolean checkPetSitter = findMember.getPetSitter().getPetSitterId() != null;
-        //펫시터 아이디가 있으면 > true 없으면 > false
-
-        if (loginMemberId.equals(postMemberId)) {
-            //같으면? 신청이 안되야함
-            return new ()
-        }else if (checkPetSitter){
-            //다르면? 펫시터 가입이 됐는지 확인해야함
-            return new responseMessage()
-        }else{
-            return new responseMessage()
-            //위에 조건이 다 만족일경우에만 신청이된다.
+        if (isOwnPost(findMember, findPost)) {
+            return ResponseEntity.ok("자신의 게시글에 신청할수 없어요!");
+        } else if (!isPetSitter(findMember)) {
+            return ResponseEntity.ok("펫시터를 아직 등록하지 않으셨네요!");
+        } else {
+            return ResponseEntity.ok("신청 완료!");
         }
     }
-     */
 
+    private boolean isOwnPost(Member member, WcBoard wcBoard) {
+        return member.getMemberId().equals(wcBoard.getMember().getMemberId());
+    }
+
+    private boolean isPetSitter(Member member) {
+        return member.getPetSitter() != null;
+    }
 
     /** 0908 태그 다중적용이 안되어 일시 비활성화 처리
     public Page<WcBoard> findPostByWcTag(int page, int size, String wcTag) {
@@ -223,7 +202,8 @@ public class WcBoardService {
         if(!findPost.getPostStatus().equals(WcBoard.PostStatus.DEFAULT)) { // 진행중인 게시글만 삭제 가능
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED); // 삭제 불가능 예외처리 TODO : 에러코드 수정 필요
         }
-        /** 멤버와 연결후 구현 / 게시글 작성자만 삭제 가능한 로직
+        /**
+         * 멤버와 연결후 구현 / 게시글 작성자만 삭제 가능한 로직
          if(!findPost.getMember().getMemberId().equals(MemberService.getLoginUserId())) { // 게시글 작성자만 삭제 가능
          throw new BusinessLogicException(ExceptionCode.NOT_RESOURCE_OWNER); // 삭제 불가능 예외처리
          }
