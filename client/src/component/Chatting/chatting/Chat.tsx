@@ -92,7 +92,15 @@ const Chat: React.FC = () => {
         <PersonInfo />
       </InfoMsgCtn>
       <div
-        style={{ border: "1px solid red", position: "relative", bottom: "120" }}
+        style={{
+          border: "1px solid red",
+          position: "relative",
+          bottom: "120",
+          height: "800px",
+          overflow: "auto",
+          flexDirection: "column-reverse",
+          display: "flex",
+        }}
       >
         <MsgCtn>
           {msgList.map((el, index) =>
