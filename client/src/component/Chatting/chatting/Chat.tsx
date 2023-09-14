@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import imgIcon from "../../../asset/ChatAsset/image-icon.png";
 import sendIcon from "../../../asset/ChatAsset/message-icon.png";
@@ -7,8 +7,7 @@ import RecieveChatDesign from "./RecieveChatDesign";
 import * as StompJS from "@stomp/stompjs";
 import global from "../../../Data/global";
 import axios from "axios";
-
-//현재 시간을 xx-xx로 가져오는 함수
+import PersonInfo from "./PersonInfo";
 
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -90,44 +89,52 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <MessageSection>
-      <MsgCtn>
-        {msgList.map((el, index) =>
-          el.userType === "신청자" ? (
-            <SendChatDesign
-              key={index}
-              input={el.message}
-              createAt={el.createdAt.slice(11, 16)}
-            />
-          ) : (
-            <RecieveChatDesign
-              key={index}
-              input={el.message}
-              createAt={el.createdAt.slice(11, 16)}
-            />
-          ),
-        )}
-      </MsgCtn>
+    <ChatCtn>
+      <PersonInfo />
+      <MessageSection>
+        <MsgCtn>
+          {msgList.map((el, index) =>
+            el.userType === "신청자" ? (
+              <SendChatDesign
+                key={index}
+                input={el.message}
+                createAt={el.createdAt.slice(11, 16)}
+              />
+            ) : (
+              <RecieveChatDesign
+                key={index}
+                input={el.message}
+                createAt={el.createdAt.slice(11, 16)}
+              />
+            ),
+          )}
+        </MsgCtn>
 
-      <MessageForm onSubmit={e => submitHdr(e)}>
-        <ImgBtn>
-          <img src={imgIcon} alt="이미지"></img>
-        </ImgBtn>
-        <MessageInput
-          type="text"
-          placeholder="메시지 입력"
-          value={input}
-          onChange={e => setSendHdr(e)}
-        />
-        <SendButton onClick={() => sendChat()}>
-          <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
-        </SendButton>
-      </MessageForm>
-    </MessageSection>
+        <MessageForm onSubmit={e => submitHdr(e)}>
+          <ImgBtn>
+            <img src={imgIcon} alt="이미지"></img>
+          </ImgBtn>
+          <MessageInput
+            type="text"
+            placeholder="메시지 입력"
+            value={input}
+            onChange={e => setSendHdr(e)}
+          />
+          <SendButton onClick={() => sendChat()}>
+            <SendIconImg src={sendIcon} alt="전송"></SendIconImg>
+          </SendButton>
+        </MessageForm>
+      </MessageSection>
+    </ChatCtn>
   );
 };
 
 export default Chat;
+
+export const ChatCtn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const MessageSection = styled.section`
   display: flex;
@@ -145,7 +152,7 @@ export const MsgCtn = styled.div`
 
 export const MessageForm = styled.form`
   display: flex;
-  border: 1px solid grey;
+  border-top: 1px solid ${global.Gray[5].value};
   position: sticky;
   bottom: 70px;
 `;

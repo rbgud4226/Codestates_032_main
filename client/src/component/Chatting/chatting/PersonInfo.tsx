@@ -19,7 +19,9 @@ const PersonInfo = () => {
           <p style={{ fontSize: "16px", marginLeft: "25px" }}>
             {userData.nickName}
           </p>
-          <p style={{ fontSize: "14px", color: "#595959" }}>{userData.phone}</p>
+          <p style={{ fontSize: "14px", color: `${global.Gray[1].value}` }}>
+            {userData.phone}
+          </p>
           <p
             style={{
               fontSize: "14px",
@@ -66,7 +68,7 @@ export const ProfileImgWrapper = styled.div`
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  background-color: #279eff;
+  background-color: ${global.Primary.value};
 `;
 
 export const InfoCtn = styled.div`
