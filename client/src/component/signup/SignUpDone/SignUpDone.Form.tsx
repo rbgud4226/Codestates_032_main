@@ -8,11 +8,11 @@ const SignUpDoneForm = () => {
   };
   return (
     <SDSection>
-      <div>
+      {/* <div>
         <AgreeSpan>약관동의</AgreeSpan>
         <InputSpan>정보입력</InputSpan>
         <DoneSpan>완료</DoneSpan>
-      </div>
+      </div> */}
       <WelcomeSpan>환영합니다!</WelcomeSpan>
       <LoginCtn onClick={() => loginBtnHdr()}>
         <LargeBtn name={"로그인"} />

@@ -51,6 +51,7 @@ const BoardList = () => {
           },
           params: { page, size: postPerPage }, // 페이지 번호 및 페이지당 게시글 수 전달
         });
+        checkLoginStatus();
         setTotalItemsCount(response.data.total); // 전체 게시물 수 설정
         setPosts(response.data.data);
       } catch (error) {
@@ -60,6 +61,11 @@ const BoardList = () => {
 
     fetchData();
   }, [page]);
+
+  const checkLoginStatus = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  };
 
   const moveToWrite = () => {
     if (isLoggedIn) {

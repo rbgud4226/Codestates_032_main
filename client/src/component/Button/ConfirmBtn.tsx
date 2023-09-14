@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import global from "../../Data/global";
 
 interface ConsfirmBtnProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -19,7 +20,7 @@ export default ConfirmBtn;
 export const CFBtn = styled.button`
   width: 240px;
   height: 30px;
-  background-color: #279eff;
+  background-color: ${global.Primary.value};
   align-items: center;
   font-size: 16px;
   justify-content: center;
@@ -29,9 +30,9 @@ export const CFBtn = styled.button`
   margin-top: 12px;
   cursor: pointer;
   &:active {
-    background-color: #1d8ce7;
+    background-color: ${global.PrimaryActive.value};
   }
   &:disabled {
-    background-color: #9ac5f4;
+    background-color: ${global.PrimaryDisable.value};
   }
 `;

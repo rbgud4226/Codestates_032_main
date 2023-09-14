@@ -36,11 +36,11 @@ const MemberAgreeForm = () => {
 
   return (
     <MASection>
-      <div>
+      {/* <div>
         <AgreeSpan>이용약관</AgreeSpan>
         <InputSpan>정보입력</InputSpan>
         <DoneSpan>완료</DoneSpan>
-      </div>
+      </div> */}
       <AllAgree>
         <input
           type="checkbox"

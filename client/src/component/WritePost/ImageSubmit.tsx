@@ -7,84 +7,41 @@ interface ImageSubmitProps {
 }
 
 function ImageSubmit({ handleImageChange, images }: ImageSubmitProps) {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [file, setFile] = useState(null);
 
-  // Create a new event handler for the file input
-  const handleFileInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
-      // Convert the selected files to an array of URLs for preview
-      const selectedFileURLs = Array.from(selectedFiles).map(file =>
-        URL.createObjectURL(file),
-      );
-      setPreviewImages(selectedFileURLs);
-
-      // Call the handleImageChange function with the selected files
-      const selectedFileArray = Array.from(selectedFiles).map(file =>
-        URL.createObjectURL(file),
-      );
-      handleImageChange(selectedFileArray);
-    }
+  const handleFileChange = e => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
 
-  const handleImageUpload = async () => {
+  const handleUpload = async () => {
+    if (!file) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
     try {
-      if (images.length > 0) {
-        const formData = new FormData();
+      // 이미지를 업로드할 백엔드 API 엔드포인트 URL을 여기에 입력하세요.
+      const response = await axios.post("백엔드_API_URL", formData);
 
-        for (const image of images) {
-          formData.append("images", image);
-        }
-
-        // Your image upload Axios request here...
+      if (response.status === 200) {
+        alert("이미지 업로드 성공!");
+        // 성공적으로 이미지를 업로드한 후 원하는 작업을 수행하세요.
+      } else {
+        alert("이미지 업로드 실패");
       }
     } catch (error) {
-      console.error("이미지 업로드 중 오류 발생", error);
+      console.error("이미지 업로드 오류:", error);
+      alert("이미지 업로드 중 오류가 발생했습니다.");
     }
   };
 
   return (
     <div>
-      {/* 컴포넌트 내에서 uploadedImages를 사용하여 업로드된 이미지를 표시 */}
-      {uploadedImages.length > 0 && (
-        <div>
-          <h2>업로드된 이미지</h2>
-          {uploadedImages.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`업로드된 이미지 ${index + 1}`}
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* 미리보기 이미지 */}
-      {previewImages.length > 0 && (
-        <div>
-          <h2>미리보기</h2>
-          {previewImages.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`미리보기 ${index + 1}`}
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Use the new event handler for file input */}
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleFileInputChange}
-      />
+      <input type="file" accept="image/*" onChange={handleFileChange} />
     </div>
   );
 }

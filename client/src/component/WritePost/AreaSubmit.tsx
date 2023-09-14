@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 
 interface AreaSubmitProps {
   onRegionSelect: (regionName: string | null) => void;
@@ -39,9 +38,8 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
     setSelectedRegion(" 지역검색");
   }, []);
   return (
-    <div>
-      <AreaContentText>지역선택</AreaContentText>
-      <div>
+    <PageListContainer>
+      <PageContainer>
         <AreaListButton onClick={() => handleRegionSelect("지역검색")}>
           {selectedRegion === "지역검색" ? "지역검색" : selectedRegion}
         </AreaListButton>
@@ -58,17 +56,19 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
             ))}
           </AreaContainer>
         )}
-      </div>
-    </div>
+      </PageContainer>
+    </PageListContainer>
   );
 }
 
 export default AreaSubmit;
 
-const AreaContentText = styled.div`
-  font-size: 20px;
-  margin-bottom: 12px;
-  margin-top: 40px;
+const PageListContainer = styled.div`
+  text-align: left;
+`;
+
+const PageContainer = styled.div`
+  text-align: left;
 `;
 
 const AreaListButton = styled.button`

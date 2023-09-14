@@ -19,7 +19,7 @@ const PostDetail = () => {
           },
         });
 
-        setPost(response.data); // 여기에서 .data를 사용하여 데이터를 가져옵니다.
+        setPost(response.data);
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
       }

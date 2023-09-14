@@ -3,8 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostForm from "./WritPostForm";
-import ImageSubmit from "./ImageSubmit";
-import AreaSubmit from "./AreaSubmit";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -17,6 +15,8 @@ function WritePost() {
     wcTag: "",
     animalTag: "",
     areaTag: "",
+    startTime: "",
+    endTime: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false); // 추가
   const [images, setImages] = useState<string[]>([]);
@@ -87,6 +87,8 @@ function WritePost() {
         post.content,
         post.areaTag,
         post.images,
+        post.startTime,
+        post.endTime,
       );
       const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
@@ -108,6 +110,8 @@ function WritePost() {
         content: "",
         images: "",
         areaTag: "",
+        startTime: "",
+        endTime: "",
       });
 
       navigate("/mainPage");
@@ -131,7 +135,7 @@ function WritePost() {
         Submit={Submit}
         AreaChange={AreaChange}
         isSubmitting={isSubmitting}
-        handleImageChange={handleImageChange} // handleImageChange 함수 전달
+        handleImageChange={handleImageChange}
         images={images}
       />
     </div>
