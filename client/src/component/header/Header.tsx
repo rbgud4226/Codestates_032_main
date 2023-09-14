@@ -13,6 +13,7 @@ const menuList = [
 ];
 
 const Header = () => {
+  //로그아웃 Hdr
   const logoutHdr = async () => {
     try {
       const res = await axios.post(`${api}/members/logout`, {
@@ -24,6 +25,7 @@ const Header = () => {
       });
       console.log(res);
       window.localStorage.clear();
+      window.location.href = "/";
     } catch (error) {
       console.log("로그아웃에러", error);
     }

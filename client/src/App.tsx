@@ -16,8 +16,6 @@ import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
 
-
-
 function App() {
   return (
     <>
