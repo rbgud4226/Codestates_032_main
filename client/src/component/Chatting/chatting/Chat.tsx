@@ -88,20 +88,10 @@ const Chat: React.FC = () => {
 
   return (
     <MessageSection>
-      <InfoMsgCtn>
+      {/* <InfoMsgCtn>
         <PersonInfo />
-      </InfoMsgCtn>
-      <div
-        style={{
-          border: "1px solid red",
-          position: "relative",
-          bottom: "120",
-          height: "800px",
-          overflow: "auto",
-          flexDirection: "column-reverse",
-          display: "flex",
-        }}
-      >
+      </InfoMsgCtn> */}
+      <Test>
         <MsgCtn>
           {msgList.map((el, index) =>
             el.userType === "신청자" ? (
@@ -119,7 +109,7 @@ const Chat: React.FC = () => {
             ),
           )}
         </MsgCtn>
-      </div>
+      </Test>
 
       <MessageForm onSubmit={e => submitHdr(e)}>
         <ImgBtn>
@@ -145,24 +135,24 @@ export const MessageSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100vh;
-  width: 100%;
 `;
 export const InfoMsgCtn = styled.div``;
+
+const Test = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: scroll;
+  height: calc(100vh - 70px - 70px - 48px);
+`;
 
 export const MsgCtn = styled.div`
   display: flex;
   flex-direction: column;
-
-  position: sticky;
 `;
 
 export const MessageForm = styled.form`
   display: flex;
-  width: 100%;
   border: 1px solid grey;
-  position: sticky;
-  bottom: 71px;
 `;
 
 export const ImgBtn = styled.div`

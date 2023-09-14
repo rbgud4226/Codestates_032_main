@@ -37,8 +37,7 @@ export default Chat;
 export const Ctn = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: white;
+  min-height: calc(100vh - 70px -70px);
 `;
 
 export const PetalkBtnCtn = styled.div`

@@ -59,16 +59,20 @@ const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     font-family: 'Roboto';
   }
+  html, body{
+    height: 100%;
+  }
 `;
+
 const Body = styled.body`
-  width: 100vw;
-  margin: 0px;
+  width: 100%;
   display: flex;
   justify-content: center;
 `;
+
 const Container = styled.div`
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
   min-width: 320px;
-  min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
 `;
