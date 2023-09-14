@@ -136,9 +136,7 @@ export default BoardList;
 const ImContainer = styled.div`
   color: back;
   border: 1px solid blue;
-
   height: 100px;
-
   text-align: center;
   margin-top: 12px;
 `;

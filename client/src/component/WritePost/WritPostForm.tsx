@@ -4,6 +4,12 @@ import "react-calendar/dist/Calendar.css";
 import ImageSubmit from "./ImageSubmit";
 import AreaSubmit from "./AreaSubmit";
 import { useNavigate } from "react-router-dom";
+import next from "../../asset/PetsitterRegisterAsset/Next.png";
+import before from "../../asset/PetsitterRegisterAsset/Before.png";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { CalendarProps } from "react-calendar";
+import moment from "moment";
 
 interface PostFormProps {
   step: number;
@@ -41,7 +47,6 @@ function PostForm({
   handleImageChange,
   images,
 }: PostFormProps) {
-  const [Calende, setCalende] = useState(new Date());
   const [selectedWcTag, setSelectedWcTag] = useState<string | null>(null);
 
   const handleWcTagChange = (wcTag: string) => {
@@ -51,6 +56,31 @@ function PostForm({
     } else {
       // 다른 버튼을 클릭한 경우, 해당 버튼 선택
       setSelectedWcTag(wcTag);
+    }
+  };
+
+  const [nowDate, setNowDate] = useState<string>("");
+  const [showCalendar, setShowCalendar] = useState(false); // 달력 표시 여부 상태 추가
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateClick = () => {
+    setShowCalendar(!showCalendar); // 날짜 버튼을 클릭하면 달력을 표시 또는 숨김
+  };
+
+  const handleDateChange = (
+    value: Date | Date[],
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    if (value instanceof Date) {
+      setSelectedDate(value);
+      setShowCalendar(false); // 날짜를 선택하면 달력을 숨김
+    } else if (
+      Array.isArray(value) &&
+      value.length > 0 &&
+      value[0] instanceof Date
+    ) {
+      setSelectedDate(value[0]);
+      setShowCalendar(false); // 날짜를 선택하면 달력을 숨김
     }
   };
 
@@ -149,20 +179,44 @@ function PostForm({
             placeholder="200자 이내로 입력해주세요."
           />
           <Container>
-            <StepButton onClick={() => StepChange(2)}>다음</StepButton>
+            <StepButton onClick={() => StepChange(2)}>
+              <StyledImage src={next} alt="Next"></StyledImage>
+            </StepButton>
           </Container>
         </div>
       )}
 
       {step === 2 && (
         <div>
-          <h2>Step 2: 다음 단계 내용</h2>
-          {/* 이 곳에 Step 2에 대한 내용을 추가하세요 */}
+          <h2>예약</h2>
+
           <ImageSubmit handleImageChange={handleImageChange} images={images} />
           <AreaSubmit onRegionSelect={AreaChange} />
+
+          <WritPostText>
+            <div>
+              <ParentContainer>
+                {/* 날짜 버튼 */}
+                <DateButton onClick={handleDateClick}>
+                  {moment(selectedDate).format("MM/DD")}
+                </DateButton>
+              </ParentContainer>
+              {/* 달력 */}
+              {showCalendar && (
+                <CalendarContainer>
+                  <Calendar onChange={handleDateChange} value={selectedDate} />
+                </CalendarContainer>
+              )}
+            </div>
+          </WritPostText>
+
           <Container>
-            <StepReButton onClick={() => StepChange(1)}>이전</StepReButton>
-            <StepSubimtButton onClick={Submit}>작성 완료</StepSubimtButton>
+            <StepReButton onClick={() => StepChange(1)}>
+              <img src={before} alt="before" />
+            </StepReButton>
+            <StepButton onClick={Submit}>
+              <img src={next} alt="Next" />
+            </StepButton>
           </Container>
         </div>
       )}
@@ -173,16 +227,20 @@ export default PostForm;
 
 const Container = styled.div`
   position: absolute;
-  bottom: 0px; /* 원하는 위치로 조정 */
+  bottom: 0px;
   display: flex;
-  justify-content: space-between; /* 이전과 작성 완료를 떨어뜨리기 위해 추가 */
-  width: 100%; /* 부모 요소 전체 너비로 확장 */
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const StyledImage = styled.img`
+  margin-left: 10px;
 `;
 
 const WritPostText = styled.div`
-  font-size: 28px;
+  font-size: 24px;
   margin-top: 40px;
-  margin-left: 8px;
+  margin-left: 24px;
 `;
 
 const WCButton = styled.button`
@@ -190,13 +248,13 @@ const WCButton = styled.button`
   font-size: 12px;
   padding: 16px 12px;
   position: relative;
-  margin-left: 40px;
+  margin-left: 12px;
   top: 10px;
-  width: 160px;
+  width: 198px;
   border: 2px solid 
   cursor: pointer;
   border-radius: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 `;
 
 const AButton = styled.button`
@@ -204,26 +262,28 @@ const AButton = styled.button`
   font-size: 12px;
   padding: 12px 12px;
   position: relative;
-  margin-left: 40px;
+  margin-left: 12px;
   top: 10px;
-  width: 100px;
+  width: 128px;
   border: 2px solid 
   cursor: pointer;
   border-radius: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 `;
 
 const ContentText = styled.div`
-  font-size: 28px;
-  margin-top: 40px;
-  margin-left: 8px;
+  font-size: 24px;
+  margin-top: 24px;
+  margin-left: 24px;
+  margin-bottom: 24px;
 `;
 
 const ContentSText = styled.div`
   font-size: 12px;
   margin-top: 12px;
   margin-bottom: 8px;
-  margin-left: 12px;
+  margin-left: 24px;
+  margin-right: 24px;
 `;
 
 const InputName = styled.input`
@@ -259,8 +319,8 @@ const InputInfo = styled.input`
 
 const StepButton = styled.button`
   position: absolute;
-  bottom: 0px;
-  left: 450px;
+  bottom: 100px;
+  left: 440px;
   background: none;
   border: none;
   cursor: pointer;
@@ -274,11 +334,23 @@ const StepReButton = styled.button`
   cursor: pointer;
 `;
 
-const StepSubimtButton = styled.button`
-  position: absolute;
-  bottom: 100px;
-  left: 400px; /* 수정: 오타 수정 및 원하는 위치로 조정 */
-  background: none;
+const DateButton = styled.button`
+  background-color: #279eff;
+  color: white;
+  padding: 5px 10px;
   border: none;
   cursor: pointer;
+`;
+
+// CalendarContainer 스타일링
+const CalendarContainer = styled.div`
+  position: relative;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+`;
+
+const ParentContainer = styled.div`
+  position: relative;
 `;

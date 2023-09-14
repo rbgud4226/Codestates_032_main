@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -34,6 +34,10 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
     onRegionSelect(regionName); // 선택된 지역을 부모 컴포넌트로 전달
   };
 
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 초기 선택 설정
+    setSelectedRegion(" 지역검색");
+  }, []);
   return (
     <div>
       <AreaContentText>지역선택</AreaContentText>
@@ -78,6 +82,18 @@ const AreaListButton = styled.button`
   border: none;
   cursor: pointer;
   border-bottom: 1px solid #ccc;
+  color: white;
+  border-radius: 8px;
+`;
+
+const AreaContainer = styled.div`
+  background-color: white;
+  padding: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  border: 1px solid #595959;
 `;
 
 const AreaSListButton = styled.button`
@@ -85,16 +101,8 @@ const AreaSListButton = styled.button`
   background-color: white;
   font-size: 12px;
   padding: 4px 8px;
-  position: relative;
-  margin-left: 24px;
-  top: 10px;
-  width: 50px;
+  width: calc(20% - 8px);
   border: 2px solid #279eff;
   cursor: pointer;
   margin-top: 8px;
-`;
-
-const AreaContainer = styled.div`
-  background-color: black;
-  padding: 36px;
 `;
