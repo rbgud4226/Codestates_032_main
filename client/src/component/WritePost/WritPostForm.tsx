@@ -7,7 +7,7 @@ import next from "../../asset/PetsitterRegisterAsset/Next.png";
 import before from "../../asset/PetsitterRegisterAsset/Before.png";
 import "react-calendar/dist/Calendar.css";
 import Pickr from "./Pickr";
-import ImageSubmit from "./ImageSubmit";
+import UploadImage from "./ImageSubmit";
 
 interface PostFormProps {
   step: number;
@@ -31,6 +31,7 @@ interface PostFormProps {
   isSubmitting: boolean;
   handleImageChange: (newImages: string[]) => void; // handleImageChange 추가
   images: string[]; // images 추가
+  imagePreview: string | null;
 }
 
 function PostForm({
@@ -47,6 +48,7 @@ function PostForm({
 }: PostFormProps) {
   const [selectedWcTag, setSelectedWcTag] = useState<string | null>(null);
   const [selectedAnimalTags, setSelectedAnimalTags] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleWcTagChange = (wcTag: string) => {
     if (selectedWcTag === wcTag) {
@@ -172,9 +174,10 @@ function PostForm({
               <SectionTitle>예약</SectionTitle>
               <HR />
               <ContentSubmitText>선택사항입니다.</ContentSubmitText>
-              <ImageSubmit
+              <UploadImage
+                onClick={Submit}
                 handleImageChange={handleImageChange}
-                images={images}
+                images={uploadedImages}
               />
               <HR />
             </SectionContainer>
@@ -271,7 +274,7 @@ const ContentSubmitText = styled.div`
   font-size: 12px;
   color: #595959;
   margin-top: 8px;
-  margin-bottom: 100px;
+  margin-bottom: 8px;
 `;
 
 const InputName = styled.input`

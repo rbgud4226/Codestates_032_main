@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 interface TimeSelectorProps {
   inputRef: React.RefObject<HTMLInputElement>;
-  onTimeChange: (selectedTime: string) => void; // onTimeChange 추가
+  onTimeChange: (selectedTime: string) => void;
 }
 
 function TimeSelector({ inputRef }: TimeSelectorProps) {
@@ -73,15 +73,17 @@ function Pickr() {
     setStartTime(selectedTime);
   };
 
+  // const handleEndTimeChange = (selectedTime: string) => {
+  //   setEndTime(selectedTime);
+  //   const apiPayload = {
+  //     startTime,
+  //     endTime,
+  //   };
+  //   console.log("API로 전송할 데이터:", apiPayload);
+  // };
   const handleEndTimeChange = (selectedTime: string) => {
-    setEndTime(selectedTime);
-    const apiPayload = {
-      startTime,
-      endTime,
-    };
-    console.log("API로 전송할 데이터:", apiPayload);
+    // 백엔드에서 만들어 주지 않았음.
   };
-
   return (
     <PageContainer>
       <SectionContainer>

@@ -1,49 +1,83 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef, Dispatch, SetStateAction } from "react";
+import { uploadImageFile } from "./utils";
+import styled from "styled-components";
 
-interface ImageSubmitProps {
+interface InputImageProps {
+  setImage: Dispatch<SetStateAction<File | null>>;
+  inputRef: React.RefObject<HTMLInputElement>;
+}
+interface UploadImageProps {
   handleImageChange: (newImages: string[]) => void;
   images: string[];
+  onClick?: () => void;
+  children?: React.ReactNode;
 }
 
-function ImageSubmit({ handleImageChange, images }: ImageSubmitProps) {
-  const [file, setFile] = useState(null);
+function UploadImage({ handleImageChange, images }: UploadImageProps) {
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleFileChange = e => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+  const inputImageRef = useRef<HTMLInputElement | null>(null);
+
+  const onClearInput = () => {
+    if (inputImageRef.current) {
+      inputImageRef.current.value = "";
+    }
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      alert("파일을 선택해주세요.");
-      return;
+  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const selectedImage = event.target.files[0];
+      setImage(selectedImage);
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        if (e.target && typeof e.target.result === "string") {
+          setImagePreview(e.target.result);
+        }
+      };
+      reader.readAsDataURL(selectedImage);
     }
+  };
 
-    const formData = new FormData();
-    formData.append("image", file);
-
+  const onClick = async () => {
     try {
-      // 이미지를 업로드할 백엔드 API 엔드포인트 URL을 여기에 입력하세요.
-      const response = await axios.post("백엔드_API_URL", formData);
-
-      if (response.status === 200) {
-        alert("이미지 업로드 성공!");
-        // 성공적으로 이미지를 업로드한 후 원하는 작업을 수행하세요.
+      setLoading(true);
+      if (image) {
+        await uploadImageFile(image);
+        alert("피드백 전송을 성공했습니다.");
       } else {
-        alert("이미지 업로드 실패");
+        throw new Error("이미지가 선택되지 않았습니다.");
       }
-    } catch (error) {
-      console.error("이미지 업로드 오류:", error);
-      alert("이미지 업로드 중 오류가 발생했습니다.");
+    } catch (e) {
+      alert("피드백 전송에 실패했습니다.");
+    } finally {
+      setLoading(false);
+      onClearInput();
     }
   };
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+      <input
+        type="file"
+        accept="image/*"
+        ref={inputImageRef}
+        onChange={onImageChange}
+      />
+      {imagePreview && (
+        <img src={imagePreview} alt="미리보기" style={{ maxWidth: "100%" }} />
+      )}
+      <div className="flex justify-end">
+        <button onClick={onClick} disabled={loading}>
+          {loading ? "업로딩 중..." : "이미지 "}
+        </button>
+      </div>
     </div>
   );
 }
 
-export default ImageSubmit;
+export default UploadImage;
+
+const InputImage = styled.input<InputImageProps>``;

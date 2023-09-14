@@ -15,8 +15,8 @@ interface Board {
   animalTag: string;
   areaTag: string;
   postStatus: string;
-  startTime: string;
-  endTime: string;
+  //startTime: string;
+  //endTime: string;
 }
 
 const BoardList = () => {
