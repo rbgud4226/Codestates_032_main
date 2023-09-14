@@ -21,6 +21,8 @@ const global = {
   },
   WhiteButtonActive: {
     value: "#d9d9d9",
+    type: "color",
+  },
   PrimaryDisable: {
     value: "#9ac5f4",
     type: "color",
