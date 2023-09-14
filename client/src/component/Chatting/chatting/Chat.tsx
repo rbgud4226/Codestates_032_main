@@ -134,6 +134,7 @@ export default Chat;
 export const MessageSection = styled.section`
   display: flex;
   flex-direction: column;
+  width: 100%;
   justify-content: space-between;
 `;
 export const InfoMsgCtn = styled.div``;

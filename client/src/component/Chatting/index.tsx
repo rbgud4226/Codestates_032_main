@@ -15,7 +15,7 @@ const Chat = () => {
   };
   return (
     <Ctn>
-      {isChat ? (
+      {/* {isChat ? (
         <PetalkBtnCtn>
           <ActiveBtn onClick={() => chatHdr()}>펫톡쳇</ActiveBtn>
           <DiactiveBtn onClick={() => mapHdr()}>펫톡맵</DiactiveBtn>
@@ -25,7 +25,7 @@ const Chat = () => {
           <DiactiveBtn onClick={() => chatHdr()}>펫톡쳇</DiactiveBtn>
           <ActiveBtn onClick={() => mapHdr()}>펫톡맵</ActiveBtn>
         </PetalkBtnCtn>
-      )}
+      )} */}
 
       {isChat ? <ChatForm /> : ""}
     </Ctn>
@@ -37,7 +37,6 @@ export default Chat;
 export const Ctn = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 70px -70px);
 `;
 
 export const PetalkBtnCtn = styled.div`
