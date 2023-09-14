@@ -15,7 +15,7 @@ const Chat = () => {
   };
   return (
     <Ctn>
-      {/* {isChat ? (
+      {isChat ? (
         <PetalkBtnCtn>
           <ActiveBtn onClick={() => chatHdr()}>펫톡쳇</ActiveBtn>
           <DiactiveBtn onClick={() => mapHdr()}>펫톡맵</DiactiveBtn>
@@ -25,7 +25,7 @@ const Chat = () => {
           <DiactiveBtn onClick={() => chatHdr()}>펫톡쳇</DiactiveBtn>
           <ActiveBtn onClick={() => mapHdr()}>펫톡맵</ActiveBtn>
         </PetalkBtnCtn>
-      )} */}
+      )}
 
       {isChat ? <ChatForm /> : ""}
     </Ctn>
@@ -40,11 +40,13 @@ export const Ctn = styled.div`
 `;
 
 export const PetalkBtnCtn = styled.div`
+  padding: 16px 0px;
   display: flex;
   justify-content: space-around;
-  background-color: ${global.White.value};
-  top: 0px;
+  top: 70px;
   position: sticky;
+  background-color: ${global.White.value};
+  z-index: 999;
 `;
 
 export const ActiveBtn = styled.button`

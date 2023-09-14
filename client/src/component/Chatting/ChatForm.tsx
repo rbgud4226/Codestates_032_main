@@ -1,10 +1,12 @@
 import React from "react";
 import { styled } from "styled-components";
 import Chat from "./chatting/Chat";
+import PersonInfo from "./chatting/PersonInfo";
 
 const ChatForm = () => {
   return (
     <ChatFormCtn>
+      <PersonInfo />
       <Chat />
     </ChatFormCtn>
   );
@@ -14,6 +16,5 @@ export default ChatForm;
 
 export const ChatFormCtn = styled.div`
   display: flex;
-  width: 100%;
-  margin-top: 14px;
+  flex-direction: column;
 `;

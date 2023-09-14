@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { styled } from "styled-components";
 import imgIcon from "../../../asset/ChatAsset/image-icon.png";
 import sendIcon from "../../../asset/ChatAsset/message-icon.png";
@@ -6,7 +6,6 @@ import SendChatDesign from "./SendChatDesign";
 import RecieveChatDesign from "./RecieveChatDesign";
 import * as StompJS from "@stomp/stompjs";
 import global from "../../../Data/global";
-import PersonInfo from "./PersonInfo";
 import axios from "axios";
 
 //현재 시간을 xx-xx로 가져오는 함수
@@ -67,6 +66,10 @@ const Chat: React.FC = () => {
       const msg = await axios.get("http://3.35.193.208:8080/chat/1");
       console.log(msg.data);
       setMsgList(msg.data);
+      window.scrollTo(
+        0,
+        document.documentElement.scrollHeight || document.body.scrollHeight,
+      );
     } catch (e) {
       console.log("오류발생", e);
     }
@@ -88,28 +91,23 @@ const Chat: React.FC = () => {
 
   return (
     <MessageSection>
-      {/* <InfoMsgCtn>
-        <PersonInfo />
-      </InfoMsgCtn> */}
-      <Test>
-        <MsgCtn>
-          {msgList.map((el, index) =>
-            el.userType === "신청자" ? (
-              <SendChatDesign
-                key={index}
-                input={el.message}
-                createAt={el.createdAt.slice(11, 16)}
-              />
-            ) : (
-              <RecieveChatDesign
-                key={index}
-                input={el.message}
-                createAt={el.createdAt.slice(11, 16)}
-              />
-            ),
-          )}
-        </MsgCtn>
-      </Test>
+      <MsgCtn>
+        {msgList.map((el, index) =>
+          el.userType === "신청자" ? (
+            <SendChatDesign
+              key={index}
+              input={el.message}
+              createAt={el.createdAt.slice(11, 16)}
+            />
+          ) : (
+            <RecieveChatDesign
+              key={index}
+              input={el.message}
+              createAt={el.createdAt.slice(11, 16)}
+            />
+          ),
+        )}
+      </MsgCtn>
 
       <MessageForm onSubmit={e => submitHdr(e)}>
         <ImgBtn>
@@ -134,26 +132,22 @@ export default Chat;
 export const MessageSection = styled.section`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  justify-content: space-between;
-`;
-export const InfoMsgCtn = styled.div``;
-
-const Test = styled.div`
-  display: flex;
-  flex-direction: column-reverse;
-  overflow: scroll;
-  height: calc(100vh - 70px - 70px - 48px);
+  min-height: calc(100vh - 300px);
 `;
 
 export const MsgCtn = styled.div`
   display: flex;
   flex-direction: column;
+  bottom: 70px;
+  position: sticky;
+  flex-grow: 1;
 `;
 
 export const MessageForm = styled.form`
   display: flex;
   border: 1px solid grey;
+  position: sticky;
+  bottom: 70px;
 `;
 
 export const ImgBtn = styled.div`

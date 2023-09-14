@@ -26,7 +26,7 @@ export const ChatCtn = styled.div`
   align-items: flex-start;
   margin-top: 8px;
   margin-bottom: 8px;
-  margin-left: 13px;
+  margin-left: 20px;
 `;
 
 export const ChatDesign = styled.div`

@@ -93,6 +93,10 @@ const global = {
       value: "#8c8c8c",
       type: "color",
     },
+    9: {
+      value: "#a4a4a4",
+      type: "color",
+    },
   },
   Border: {
     1: {

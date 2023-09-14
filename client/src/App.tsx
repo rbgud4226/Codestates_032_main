@@ -12,7 +12,6 @@ import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
 import ChatPage from "./page/ChatPage";
-
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
@@ -27,16 +26,24 @@ function App() {
             <Header />
             <Layout>
               <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/chat" element={<ChatPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/memberAgree" element={<MemberAgreePage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
-                <Route path="/members" element={<Mypage />} />
+                <Route
+                  path="/members"
+                  element={
+                    window.localStorage.getItem("accessToken") ? (
+                      <Mypage />
+                    ) : (
+                      <LoginPage />
+                    )
+                  }
+                />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
+                <Route path="/chat" element={<ChatPage />} />
                 <Route path="/mainpage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board" element={<PostDetailPage />} />
@@ -59,20 +66,16 @@ const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     font-family: 'Roboto';
   }
-  html, body{
-    height: 100%;
-  }
 `;
-
 const Body = styled.body`
-  width: 100%;
+  width: 100vw;
+  margin: 0px;
   display: flex;
   justify-content: center;
 `;
-
 const Container = styled.div`
-  max-width: 500px;
-  width: 100%;
+  width: 500px;
   min-width: 320px;
+  min-height: 100vh;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 36px;
 `;

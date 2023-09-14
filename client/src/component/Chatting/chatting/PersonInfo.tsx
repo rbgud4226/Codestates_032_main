@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import global from "../../../Data/global";
 
 const PersonInfo = () => {
   const [userData, setUserData] = useState({
@@ -44,9 +45,13 @@ export const PersonInfoSection = styled.section`
   justify-content: space-between;
   align-items: center;
   height: 92px;
-  width: 100%;
   border-radius: 12px;
+  margin: 0px 8px;
   box-shadow: 2px 4px 4px 2px rgba(39, 44, 86, 0.25);
+  position: sticky;
+  top: 138px;
+  background-color: ${global.White.value};
+  z-index: 999;
 `;
 export const ImgInfoWrapper = styled.div`
   display: flex;
@@ -67,6 +72,7 @@ export const ProfileImgWrapper = styled.div`
 export const InfoCtn = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   margin-left: 8px;
 `;
 
@@ -86,10 +92,10 @@ export const AcceptBtn = styled.button`
   border-radius: 8px;
   color: white;
   font-weight: 600;
-  background-color: #279eff;
+  background-color: ${global.Primary.value};
   cursor: pointer;
   &:active {
-    background-color: #1d8ce7;
+    background-color: ${global.PrimaryActive.value};
   }
 `;
 
@@ -99,12 +105,12 @@ export const RefuseBtn = styled.button`
   height: 32px;
   width: 80px;
   border-radius: 8px;
-  background-color: white;
-  color: #a4a4a4;
+  background-color: ${global.White.value};
+  color: ${global.Gray[9].value};
   font-weight: 600;
-  border: 1px solid #dee2e9;
+  border: 1px solid ${global.Gray[5].value};
   cursor: pointer;
   &:active {
-    background-color: #dee2e9;
+    background-color: ${global.Gray[5].value};
   }
 `;

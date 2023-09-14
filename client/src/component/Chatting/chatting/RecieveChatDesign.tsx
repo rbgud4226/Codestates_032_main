@@ -25,7 +25,7 @@ export const ChatCtn = styled.div`
   flex-direction: column;
   margin-top: 8px;
   margin-bottom: 8px;
-  margin-right: 13px;
+  margin-right: 20px;
 `;
 
 export const ChatDesign = styled.div`
