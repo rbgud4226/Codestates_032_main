@@ -69,14 +69,55 @@ public class WcBoardController {
 //    }
 
     //게시글에 펫시터 신청
-    @PostMapping("/submit")
+    @PostMapping("/petsitter/{wcboard-id}")
     public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
-                                          @Valid @RequestBody WcBoardDto.SubmitResponse submitResponse) {
-        WcBoard convertedResponse = service.whoPetSitterId(submitResponse, memberId);
-        //Todo 일반 멤버가 신청할경우 방어로직 Member
-        return ResponseEntity
-                .ok()
-                .body("신청 완료!");
+                                          @Valid @RequestBody WcBoardDto.SubmitPost submitPost,
+                                          @Positive @PathVariable("wcboard-id") Long wcboardId) {
+//        WcBoard convertedResponse = service.whoPetSitterId(submitPost, memberId);
+        /**
+         * Todo 방어로직
+         * 1. 자신이 게시글에 신청할 경우
+         * 2. 여러게시글에 동일 시간대 신청시
+         * 3.
+         */
+        Member findMember = memberService.findVerifyMember(memberId);
+
+        log.info("토큰으로 찾은 멤버아이디 : " + memberId);
+        WcBoard findPost = service.findVerifyPost(wcboardId);
+        Long postMemberId = findPost.getMember().getMemberId(); // 작성자 멤버아이디 찾아서 postMemberId 로
+
+//        PetSitter petSitter = findMember.getPetSitter();
+//        boolean checkPetSitter = petSitter.getPetSitterId() != null;
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + checkPetSitter);
+        //펫시터 아이디가 있으면 > true 없으면 > false
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + petSitter);
+
+        Long petSitterId = null;
+        PetSitter petSitter = findMember.getPetSitter();
+        if (petSitter != null) {
+            petSitterId = petSitter.getPetSitterId();
+        }
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + petSitterId);
+
+        Long loginMemberId = findMember.getMemberId();//로그인한 멤버의 멤버아이디
+        log.info("로그인한 멤버의 멤버아이디 : " + loginMemberId);
+//        Long postMemberId = findPost.getMember().getMemberId(); //게시글 작성자의 멤버아이디
+        log.info("게시글 작성자의 멤버아이디 : " + postMemberId);
+
+        if (loginMemberId.equals(postMemberId)) {
+            return ResponseEntity
+                    .ok()
+                    .body("자신의 게시글에 신청할수 없어요!");
+
+        }else if (petSitterId == null){
+            return ResponseEntity
+                    .ok()
+                    .body("펫시터를 아직 등록하지 않으셨네요!");
+        }else {
+            return ResponseEntity
+                    .ok()
+                    .body("신청 완료!");
+        }
     }
 
     @PatchMapping("/{wcboard-id}")
@@ -108,25 +149,34 @@ public class WcBoardController {
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요 > 테스트 완료!
      */
 
-    @GetMapping("/submit/{wcboard-id}")
+    //신청자 조회
+    @GetMapping("/client/{wcboard-id}")
     public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
         List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
-
-
         return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
     }
 
+    //게시글 단일 조회
     @GetMapping("/{wcboard-id}")
     public ResponseEntity findPost(@PathVariable("wcboard-id") @Positive Long wcboardId) {
         WcBoard wcBoard = service.findWcBoardPost(wcboardId);
-        return new ResponseEntity<>(mapper.wcBoardResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
+
+        log.info("단일조회 보드아이디 테스트 : " + wcBoard);
+        log.info("단일조회 멤버아이디 테스트 : " + wcBoard.getMember().getMemberId());
+
+        if (wcboardId == null){
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body("작성된 글이 없어요!");
+        }else{
+            return new ResponseEntity<>(mapper.wcBoardGetResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
+        }
     }
 
     @GetMapping // 메인 페이지 전체 게시글 로드
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size,
                                        @LoginMemberId Long memberId) {
-        log.info("page : " + page +", " + "size : " + size);
         Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size, memberId); // 페이지 처리
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
 

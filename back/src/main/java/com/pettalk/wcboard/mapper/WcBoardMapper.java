@@ -20,13 +20,15 @@ public interface WcBoardMapper {
 //     @Mapping(source = "memberId", target = "member.memberId") // 추후에 member에 맞게 수정
      WcBoard wcBoardPostDtoToWcBoard(WcBoardDto.Post postDto);
      WcBoard wcBoardPatchDtotoWcBoard(WcBoardDto.Patch patchDto);
+     //디폴트 구현
      WcBoardDto.Response wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
-//     WcBoardDto.postResponse wcBoardPostResponseDtoToWcBoard(WcBoard wcBoard);
+
+     //디폴트로 구현
 //     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
 
 
-/**
-     default WcBoardDto.postResponse wcBoardPostResponseDtoToWcBoard(WcBoard wcBoard) {
+
+     default WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard(WcBoard wcBoard) {
           if ( wcBoard == null ) {
                return null;
           }
@@ -65,16 +67,14 @@ public interface WcBoardMapper {
           }
 
           String nickName = null;
-          String profileImage = null;
 
           nickName = wcBoard.getMember().getNickName();
-          profileImage = wcBoard.getMember().getProfileImage();
 
-          WcBoardDto.postResponse postResponse = new WcBoardDto.postResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName, profileImage );
+          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName );
 
-          return postResponse;
+          return response;
      }
-*/
+
      //엔티티 생성으로 인한 PetSitterApplicant 수동 매핑
      default List<WcBoardDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
           if ( petSitterApplicant == null ) {

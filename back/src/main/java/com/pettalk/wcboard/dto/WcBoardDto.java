@@ -39,6 +39,7 @@ public class WcBoardDto {
         private String startTime;
         private String endTime;
         private String postStatus;
+        private String createdAt;
 
     }
     @AllArgsConstructor
@@ -73,13 +74,32 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
+        private String createdAt;
+        private String nickName;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class GetResponse {
+        private Long wcboardId;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+        private String postStatus;
+        private String startTime;
+        private String endTime;
+        private String createdAt;
         private String nickName;
     }
 
 
     @Getter
     @Setter
-    public static class SubmitResponse{
+    public static class SubmitPost{
         private Long wcboardId;
     }
 
@@ -90,5 +110,6 @@ public class WcBoardDto {
         private String nowJob;
         private boolean smoking;
         private String petSitterImage;
+        //Todo 리뷰 포함되야하나?
     }
 }
