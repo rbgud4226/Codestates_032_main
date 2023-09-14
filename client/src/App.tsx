@@ -13,8 +13,7 @@ import ChatPage from "./page/ChatPage";
 import SignUpDonePage from "./page/signup/SignUpDone";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
-import PostDetailPage from "./page/PostDetailPage";
-import BookingHistroyPage from "./page/BookingHistoryPage";
+import PostDetailPage from "./page/PostDetail";
 
 function App() {
   return (
