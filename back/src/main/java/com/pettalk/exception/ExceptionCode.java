@@ -16,7 +16,8 @@ public enum ExceptionCode {
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     INVALID_MEMBER_STATUS(400, "Invalid member status"),
     PASSWORD_NOT_MATCHED(409, "Password not matched"),
-    ACCESS_DENIED(401, "Access denied"); //추가한 예외코드
+    ACCESS_DENIED(401, "Access denied"), //추가한 예외코드
+    PETSITTER_EXISTS(409, "PetSitter exists");
 
 
     @Getter

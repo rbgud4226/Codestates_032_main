@@ -124,8 +124,11 @@ public class MemberService {
 
     public Member findVerifyMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.get();
-        return findMember;
+        if(optionalMember.isEmpty()){
+            return null;
+        }
+
+        return optionalMember.get();
     }
 
     public Member findMemberByPrincipal(String principal) {

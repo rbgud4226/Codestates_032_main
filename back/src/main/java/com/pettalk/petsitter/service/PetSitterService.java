@@ -37,17 +37,22 @@ public class PetSitterService {
         String principal = (String) authentication.getPrincipal();
         Member findMember = memberService.findMemberByPrincipal(principal);
 
-        petSitter.setMember(findMember);
-        petSitter.setPetSitterId(petSitter.getPetSitterId());
-        petSitter.setName(petSitter.getName());
-        petSitter.setIntroduce(petSitter.getIntroduce());
-        petSitter.setNowJob(petSitter.getNowJob());
-        petSitter.setSmoking(petSitter.isSmoking());
-        petSitter.setExAnimal(petSitter.getExAnimal());
-        petSitter.setInfo(petSitter.getInfo());
-        petSitter.setCreatedAt(LocalDateTime.now());
+        if(findMember.getPetSitter() != null && findMember.getPetSitter().getPetSitterId() != null) {
+            throw new BusinessLogicException(ExceptionCode.PETSITTER_EXISTS);
+        }
+        else {
+            petSitter.setMember(findMember);
+            petSitter.setPetSitterId(petSitter.getPetSitterId());
+            petSitter.setName(petSitter.getName());
+            petSitter.setIntroduce(petSitter.getIntroduce());
+            petSitter.setNowJob(petSitter.getNowJob());
+            petSitter.setSmoking(petSitter.isSmoking());
+            petSitter.setExAnimal(petSitter.getExAnimal());
+            petSitter.setInfo(petSitter.getInfo());
+            petSitter.setCreatedAt(LocalDateTime.now());
 
-        return petSitterRepository.save(petSitter);
+            return petSitterRepository.save(petSitter);
+        }
     }
 
     public PetSitter updatePetSitter(PetSitter petSitter, Long memberId) {
