@@ -11,7 +11,7 @@ import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
-
+import ChatPage from "./page/ChatPage";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
@@ -43,7 +43,7 @@ function App() {
                 />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
-
+                <Route path="/chat" element={<ChatPage />} />
                 <Route path="/mainpage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board" element={<PostDetailPage />} />

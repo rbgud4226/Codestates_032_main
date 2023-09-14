@@ -15,12 +15,14 @@ const global = {
     value: "#1d8ce7",
     type: "color",
   },
-  PrimaryDisable: {
-    value: "#9ac5f4",
-    type: "color",
-  },
   White: {
     value: "white",
+    type: "color",
+  },
+  WhiteButtonActive: {
+    value: "#d9d9d9",
+  PrimaryDisable: {
+    value: "#9ac5f4",
     type: "color",
   },
   PuppleButton: {
@@ -87,6 +89,14 @@ const global = {
     },
     7: {
       value: "#d9d9d9",
+      type: "color",
+    },
+    8: {
+      value: "#8c8c8c",
+      type: "color",
+    },
+    9: {
+      value: "#a4a4a4",
       type: "color",
     },
   },
