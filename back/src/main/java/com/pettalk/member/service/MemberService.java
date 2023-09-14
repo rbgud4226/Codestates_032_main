@@ -12,7 +12,7 @@ import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
-import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
+//import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,6 +72,7 @@ public class MemberService {
         }
         return memberRepository.save(findMember);
     }
+
 
     public GetMemberDto getMember(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
@@ -148,4 +149,15 @@ public class MemberService {
             return false;
         }
     }
+
+    public Member findVerifyNickName (Long memberId) {
+        Optional<Member> optionalNickName = memberRepository.findById(memberId);
+
+        Member findMembersNickName =
+                optionalNickName.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMembersNickName;
+    }
+
+    public Member findNickName(Long memberId) { return findVerifyNickName(memberId); }
 }

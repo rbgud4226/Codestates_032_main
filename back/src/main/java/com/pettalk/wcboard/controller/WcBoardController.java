@@ -38,47 +38,86 @@ public class WcBoardController {
     private final MemberService memberService;
 
 
-//    @PostMapping
-//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
-//                                  @LoginMemberId Long memberId){
-//        log.info(memberId + "MemberId");
-//
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        memberService.findMemberByPrincipal(principal.toString());
-//
-//        if ("anonymousUser".equals(principal)) {
-//            return ResponseEntity
-//                    .status(HttpStatus.BAD_REQUEST)
-//                    .body("로그인을 해주세요!");
-//        }else {
-//            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId);
-//            return ResponseEntity
-//                    .status(HttpStatus.CREATED)
-//                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
-//        }
-//
-//
-//    }
-
-
-//    로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
     @PostMapping
-    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
-        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
+                                  @LoginMemberId Long memberId){
+        log.info(memberId + "MemberId");
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
+
+        if ("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("로그인을 해주세요!");
+        }else {
+            WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+        }
     }
 
-    //게시글에 펫시터 신청
-    @PostMapping("/submit")
-    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
-                                          @Valid @RequestBody WcBoardDto.SubmitResponse submitResponse) {
-        WcBoard convertedResponse = service.whoPetSitterId(submitResponse, memberId);
 
-        return ResponseEntity
-                .ok()
-                .body("신청 완료!");
+    //로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
+//    @PostMapping
+//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
+//        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
+//    }
+
+    //게시글에 펫시터 신청
+    @PostMapping("/petsitter/{wcboard-id}")
+    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
+                                          @Valid @RequestBody WcBoardDto.SubmitPost submitPost,
+                                          @Positive @PathVariable("wcboard-id") Long wcboardId) {
+//        WcBoard convertedResponse = service.whoPetSitterId(submitPost, memberId);
+        /**
+         * Todo 방어로직
+         * 1. 자신이 게시글에 신청할 경우
+         * 2. 여러게시글에 동일 시간대 신청시
+         * 3.
+         */
+        Member findMember = memberService.findVerifyMember(memberId);
+
+        log.info("토큰으로 찾은 멤버아이디 : " + memberId);
+        WcBoard findPost = service.findVerifyPost(wcboardId);
+        Long postMemberId = findPost.getMember().getMemberId(); // 작성자 멤버아이디 찾아서 postMemberId 로
+
+//        PetSitter petSitter = findMember.getPetSitter();
+//        boolean checkPetSitter = petSitter.getPetSitterId() != null;
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + checkPetSitter);
+        //펫시터 아이디가 있으면 > true 없으면 > false
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + petSitter);
+
+        Long petSitterId = null;
+        PetSitter petSitter = findMember.getPetSitter();
+        if (petSitter != null) {
+            petSitterId = petSitter.getPetSitterId();
+        }
+//        log.info("로그인한 멤버의 펫시터 등록 여부 : " + petSitterId);
+
+        Long loginMemberId = findMember.getMemberId();//로그인한 멤버의 멤버아이디
+        log.info("로그인한 멤버의 멤버아이디 : " + loginMemberId);
+//        Long postMemberId = findPost.getMember().getMemberId(); //게시글 작성자의 멤버아이디
+        log.info("게시글 작성자의 멤버아이디 : " + postMemberId);
+
+        if (loginMemberId.equals(postMemberId)) {
+            return ResponseEntity
+                    .ok()
+                    .body("자신의 게시글에 신청할수 없어요!");
+
+        }else if (petSitterId == null){
+            return ResponseEntity
+                    .ok()
+                    .body("펫시터를 아직 등록하지 않으셨네요!");
+        }else {
+            return ResponseEntity
+                    .ok()
+                    .body("신청 완료!");
+        }
     }
 
     @PatchMapping("/{wcboard-id}")
@@ -110,45 +149,49 @@ public class WcBoardController {
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요 > 테스트 완료!
      */
 
-    @GetMapping("/submit/{wcboard-id}")
+    //신청자 조회
+    @GetMapping("/client/{wcboard-id}")
     public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
         List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
-
-
         return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
     }
 
+    //게시글 단일 조회
     @GetMapping("/{wcboard-id}")
     public ResponseEntity findPost(@PathVariable("wcboard-id") @Positive Long wcboardId) {
         WcBoard wcBoard = service.findWcBoardPost(wcboardId);
-        return new ResponseEntity<>(mapper.wcBoardResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
-    }
 
-    @GetMapping // 메인 페이지 전체 게시글 로드 @@ㅇ
-    public ResponseEntity findAllPosts(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size) {
-        log.info("page : " + page +", " + "size : " + size);
-        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
-        List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
-        if(!posts.isEmpty()) {
-            return new ResponseEntity<>(
-                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-        }else{
+        log.info("단일조회 보드아이디 테스트 : " + wcBoard);
+        log.info("단일조회 멤버아이디 테스트 : " + wcBoard.getMember().getMemberId());
+
+        if (wcboardId == null){
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)
                     .body("작성된 글이 없어요!");
+        }else{
+            return new ResponseEntity<>(mapper.wcBoardGetResponseDtoToWcBoard(wcBoard), HttpStatus.OK);
         }
     }
 
-//    @GetMapping // 전체 게시글 조회 프론트 테스트용 (로그인 검증 로직 제외)
-//    public ResponseEntity findAllPosts(@Positive @RequestParam int page,
-//                                       @Positive @RequestParam int size) {
-//        log.info("page : " + page +", " + "size : " + size);
-//        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
-//        List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
-//            return new ResponseEntity<>(
-//                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-//    }
+    @GetMapping // 메인 페이지 전체 게시글 로드
+    public ResponseEntity findAllPosts(@Positive @RequestParam int page,
+                                       @Positive @RequestParam int size,
+                                       @LoginMemberId Long memberId) {
+        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size, memberId); // 페이지 처리
+        List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
+
+        if ("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body("작성된 글이 없어요!");
+        }else{
+            return new ResponseEntity<>(
+                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
+        }
+    }
 
     /**
      * 태그를 활용한 검색의 주요 로직
@@ -185,9 +228,13 @@ public class WcBoardController {
             @RequestParam(name = "size") int size,
             @RequestParam(name = "wcTag", required = false) String wcTag,
             @RequestParam(name = "animalTag", required = false) String animalTag,
-            @RequestParam(name = "areaTag", required = false) String areaTag) {
+            @RequestParam(name = "areaTag", required = false) String areaTag,
+            @LoginMemberId Long memberId){
 
-        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
+
+        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag, memberId);
         List<WcBoard> posts = pageWcBoardPosts.getContent();
 
         return new ResponseEntity<>(
@@ -198,8 +245,16 @@ public class WcBoardController {
     @DeleteMapping("/{wcboard-id}")
     public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
 
-        service.deletePost(wcboardId);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        memberService.findMemberByPrincipal(principal.toString());
 
+        if ("anonymousUser".equals(principal)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("권한이 없어요!");
+        }else {
+            service.deletePost(wcboardId);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("삭제 완료!");

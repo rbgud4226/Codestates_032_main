@@ -40,9 +40,9 @@ public class WcBoard { //..
 
 
     @Column
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now(); //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
-    private LocalDateTime startTime = LocalDateTime.now();
+    private LocalDateTime startTime = LocalDateTime.now(); //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
     private LocalDateTime endTime = LocalDateTime.now();
     @Enumerated(value = EnumType.STRING)
