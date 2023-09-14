@@ -14,12 +14,6 @@ type FormData = {
   password: string;
 };
 
-// type T = {
-//   nickName: string;
-//   profileImage: string;
-//   accessToken: string;
-//   refreshToken: string;
-// };
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -57,6 +51,7 @@ const LoginForm = () => {
       localStorage.setItem("profileImage", userData.profileImage);
       localStorage.setItem("refreshToken", userData.refreshToken);
       localStorage.setItem("accessToken", userData.accessToken);
+
       window.location.href = "/";
     } catch (e) {
       if (axios.isAxiosError(e)) {

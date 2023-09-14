@@ -16,8 +16,6 @@ import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
 
-
-
 function App() {
   return (
     <>
@@ -33,7 +31,16 @@ function App() {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />
-                <Route path="/members" element={<Mypage />} />
+                <Route
+                  path="/members"
+                  element={
+                    window.localStorage.getItem("accessToken") ? (
+                      <Mypage />
+                    ) : (
+                      <LoginPage />
+                    )
+                  }
+                />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
 
