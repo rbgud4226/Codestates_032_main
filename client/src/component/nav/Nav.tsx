@@ -5,13 +5,17 @@ import bookCheckIcon from "../../asset/NavAsset/book-check-icon.png";
 import searchIcon from "../../asset/NavAsset/search-icon.png";
 import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
-import global from "../../Data/global";
+import global from "../../Data/global.json";
 
 const BtnArr = [
   {
     text: "예약하기",
     src: bookIcon,
+
     link: "/mainpage",
+
+    link: "/reservation",
+
   },
   {
     text: "예약확인",
@@ -21,7 +25,11 @@ const BtnArr = [
   {
     text: "검색",
     src: searchIcon,
+
     link: "/mainpage",
+
+    link: "/search",
+
   },
   {
     text: "마이페이지",
