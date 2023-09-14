@@ -21,6 +21,8 @@ const global = {
   },
   WhiteButtonActive: {
     value: "#d9d9d9",
+  PrimaryDisable: {
+    value: "#9ac5f4",
     type: "color",
   },
   PuppleButton: {
@@ -29,7 +31,7 @@ const global = {
   },
   PuppleActive: {
     value: "#f6f8ff",
-    tyle: "color",
+    type: "color",
   },
   ErrorMsgRed: {
     value: "#ff2727",

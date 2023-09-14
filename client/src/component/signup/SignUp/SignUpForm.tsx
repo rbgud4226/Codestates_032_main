@@ -6,6 +6,7 @@ import * as yup from "yup";
 import LargeBtn from "../../Button/LargeCheckBtn";
 import axios from "axios";
 import { iconImg } from "../../../Data/IconImg";
+import global from "../../../Data/global";
 
 interface T {
   phoneNum: string;
@@ -36,12 +37,13 @@ const schema = yup.object().shape({
     .test("passwords-match", "비밀번호가 일치해야 합니다", function (value) {
       return this.parent.password === value;
     })
-    .required("Pw is required"),
+    .required("비밀번호가 일치하지 않습니다."),
   // phone: yup.string().trim().required("전화번호인증 해야합니다."),
 });
 
 const SignUpForm = ({ phoneNum }: T) => {
   const [emailErr, setEmailErr] = useState("");
+  const [phoneErr, setPhoneErr] = useState("");
   const [err, setErr] = useState("");
   const {
     register,
@@ -56,45 +58,54 @@ const SignUpForm = ({ phoneNum }: T) => {
   };
   //회원가입
   const signupHdr = async (data: FormData) => {
-    try {
-      imageHdr();
-      const resData = await axios.post(`${api}/check`, { email: data.email });
+    if (phoneNum) {
+      try {
+        imageHdr();
+        const resData = await axios.post(`${api}/check`, { email: data.email });
 
-      if (resData.data) {
-        try {
-          const sendData = {
-            email: data.email,
-            nickName: data.nickName,
-            password: data.password,
-            profileImage: imageHdr(),
-            phone: phoneNum,
-          };
-          console.log(sendData);
-          const resData2 = await axios.post(`${api}/members`, sendData);
-          if (resData2) {
-            window.location.replace("/signupDone");
+        if (resData.data) {
+          try {
+            const sendData = {
+              email: data.email,
+              nickName: data.nickName,
+              password: data.password,
+              profileImage: imageHdr(),
+              phone: phoneNum,
+            };
+            console.log(sendData);
+            const resData2 = await axios.post(`${api}/members`, sendData);
+            if (resData2) {
+              window.location.replace("/signupDone");
+            }
+          } catch (e) {
+            setErr("알수 없는 에러가 발생");
           }
-        } catch (e) {
-          setErr("알수 없는 에러가 발생");
         }
+      } catch (e) {
+        setEmailErr("중복된 email 입니다.");
       }
-    } catch (e) {
-      setEmailErr("중복된 email 입니다.");
+    } else {
+      setPhoneErr("전화번호를 인증해주세요");
     }
   };
 
   return (
     <SUForm onSubmit={handleSubmit(signupHdr)}>
       <InputWrapper>
-        <TextInput placeholder="email" {...register("email")} />
+        <TextInput placeholder="이메일을 입력하세요" {...register("email")} />
         {emailErr ? (
           <ErrMsg> {emailErr}</ErrMsg>
-        ) : (
+        ) : !errors.email ? (
           <Span>email을 입력하세요.</Span>
+        ) : (
+          <ErrMsg>{errors.email.message}</ErrMsg>
         )}
       </InputWrapper>
       <InputWrapper>
-        <TextInput placeholder="nickname" {...register("nickName")} />
+        <TextInput
+          placeholder="닉네임을 입력하세요"
+          {...register("nickName")}
+        />
         {!errors.nickName ? (
           <Span>닉네임을 입력하세요.</Span>
         ) : (
@@ -103,7 +114,7 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <InputWrapper>
         <TextInput
-          placeholder="password"
+          placeholder="패스워드 입력하세요"
           type="password"
           {...register("password")}
         />
@@ -115,7 +126,7 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <InputWrapper>
         <TextInput
-          placeholder="password확인"
+          placeholder="패스워드를 재입력하세요"
           type="password"
           {...register("passwordCf")}
         />
@@ -127,6 +138,7 @@ const SignUpForm = ({ phoneNum }: T) => {
       </InputWrapper>
       <div style={{ marginTop: "12px", width: "100%" }}>
         <LargeBtn name={"회원가입"} />
+        {!phoneNum ? <ErrMsg>{phoneErr}</ErrMsg> : ""}
         {/* {!errors.phone ? (
           err ? (
             <ErrMsg>{err}</ErrMsg>
@@ -158,14 +170,14 @@ export const InputWrapper = styled.div`
 export const ErrMsg = styled.div`
   justify-content: flex-start;
   margin-top: 4px;
-  color: #ff2727;
+  color: ${global.ErrorMsgRed.value};
   font-size: 10px;
   margin-bottom: 6px;
 `;
 export const TextInput = styled.input`
   height: 31px;
   width: 100%;
-  border: 1px inset #595959;
+  border: 1px inset ${global.Gray[1].value};
   border-radius: 4px;
   padding-left: 10px;
   &:focus {
@@ -175,7 +187,7 @@ export const TextInput = styled.input`
 export const Span = styled.span`
   justify-content: flex-start;
   margin-top: 4px;
-  color: #279eff;
+  color: ${global.Primary.value};
   font-size: 10px;
   margin-bottom: 6px;
 `;
