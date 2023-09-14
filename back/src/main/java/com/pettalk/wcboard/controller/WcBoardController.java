@@ -117,7 +117,7 @@ public class WcBoardController {
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
                                     @Positive @PathVariable("wcboard-id") Long wcboardId,
                                     @LoginMemberId Long memberId) {
-        log.info("memberId : " + memberId);
+        log.info("수정 진행 시 멤버아이디 : " + memberId);
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         memberService.findMemberByPrincipal(principal.toString());
@@ -144,7 +144,7 @@ public class WcBoardController {
      */
 
     //신청자 조회
-    @GetMapping("/client/{wcboard-id}")
+    @GetMapping("/submit/{wcboard-id}")
     public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
         List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
         return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
@@ -155,7 +155,7 @@ public class WcBoardController {
     public ResponseEntity findPost(@PathVariable("wcboard-id") @Positive Long wcboardId) {
         WcBoard wcBoard = service.findWcBoardPost(wcboardId);
 
-        log.info("단일조회 보드아이디 테스트 : " + wcBoard);
+        log.info("단일조회 보드아이디 테스트 : " + wcboardId);
         log.info("단일조회 멤버아이디 테스트 : " + wcBoard.getMember().getMemberId());
 
         if (wcboardId == null){
@@ -169,13 +169,14 @@ public class WcBoardController {
 
     @GetMapping // 메인 페이지 전체 게시글 로드
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size,
-                                       @LoginMemberId Long memberId) {
-        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size, memberId); // 페이지 처리
+                                       @Positive @RequestParam int size) {
+        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
+
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         memberService.findMemberByPrincipal(principal.toString());
+
 
         if ("anonymousUser".equals(principal)) {
             return ResponseEntity
@@ -220,13 +221,12 @@ public class WcBoardController {
             @RequestParam(name = "size") int size,
             @RequestParam(name = "wcTag", required = false) String wcTag,
             @RequestParam(name = "animalTag", required = false) String animalTag,
-            @RequestParam(name = "areaTag", required = false) String areaTag,
-            @LoginMemberId Long memberId){
+            @RequestParam(name = "areaTag", required = false) String areaTag){
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         memberService.findMemberByPrincipal(principal.toString());
 
-        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag, memberId);
+        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag);
         List<WcBoard> posts = pageWcBoardPosts.getContent();
 
         return new ResponseEntity<>(

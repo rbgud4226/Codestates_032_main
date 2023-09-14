@@ -5,6 +5,7 @@ import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -21,7 +22,9 @@ public interface WcBoardMapper {
      WcBoard wcBoardPostDtoToWcBoard(WcBoardDto.Post postDto);
      WcBoard wcBoardPatchDtotoWcBoard(WcBoardDto.Patch patchDto);
      //디폴트 구현
-     WcBoardDto.Response wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
+     WcBoardDto.PostResponse wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
+
+//     WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard (WcBoard wcBoard);
 
      //디폴트로 구현
 //     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
@@ -67,8 +70,8 @@ public interface WcBoardMapper {
           }
 
           String nickName = null;
-
-          nickName = wcBoard.getMember().getNickName();
+          Member findMember = wcBoard.getMember();
+          nickName = findMember.getNickName();
 
           WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName );
 
@@ -88,9 +91,6 @@ public interface WcBoardMapper {
 
           return list;
      }
-
-
-
 
      private WcBoardDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
           if ( petSitterApplicant == null ) {
@@ -139,6 +139,7 @@ public interface WcBoardMapper {
           response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
           response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
           response.setPostStatus(wcBoard.getPostStatus().name());
+          response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
           response.setNickName(member.getNickName());
 
           return response;

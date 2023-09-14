@@ -86,10 +86,10 @@ public class WcBoardService {
         return wcBoardRepository.save(findPost);
     }
 
-    // wcBoardId 검색해주는 메서드
     public WcBoard findWcBoardPost(Long wcboardId) {
         WcBoard findPost = findVerifyPost(wcboardId);
         memberService.findNickName(findPost.getMember().getMemberId());
+        //추가
 
         System.out.println(findPost.getMember().getMemberId() + "멤버 아이디 테스트");
 
@@ -101,21 +101,35 @@ public class WcBoardService {
     }
 
     //전체 글 조회 (최신순 정렬)
-    public Page<WcBoard> findAllPosts(int page, int size, Long memberId) {
-        memberService.findNickName(memberId);
+    public Page<WcBoard> findAllPosts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
         return wcBoardRepository.findAll(pageRequest);
     }
 
 
-    //백업
+    //태그사용 조회
+    public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag) {
+        Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
+
+        if (wcTag != null)
+            spec = spec.and(WcBoardSpecification.equalWcTagWithTag(wcTag));
+
+        if (animalTag != null)
+            spec = spec.and(WcBoardSpecification.equalAnimalTagWithTag(animalTag));
+
+        if (areaTag != null)
+            spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
+//        memberService.findNickName(memberId);
+        Pageable pageable = PageRequest.of(page, size);
+        return wcBoardRepository.findAll(spec, pageable);
+    }
+
     public WcBoard whoPetSitterId(WcBoardDto.SubmitPost wcboard, Long memberId) {
         //토큰에서 petsitterId를 가져왔기 때문에 검증 필요 없음
         //가져온 petsitterId가 null이면 펫시터 등록을 안한 상태
         Member member = memberService.findVerifyMember(memberId);
 
         Long petSitterId = member.getPetSitter().getPetSitterId();
-
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
         boolean checkPetSitter = petSitter.getPetSitterId() != null;
 
@@ -141,9 +155,29 @@ public class WcBoardService {
      * 2. 펫시터 아이디가 없는 경우 > 완료
      * 3. 동일한 시간대에 여러게시글에 신청
      */
-    public ResponseEntity submitPetSitter(Long memberId, WcBoardDto.SubmitPost submitPost, Long wcboardId) {
+    //신청
+    public ResponseEntity submitPetSitter(Long memberId, WcBoardDto.SubmitPost wcboard, Long wcboardId) {
         Member findMember = memberService.findVerifyMember(memberId);
         WcBoard findPost = findVerifyPost(wcboardId);
+        findPost.setPostStatus(WcBoard.PostStatus.IN_PROGRESS);
+
+        Member member = memberService.findVerifyMember(memberId);
+
+        Long petSitterId = member.getPetSitter().getPetSitterId();
+        PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
+        boolean checkPetSitter = petSitter.getPetSitterId() != null;
+
+        WcBoard findWcBoard = wcBoardRepository.findById(wcboard.getWcboardId())
+                .orElseThrow(() ->
+                        new RuntimeException("게시글이 없어요!"));
+        if (!checkPetSitter) {
+            throw new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND);
+        } else {
+            PetSitterApplicant petSitterApplicant = new PetSitterApplicant();
+            petSitterApplicant.setWcboardId(wcboard.getWcboardId());
+            petSitterApplicant.setPetSitter(petSitter);
+            paRepository.save(petSitterApplicant);
+        }
 
         if (isOwnPost(findMember, findPost)) {
             return ResponseEntity.ok("자신의 게시글에 신청할수 없어요!");
@@ -178,23 +212,6 @@ public class WcBoardService {
         return wcBoardRepository.findByAreaTagContaining(areaTag, pageRequest);
     }
      */
-    //태그사용 조회
-    public Page<WcBoard> findAllWithTags(int page, int size, String wcTag, String animalTag, String areaTag, Long memberId) {
-        Specification<WcBoard> spec = (root, query, criteriaBuilder) -> null;
-
-        if (wcTag != null)
-            spec = spec.and(WcBoardSpecification.equalWcTagWithTag(wcTag));
-
-        if (animalTag != null)
-            spec = spec.and(WcBoardSpecification.equalAnimalTagWithTag(animalTag));
-
-        if (areaTag != null)
-            spec = spec.and(WcBoardSpecification.equalAreaTagWithTag(areaTag));
-
-        Pageable pageable = PageRequest.of(page, size);
-        memberService.findNickName(memberId);
-        return wcBoardRepository.findAll(spec, pageable);
-    }
 
     public void deletePost(Long wcboardId) {
         WcBoard findPost = findVerifyPost(wcboardId);

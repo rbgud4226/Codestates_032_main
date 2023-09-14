@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @NoArgsConstructor
@@ -40,11 +41,11 @@ public class WcBoard { //..
 
 
     @Column
-    private LocalDateTime createdAt = LocalDateTime.now(); //Todo : 서버 업로드시 LocalDateTime.now 없애기
+    private LocalDateTime createdAt = LocalDateTime.now().withNano(0).withSecond(0);
     @Column
-    private LocalDateTime startTime = LocalDateTime.now(); //Todo : 서버 업로드시 LocalDateTime.now 없애기
+    private LocalDateTime startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
-    private LocalDateTime endTime = LocalDateTime.now();
+    private LocalDateTime endTime;
     @Enumerated(value = EnumType.STRING)
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
@@ -74,6 +75,15 @@ public class WcBoard { //..
 
         PostStatus(String status) { this.status = status; }
     }
+
+    private String formatLocalDateTime(LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return dateTime.format(formatter);
+        }
+        return null;
+    }
+
 
 
 }
