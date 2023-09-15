@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class PetSitterController {
 
 //다른 패키지들과 합치기 전이므로 주석처리해둔 것들이 존재함.
 
+    //펫시터 등록
     @PostMapping
     public ResponseEntity postPetSitter(@Valid @RequestBody PetSitterDto.PostDto postDto) {
 
@@ -50,6 +52,7 @@ public class PetSitterController {
 
     }
 
+    //펫시터 수정
     @PatchMapping
     public ResponseEntity patchPetSitter(@LoginMemberId Long memberId,
                                          @Valid @RequestBody PetSitterDto.PatchDto patchDto) {
@@ -65,6 +68,7 @@ public class PetSitterController {
         return new ResponseEntity<>(mapper.petSitterToResponse(response), HttpStatus.OK);
     }
 
+    //펫시터 조회
     @GetMapping
     public ResponseEntity getPetSitter(@LoginMemberId Long memberId) {
 
@@ -79,39 +83,21 @@ public class PetSitterController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+/**
+    @GetMapping("/{pet-sitter-id}/recent")
+    public  ResponseEntity getRecentWalkCare(@PathVariable("pet-sitter-id") @Positive Long petsitterId, @RequestParam @Positive int page, @RequestParam @Positive int size) {
+        PetSitter petSitter = service.findPetSitter(petsitterId);
 
-//    @GetMapping("/{pet-sitter-id}/recent")
-//    public  ResponseEntity getRecentWalkCare(@PathVariable("pet-sitter-id") @Positive Long petsitterId, @RequestParam @Positive int page, @RequestParam @Positive int size) {
-//        PetSitter petSitter = service.findPetSitter(petsitterId);
-//
-//        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
-//        List<WcBoard> wcBoardList = wcBoardPage.getContent();
-//
-//        return new ResponseEntity<>(new MultiResponseDto<>(wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardList), wcBoardPage), HttpStatus.OK);
-//        TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
-//
-//    }
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+        List<WcBoard> wcBoardList = wcBoardPage.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoardList), wcBoardPage), HttpStatus.OK);
+        TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+
+    }
 
 
-//    @GetMapping("/recent")
-//    public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
-//                                             @RequestParam @Positive int page,
-//                                             @RequestParam @Positive int size) {
-//        Member member = memberService.findVerifyMember(memberId);
-//        String memberImage = member.getProfileImage();
-//        PetSitter petSitter = member.getPetSitter();
-//
-//        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
-//        List<WcBoard> wcBoardList = wcBoardPage.getContent();
-//
-//        List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
-//
-//        return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
-//        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
-//
-//    }
-
-    @GetMapping("/testrecent")
+    @GetMapping("/recent")
     public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
                                              @RequestParam @Positive int page,
                                              @RequestParam @Positive int size) {
@@ -119,7 +105,37 @@ public class PetSitterController {
         String memberImage = member.getProfileImage();
         PetSitter petSitter = member.getPetSitter();
 
-        Page<WcBoard> wcBoardPage = service.getRecentInfo(memberId, page, size);
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+        List<WcBoard> wcBoardList = wcBoardPage.getContent();
+
+        List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
+
+        return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
+        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+
+    }**/
+
+//    @GetMapping("/recent")
+//    public ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
+//                                            @RequestParam @Positive int page,
+//                                            @RequestParam @Positive int size) {
+//
+//        Member member = memberService.findVerifyMember(memberId);
+//        String memberImage = member.getProfileImage();
+//        Page<WcBoard> recentPost = service.getRecentPost(memberId, page, size);
+//
+//        return new ResponseEntity<>(recentPost, HttpStatus.OK);
+//    }
+
+    @GetMapping("/wclist")
+    public  ResponseEntity getRecentWcList(@LoginMemberId Long memberId,
+                                             @RequestParam @Positive int page,
+                                             @RequestParam @Positive int size) {
+        Member member = memberService.findVerifyMember(memberId);
+        String memberImage = member.getProfileImage();
+        PetSitter petSitter = member.getPetSitter();
+
+        Page<WcBoard> wcBoardPage = service.getRecentPosts(memberId, page, size);
         List<WcBoard> filteredPosts = wcBoardPage.getContent();
 
         return new ResponseEntity<>(
