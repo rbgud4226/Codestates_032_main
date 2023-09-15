@@ -1,92 +1,83 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef, Dispatch, SetStateAction } from "react";
+import { uploadImageFile } from "./utils";
+import styled from "styled-components";
 
-interface ImageSubmitProps {
+interface InputImageProps {
+  setImage: Dispatch<SetStateAction<File | null>>;
+  inputRef: React.RefObject<HTMLInputElement>;
+}
+interface UploadImageProps {
   handleImageChange: (newImages: string[]) => void;
   images: string[];
+  onClick?: () => void;
+  children?: React.ReactNode;
 }
 
-function ImageSubmit({ handleImageChange, images }: ImageSubmitProps) {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+function UploadImage({ handleImageChange, images }: UploadImageProps) {
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // Create a new event handler for the file input
-  const handleFileInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
-      // Convert the selected files to an array of URLs for preview
-      const selectedFileURLs = Array.from(selectedFiles).map(file =>
-        URL.createObjectURL(file),
-      );
-      setPreviewImages(selectedFileURLs);
+  const inputImageRef = useRef<HTMLInputElement | null>(null);
 
-      // Call the handleImageChange function with the selected files
-      const selectedFileArray = Array.from(selectedFiles).map(file =>
-        URL.createObjectURL(file),
-      );
-      handleImageChange(selectedFileArray);
+  const onClearInput = () => {
+    if (inputImageRef.current) {
+      inputImageRef.current.value = "";
     }
   };
 
-  const handleImageUpload = async () => {
-    try {
-      if (images.length > 0) {
-        const formData = new FormData();
+  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const selectedImage = event.target.files[0];
+      setImage(selectedImage);
 
-        for (const image of images) {
-          formData.append("images", image);
+      const reader = new FileReader();
+      reader.onload = e => {
+        if (e.target && typeof e.target.result === "string") {
+          setImagePreview(e.target.result);
         }
+      };
+      reader.readAsDataURL(selectedImage);
+    }
+  };
 
-        // Your image upload Axios request here...
+  const onClick = async () => {
+    try {
+      setLoading(true);
+      if (image) {
+        await uploadImageFile(image);
+        alert("피드백 전송을 성공했습니다.");
+      } else {
+        throw new Error("이미지가 선택되지 않았습니다.");
       }
-    } catch (error) {
-      console.error("이미지 업로드 중 오류 발생", error);
+    } catch (e) {
+      alert("피드백 전송에 실패했습니다.");
+    } finally {
+      setLoading(false);
+      onClearInput();
     }
   };
 
   return (
     <div>
-      {/* 컴포넌트 내에서 uploadedImages를 사용하여 업로드된 이미지를 표시 */}
-      {uploadedImages.length > 0 && (
-        <div>
-          <h2>업로드된 이미지</h2>
-          {uploadedImages.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`업로드된 이미지 ${index + 1}`}
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* 미리보기 이미지 */}
-      {previewImages.length > 0 && (
-        <div>
-          <h2>미리보기</h2>
-          {previewImages.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`미리보기 ${index + 1}`}
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Use the new event handler for file input */}
       <input
         type="file"
         accept="image/*"
-        multiple
-        onChange={handleFileInputChange}
+        ref={inputImageRef}
+        onChange={onImageChange}
       />
+      {imagePreview && (
+        <img src={imagePreview} alt="미리보기" style={{ maxWidth: "100%" }} />
+      )}
+      <div className="flex justify-end">
+        <button onClick={onClick} disabled={loading}>
+          {loading ? "업로딩 중..." : "이미지 "}
+        </button>
+      </div>
     </div>
   );
 }
 
-export default ImageSubmit;
+export default UploadImage;
+
+const InputImage = styled.input<InputImageProps>``;

@@ -3,8 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostForm from "./WritPostForm";
-import ImageSubmit from "./ImageSubmit";
-import AreaSubmit from "./AreaSubmit";
+import UploadImage from "./ImageSubmit";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -17,23 +16,24 @@ function WritePost() {
     wcTag: "",
     animalTag: "",
     areaTag: "",
+    // startTime: "",
+    //  endTime: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false); // 추가
   const [images, setImages] = useState<string[]>([]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기 추가
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
   const StepChange = newStep => {
     setStep(newStep);
   };
-
+  // 이미지 업로드 관련 함수
   const handleImageChange = (newImages: string[]) => {
-    setImages(newImages);
-    setPost({
-      ...post,
-      images: newImages.join(","),
-    });
+    setUploadedImages([...uploadedImages, ...newImages]);
   };
+
   const InputChange = e => {
     const { name, value } = e.target;
     setPost({
@@ -87,6 +87,8 @@ function WritePost() {
         post.content,
         post.areaTag,
         post.images,
+        // post.startTime,
+        // post.endTime,
       );
       const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
@@ -108,6 +110,8 @@ function WritePost() {
         content: "",
         images: "",
         areaTag: "",
+        // startTime: "",
+        // endTime: "",
       });
 
       navigate("/mainPage");
@@ -131,8 +135,9 @@ function WritePost() {
         Submit={Submit}
         AreaChange={AreaChange}
         isSubmitting={isSubmitting}
-        handleImageChange={handleImageChange} // handleImageChange 함수 전달
+        handleImageChange={handleImageChange}
         images={images}
+        imagePreview={imagePreview}
       />
     </div>
   );

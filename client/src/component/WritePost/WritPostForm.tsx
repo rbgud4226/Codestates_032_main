@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
-import ImageSubmit from "./ImageSubmit";
 import AreaSubmit from "./AreaSubmit";
 import { useNavigate } from "react-router-dom";
+import next from "../../asset/PetsitterRegisterAsset/Next.png";
+import before from "../../asset/PetsitterRegisterAsset/Before.png";
+import "react-calendar/dist/Calendar.css";
+import Pickr from "./Pickr";
+import UploadImage from "./ImageSubmit";
 
 interface PostFormProps {
   step: number;
@@ -27,6 +31,7 @@ interface PostFormProps {
   isSubmitting: boolean;
   handleImageChange: (newImages: string[]) => void; // handleImageChange 추가
   images: string[]; // images 추가
+  imagePreview: string | null;
 }
 
 function PostForm({
@@ -41,8 +46,9 @@ function PostForm({
   handleImageChange,
   images,
 }: PostFormProps) {
-  const [Calende, setCalende] = useState(new Date());
   const [selectedWcTag, setSelectedWcTag] = useState<string | null>(null);
+  const [selectedAnimalTags, setSelectedAnimalTags] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleWcTagChange = (wcTag: string) => {
     if (selectedWcTag === wcTag) {
@@ -54,182 +60,226 @@ function PostForm({
     }
   };
 
+  const handleAnimalTagChange = (animalTag: string) => {
+    const isSelected = selectedAnimalTags.includes(animalTag);
+
+    if (isSelected) {
+      // 이미 선택된 버튼을 클릭한 경우, 선택 취소
+      setSelectedAnimalTags(prevTags =>
+        prevTags.filter(tag => tag !== animalTag),
+      );
+    } else {
+      // 다른 버튼을 클릭한 경우, 해당 버튼 선택
+      setSelectedAnimalTags(prevTags => [...prevTags, animalTag]);
+    }
+  };
+
   return (
-    <div>
+    <PageListContainer>
       {step === 1 && (
-        <div>
-          <WritPostText>
-            예약
-            <div>
-              <WCButton
+        <PageContainer>
+          <SectionContainer>
+            <SectionTitle>예약</SectionTitle>
+            <OptionButtonContainer>
+              <OptionButton
+                selected={selectedWcTag === "산책"}
                 onClick={() => {
                   WcTagChange("산책");
                   handleWcTagChange("산책");
                 }}
-                style={{
-                  backgroundColor:
-                    selectedWcTag === "산책" ? "#279eff" : "white",
-                }}
               >
                 산책
-              </WCButton>
-              <WCButton
+              </OptionButton>
+              <OptionButton
+                selected={selectedWcTag === "돌봄"}
                 onClick={() => {
                   WcTagChange("돌봄");
                   handleWcTagChange("돌봄");
                 }}
-                style={{
-                  backgroundColor:
-                    selectedWcTag === "돌봄" ? "#279eff" : "white",
-                }}
               >
                 돌봄
-              </WCButton>
-            </div>
-          </WritPostText>
-
-          <WritPostText>
-            동물 선택
-            <div>
-              <AButton
-                onClick={() => AnimalTagChange("강아지")}
-                style={{
-                  backgroundColor: post.animalTag.includes("강아지")
-                    ? "#279eff" // 선택된 경우의 스타일
-                    : "white", // 선택되지 않은 경우의 스타일
+              </OptionButton>
+            </OptionButtonContainer>
+          </SectionContainer>
+          <SectionContainer>
+            <SectionTitle>동물 선택</SectionTitle>
+            <OptionButtonContainer>
+              <OptiontwoButton
+                selected={selectedAnimalTags.includes("강아지")}
+                onClick={() => {
+                  AnimalTagChange("강아지");
+                  handleAnimalTagChange("강아지");
                 }}
               >
                 강아지
-              </AButton>
-
-              <AButton
-                onClick={() => AnimalTagChange("고양이")}
-                style={{
-                  backgroundColor: post.animalTag.includes("고양이")
-                    ? "#279eff" // 선택된 경우의 스타일
-                    : "white", // 선택되지 않은 경우의 스타일
+              </OptiontwoButton>
+              <OptiontwoButton
+                selected={selectedAnimalTags.includes("고양이")}
+                onClick={() => {
+                  AnimalTagChange("고양이");
+                  handleAnimalTagChange("고양이");
                 }}
               >
                 고양이
-              </AButton>
-              <AButton
-                onClick={() => AnimalTagChange("기타동물")}
-                style={{
-                  backgroundColor: post.animalTag.includes("기타동물")
-                    ? "#279eff" // 선택된 경우의 스타일
-                    : "white", // 선택되지 않은 경우의 스타일
+              </OptiontwoButton>
+              <OptiontwoButton
+                selected={selectedAnimalTags.includes("기타동물")}
+                onClick={() => {
+                  AnimalTagChange("기타동물");
+                  handleAnimalTagChange("기타동물");
                 }}
               >
                 기타동물
-              </AButton>
-            </div>
-          </WritPostText>
-
-          <ContentText>제목</ContentText>
-          <InputInfo
-            type="text"
-            name="title"
-            value={post.title}
-            onChange={InputChange}
-            maxLength={20}
-            placeholder="20자 이내로 입력해주세요."
-          />
-
-          <ContentText>참고내용</ContentText>
-          <ContentSText>
-            케어를 맡기게 된 상황 설명과 반려동물의 이름, 품종, 성별, 성격,
-            주의사항 들의 내용을 적어주세요.
-          </ContentSText>
-          <InputName
-            type="text"
-            name="content"
-            value={post.content}
-            onChange={InputChange}
-            maxLength={200}
-            placeholder="200자 이내로 입력해주세요."
-          />
-          <Container>
-            <StepButton onClick={() => StepChange(2)}>다음</StepButton>
-          </Container>
-        </div>
+              </OptiontwoButton>
+            </OptionButtonContainer>
+          </SectionContainer>
+          <SectionContainer>
+            <SectionTitle>제목</SectionTitle>
+            <InputInfo
+              type="text"
+              name="title"
+              value={post.title}
+              onChange={InputChange}
+              maxLength={20}
+              placeholder="20자 이내로 입력해주세요."
+            />
+          </SectionContainer>
+          <SectionContainer>
+            <SectionTitle>참고내용</SectionTitle>
+            <ContentSText>
+              케어를 맡기게 된 상황 설명과 반려동물의 이름, 품종, 성별, 성격,
+              주의사항 들의 내용을 적어주세요.
+            </ContentSText>
+            <InputName
+              type="text"
+              name="content"
+              value={post.content}
+              onChange={InputChange}
+              maxLength={200}
+              placeholder="200자 이내로 입력해주세요."
+            />
+          </SectionContainer>
+          <SectionContainer>
+            <StepButton onClick={() => StepChange(2)}>
+              <StyledImage src={next} alt="Next"></StyledImage>
+            </StepButton>
+          </SectionContainer>
+        </PageContainer>
       )}
 
-      {step === 2 && (
-        <div>
-          <h2>Step 2: 다음 단계 내용</h2>
-          {/* 이 곳에 Step 2에 대한 내용을 추가하세요 */}
-          <ImageSubmit handleImageChange={handleImageChange} images={images} />
-          <AreaSubmit onRegionSelect={AreaChange} />
-          <Container>
-            <StepReButton onClick={() => StepChange(1)}>이전</StepReButton>
-            <StepSubimtButton onClick={Submit}>작성 완료</StepSubimtButton>
-          </Container>
-        </div>
-      )}
-    </div>
+      <PageContainer>
+        {step === 2 && (
+          <PageContainer>
+            <SectionContainer>
+              <SectionTitle>예약</SectionTitle>
+              <HR />
+              <ContentSubmitText>선택사항입니다.</ContentSubmitText>
+              <UploadImage
+                onClick={Submit}
+                handleImageChange={handleImageChange}
+                images={uploadedImages}
+              />
+              <HR />
+            </SectionContainer>
+            <SectionContainer>
+              <SectionTitle>지역</SectionTitle>
+              <AreaSubmit onRegionSelect={AreaChange} />
+            </SectionContainer>
+            <SectionContainer>
+              <SectionTitle>예약 날짜</SectionTitle>
+              <Pickr></Pickr>
+            </SectionContainer>
+            <SectionContainer>
+              <StepReButton onClick={() => StepChange(1)}>
+                <StyledImage src={before} alt="before"></StyledImage>
+              </StepReButton>
+            </SectionContainer>
+            <SectionButtonContainer>
+              <StepSubmitButton onClick={Submit}>제출하기</StepSubmitButton>
+            </SectionButtonContainer>
+          </PageContainer>
+        )}
+      </PageContainer>
+    </PageListContainer>
   );
 }
 export default PostForm;
+const PageListContainer = styled.div`
+  text-align: left;
+`;
 
-const Container = styled.div`
-  position: absolute;
-  bottom: 0px; /* 원하는 위치로 조정 */
+const PageContainer = styled.div`
+  text-align: left;
+`;
+
+const SectionContainer = styled.div`
+  margin-bottom: 32px;
+`;
+const SectionButtonContainer = styled.div`
+  margin-bottom: 32px;
+  text-align: center;
+`;
+
+const StyledImage = styled.img`
+  margin-left: 10px;
+`;
+
+const SectionTitle = styled.div`
+  font-size: 20px;
+  margin-bottom: 8px;
+`;
+const OptionButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between; /* 이전과 작성 완료를 떨어뜨리기 위해 추가 */
-  width: 100%; /* 부모 요소 전체 너비로 확장 */
+  justify-content: space-around;
 `;
 
-const WritPostText = styled.div`
-  font-size: 28px;
-  margin-top: 40px;
-  margin-left: 8px;
+const HR = styled.hr`
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 16px;
 `;
 
-const WCButton = styled.button`
-  color: black;
-  font-size: 12px;
-  padding: 16px 12px;
-  position: relative;
-  margin-left: 40px;
-  top: 10px;
-  width: 160px;
-  border: 2px solid 
+const OptionButton = styled.button<{ selected: boolean }>`
+  background-color: ${props => (props.selected ? "#279eff" : "white")};
+  color: ${props => (props.selected ? "white" : "#279eff")};
+  border: 1px solid #279eff;
+  width: 210px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 8px 16px;
   cursor: pointer;
-  border-radius: 8px;
-  margin-bottom: 40px;
+  justify-content: space-around;
+  font-size: 16px;
 `;
-
-const AButton = styled.button`
-  color: black;
-  font-size: 12px;
-  padding: 12px 12px;
-  position: relative;
-  margin-left: 40px;
-  top: 10px;
-  width: 100px;
-  border: 2px solid 
+const OptiontwoButton = styled.button<{ selected: boolean }>`
+  background-color: ${props => (props.selected ? "#279eff" : "white")};
+  color: ${props => (props.selected ? "white" : "#279eff")};
+  border: 1px solid #279eff;
+  width: 200px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 8px 16px;
   cursor: pointer;
-  border-radius: 8px;
-  margin-bottom: 40px;
-`;
-
-const ContentText = styled.div`
-  font-size: 28px;
-  margin-top: 40px;
-  margin-left: 8px;
+  margin-left: 4px;
+  font-size: 16px;
 `;
 
 const ContentSText = styled.div`
   font-size: 12px;
-  margin-top: 12px;
+  color: #595959;
+  margin-top: 8px;
   margin-bottom: 8px;
-  margin-left: 12px;
+`;
+const ContentSubmitText = styled.div`
+  font-size: 12px;
+  color: #595959;
+  margin-top: 8px;
+  margin-bottom: 8px;
 `;
 
 const InputName = styled.input`
-  width: 90%;
-  height: 124px;
-  margin-left: 24px;
+  width: 100%;
+  height: 120px;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #595959;
@@ -237,48 +287,50 @@ const InputName = styled.input`
   overflow: auto;
   white-space: normal;
   resize: none;
-`;
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  border: 1px solid #595959;
 `;
 
 const InputInfo = styled.input`
-  width: 90%;
+  width: 100%;
   height: 40px;
   padding: 8px;
-  margin-left: 24px;
   border-radius: 4px;
   border: 1px solid #595959;
   text-align: left;
   overflow: auto;
   white-space: normal;
   resize: none;
-  margin-bottom: 40px;
 `;
 
 const StepButton = styled.button`
   position: absolute;
-  bottom: 0px;
-  left: 450px;
+  bottom: -100px;
+  left: 440px;
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
 `;
-const StepReButton = styled.button`
-  position: absolute;
-  bottom: 100px;
-  left: 0px; /* 수정: 오타 수정 */
-  background: none;
-  border: none;
+const StepSubmitButton = styled.button`
+  color: white;
+  background-color: #279eff;
+  border: 1px solid #279eff;
+  width: 120px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 8px 16px;
   cursor: pointer;
+  justify-content: space-around;
+  font-size: 16px;
+  display: inline-block;
 `;
 
-const StepSubimtButton = styled.button`
+const StepReButton = styled.button`
   position: absolute;
-  bottom: 100px;
-  left: 400px; /* 수정: 오타 수정 및 원하는 위치로 조정 */
+  bottom: -74px;
+  left: 0px;
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
 `;

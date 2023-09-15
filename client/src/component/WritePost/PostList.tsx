@@ -15,8 +15,8 @@ interface Board {
   animalTag: string;
   areaTag: string;
   postStatus: string;
-  startTime: string;
-  endTime: string;
+  //startTime: string;
+  //endTime: string;
 }
 
 const BoardList = () => {
@@ -51,6 +51,7 @@ const BoardList = () => {
           },
           params: { page, size: postPerPage }, // 페이지 번호 및 페이지당 게시글 수 전달
         });
+        checkLoginStatus();
         setTotalItemsCount(response.data.total); // 전체 게시물 수 설정
         setPosts(response.data.data);
       } catch (error) {
@@ -60,6 +61,11 @@ const BoardList = () => {
 
     fetchData();
   }, [page]);
+
+  const checkLoginStatus = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  };
 
   const moveToWrite = () => {
     if (isLoggedIn) {
@@ -136,9 +142,7 @@ export default BoardList;
 const ImContainer = styled.div`
   color: back;
   border: 1px solid blue;
-
   height: 100px;
-
   text-align: center;
   margin-top: 12px;
 `;
