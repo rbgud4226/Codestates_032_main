@@ -12,7 +12,7 @@ import com.pettalk.petsitter.service.PetSitterService;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
-import com.pettalk.wcboard.exception.SubmitException;
+
 import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.specification.WcBoardSpecification;

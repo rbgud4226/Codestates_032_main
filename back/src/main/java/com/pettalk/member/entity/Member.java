@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -40,8 +41,8 @@ public class Member implements Serializable{
     @Column
     private String password;
 
-    @CreationTimestamp
-    private Timestamp createdAt;
+    @Column
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private PetSitter petSitter;
