@@ -243,7 +243,7 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 210px;
+  width: 200px;
   height: 44px;
   border-radius: 4px;
   padding: 8px 16px;
