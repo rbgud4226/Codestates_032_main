@@ -2,6 +2,7 @@ package com.pettalk.member.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.dto.GetMemberDto;
+import com.pettalk.member.dto.LoginDto;
 import com.pettalk.member.dto.PatchMemberDto;
 import com.pettalk.member.dto.PostMemberDto;
 import com.pettalk.member.entity.Member;
@@ -92,13 +93,28 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity memberDelete(@LoginMemberId Long memberId) {
+    public ResponseEntity memberDeleteConfirm(@LoginMemberId Long memberId, @RequestBody LoginDto request) {
         try {
-            memberService.deleteMember(memberId);
-            return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
-        }
-        catch (Exception e){
+            boolean comfirmDelete = memberService.confirmDelete(request.getEmail(), request.getPassword());
+            if (comfirmDelete) {
+                memberService.deleteMember(memberId);
+                return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("인증 실패", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+// 지우면 안됩니다!!
+//    @DeleteMapping
+//    public ResponseEntity memberDelete(@LoginMemberId Long memberId) {
+//        try {
+//            memberService.deleteMember(memberId);
+//            return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
+//        }
+//        catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+//        }
+//    }
   }

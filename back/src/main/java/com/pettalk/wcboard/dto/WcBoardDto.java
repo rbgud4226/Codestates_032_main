@@ -17,7 +17,7 @@ public class WcBoardDto {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class Post { // 0829 위치는 어떤 정보를 줘야할까..
+    public static class Post {
         private Long wcboardId;
         @NotNull (message = "공백이 아니어야 합니다")
         private String title;
@@ -38,8 +38,9 @@ public class WcBoardDto {
 
         private String startTime;
         private String endTime;
-        private String createdAt;
         private String postStatus;
+        private String createdAt;
+
     }
     @AllArgsConstructor
     @Getter
@@ -58,8 +59,27 @@ public class WcBoardDto {
             this.wcboardId = wcboardId;
         }
     }
+
     @AllArgsConstructor
     @Getter
+    public static class PostResponse {
+        private Long wcboardId;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+        private String startTime;
+        private String endTime;
+        private String postStatus;
+    }
+
+
+
+
+    @Getter
+    @Setter
     public static class Response {
         private Long wcboardId;
         private String title;
@@ -71,15 +91,33 @@ public class WcBoardDto {
         private String postStatus;
         private String startTime;
         private String endTime;
+        private String createdAt;
+        private String nickName;
     }
+
     @Getter
     @Setter
-    public static class SubmitResponse{
+    @AllArgsConstructor
+    public static class GetResponse {
         private Long wcboardId;
-//        private String name;
-//        private String nowJob;
-//        private String petSitterImage;
-//        private boolean smoking;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+        private String postStatus;
+        private String startTime;
+        private String endTime;
+        private String createdAt;
+        private String nickName;
+    }
+
+
+    @Getter
+    @Setter
+    public static class SubmitPost{
+        private Long wcboardId;
     }
 
     @Getter
@@ -89,5 +127,6 @@ public class WcBoardDto {
         private String nowJob;
         private boolean smoking;
         private String petSitterImage;
+        //Todo 리뷰 포함되야하나?
     }
 }

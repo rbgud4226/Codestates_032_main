@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.repository;
 
+import com.pettalk.member.entity.Member;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +19,15 @@ import java.util.Optional;
  * 기존 태그기반 검색기능 비활성화
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
-
     Optional<WcBoard> findById(Long wcboardId);
 
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
 //    Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
 //    Page<WcBoard> findByAnimalTagContaining(String animalTag, PageRequest pageRequest);
 //    Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
-
-
-    Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
-    Page<WcBoard> findByMember_MemberIdAndPostStatus(Long memberId, WcBoard.PostStatus complete, Pageable pageable);
+//    Page<WcBoard> findByMember_MemberIdAndPostStatus(Long memberId, WcBoard.PostStatus complete, Pageable pageable);
+    Page<WcBoard> findByMember_MemberIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
+    Page<WcBoard> findByPetSitter_PetSitterIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
     Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
+    Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
 }

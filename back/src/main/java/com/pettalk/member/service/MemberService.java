@@ -12,18 +12,17 @@ import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
-import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
+//import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class MemberService {
@@ -74,6 +73,7 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+
     public GetMemberDto getMember(Long memberId, int page, int size) {
         Member findMember = findVerifyMember(memberId);
         boolean checkPetSitter = findMember.getPetSitter() != null;
@@ -85,7 +85,8 @@ public class MemberService {
             petSitterProfileImage = findMember.getPetSitter().getMember().getProfileImage();
         }
         Pageable pageable = PageRequest.of(page-1, size);
-        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatus(findMember.getMemberId(), WcBoard.PostStatus.COMPLETE, pageable);
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
 
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
@@ -96,8 +97,8 @@ public class MemberService {
         Member findMember = findVerifyMember(memberId);
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberId(findMember.getMemberId(), pageable);
-
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
 
         List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
@@ -138,10 +139,26 @@ public class MemberService {
         }
         Member member = optionalMember.get();
         return member;
-
-//        public Member findMemberByEmail(String email) {
-//            return memberRepository.findByEmail(email).get();
-//        }
-//    }
     }
+
+    public boolean confirmDelete(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        if (passwordEncoder.matches(password, member.getPassword())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Member findVerifyNickName (Long memberId) {
+        Optional<Member> optionalNickName = memberRepository.findById(memberId);
+
+        Member findMembersNickName =
+                optionalNickName.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMembersNickName;
+    }
+
+    public Member findNickName(Long memberId) { return findVerifyNickName(memberId); }
+
 }
