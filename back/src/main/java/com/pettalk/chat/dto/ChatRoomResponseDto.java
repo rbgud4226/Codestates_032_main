@@ -13,4 +13,10 @@ public class ChatRoomResponseDto {
 //    private PetSitter petSitter;
     private Long memberId;
     private Long petSitterId;
+    private Long wcBoardId;
+    @Getter
+    @Setter
+    public static class acceptDto{
+        private String postStatus;
+    }
 }
