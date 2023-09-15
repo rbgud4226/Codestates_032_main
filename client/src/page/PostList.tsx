@@ -2,11 +2,7 @@ import React from "react";
 import BoardList from "../component/WritePost/PostList";
 
 const borderListPage = () => {
-  return (
-    <div>
-      <BoardList />
-    </div>
-  );
+  return <BoardList />;
 };
 
 export default borderListPage;

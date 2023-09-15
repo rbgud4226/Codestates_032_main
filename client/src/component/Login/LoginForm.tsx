@@ -4,10 +4,8 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import LargeBtn from "../Button/LargeCheckBtn";
-
-const api = process.env.REACT_APP_DB_HOST;
+import { apiServer } from "../../lib/api";
 
 type FormData = {
   email: string;
@@ -17,15 +15,15 @@ type FormData = {
 const schema = yup.object().shape({
   email: yup
     .string()
-    .email("email형식으로 입력하세요")
-    .required("Email is required"),
+    .email("email형식으로 입력하세요.")
+    .required("이메일은 필수입니다."),
   password: yup
     .string()
     .matches(
       /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/,
       "영문자 숫자조합 8글자 이상입니다.",
     )
-    .required("Pw is required"),
+    .required("이메일은 필수입니다."),
 });
 
 const LoginForm = () => {
@@ -39,7 +37,7 @@ const LoginForm = () => {
 
   const loginHdr = async (data: FormData) => {
     try {
-      const res: any = await axios.post(`${api}/members/login`, data);
+      const res: any = await apiServer.post(`/members/login`, data);
       console.log(res.data);
       const userData = {
         nickName: res.data.nickName,
@@ -54,24 +52,17 @@ const LoginForm = () => {
 
       window.location.href = "/";
     } catch (e) {
-      if (axios.isAxiosError(e)) {
-        if (e) {
-          setErrorMsg("로그인 정보를 확인하세요");
-        }
-      }
+      setErrorMsg("로그인 정보를 확인하세요");
     }
   };
+  console.log(errors);
 
   return (
     <LoginContainer>
       <LForm onSubmit={handleSubmit(loginHdr)}>
         <InputWrapper>
           <TextInput placeholder="email" {...register("email")} />
-          {!errors.email ? (
-            <Span>email을 입력하세요</Span>
-          ) : (
-            <ErrMsg>{errors?.email?.message}</ErrMsg>
-          )}
+          {errors?.email?.message && <ErrMsg>{errors.email.message}</ErrMsg>}
         </InputWrapper>
         <InputWrapper>
           <TextInput
@@ -79,16 +70,12 @@ const LoginForm = () => {
             type="password"
             {...register("password")}
           />
-          {!errors.password ? (
-            <Span>비밀번호를 입력하세요.</Span>
-          ) : (
-            <ErrMsg>{errors?.password?.message}</ErrMsg>
+          {errors?.password?.message && (
+            <ErrMsg>{errors.password.message}</ErrMsg>
           )}
         </InputWrapper>
-        <div style={{ marginTop: "12px", width: "100%" }}>
-          <LargeBtn name={"로그인"} />
-        </div>
         <ErrMsg>{errorMsg}</ErrMsg>
+        <LargeBtn margin={"12px 0px 0px 0px"} name={"로그인"} />
         <SignUpLink to={"/memberAgree"}>회원가입</SignUpLink>
       </LForm>
     </LoginContainer>
@@ -109,7 +96,7 @@ export const LForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 240px;
+  width: 100%;
 `;
 export const InputWrapper = styled.div`
   width: 100%;
@@ -140,7 +127,6 @@ export const ErrMsg = styled.div`
   margin-top: 4px;
   color: #ff2727;
   font-size: 10px;
-  margin-bottom: 6px;
 `;
 
 export const SignUpLink = styled(Link)`

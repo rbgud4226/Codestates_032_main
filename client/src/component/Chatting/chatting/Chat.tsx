@@ -145,8 +145,6 @@ export const MessageSection = styled.section`
 export const MsgCtn = styled.div`
   display: flex;
   flex-direction: column;
-  bottom: 70px;
-  position: sticky;
   flex-grow: 1;
 `;
 

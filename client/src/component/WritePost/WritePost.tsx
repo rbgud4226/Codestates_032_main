@@ -8,7 +8,7 @@ import UploadImage from "./ImageSubmit";
 const api = process.env.REACT_APP_DB_HOST;
 
 function WritePost() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [post, setPost] = useState({
     title: "",
     content: "",

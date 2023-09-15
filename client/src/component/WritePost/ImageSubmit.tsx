@@ -1,5 +1,5 @@
 import React, { useState, useRef, Dispatch, SetStateAction } from "react";
-import { uploadImageFile } from "./utils";
+// import { uploadImageFile } from "./utils";
 import styled from "styled-components";
 
 interface InputImageProps {
@@ -45,7 +45,7 @@ function UploadImage({ handleImageChange, images }: UploadImageProps) {
     try {
       setLoading(true);
       if (image) {
-        await uploadImageFile(image);
+        // await uploadImageFile(image);
         alert("피드백 전송을 성공했습니다.");
       } else {
         throw new Error("이미지가 선택되지 않았습니다.");

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import flatpickr from "flatpickr";
+// import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import styled from "styled-components";
 
@@ -10,22 +10,22 @@ interface TimeSelectorProps {
 
 function TimeSelector({ inputRef }: TimeSelectorProps) {
   useEffect(() => {
-    let picker: flatpickr.Instance | null = null;
+    // let picker: flatpickr.Instance | null = null;
 
     if (inputRef.current) {
-      picker = flatpickr(inputRef.current, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true,
-        defaultDate: "09:00",
-      });
+      // picker = flatpickr(inputRef.current, {
+      //   enableTime: true,
+      //   noCalendar: true,
+      //   dateFormat: "H:i",
+      //   time_24hr: true,
+      //   defaultDate: "09:00",
+      // });
     }
 
     return () => {
-      if (picker) {
-        picker.destroy();
-      }
+      // if (picker) {
+      //   picker.destroy();
+      // }
     };
   }, [inputRef]);
 
@@ -46,27 +46,26 @@ function Pickr() {
   const [endTime, setEndTime] = useState<string>("");
 
   useEffect(() => {
-    const dateSelector = document.querySelector(".dateSelector");
-
-    if (dateSelector) {
-      flatpickr(dateSelector, {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "Y-m-d",
-        disable: [
-          function (date) {
-            return !(date.getDate() % 8);
-          },
-        ],
-        onChange: (selectedDates, selectedDateStr) => {
-          if (selectedDates.length === 2) {
-            const [start, end] = selectedDateStr.split(" to ");
-            setStartTime(start);
-            setEndTime(end);
-          }
-        },
-      });
-    }
+    // const dateSelector = document.querySelector(".dateSelector");
+    // if (dateSelector) {
+    //   flatpickr(dateSelector, {
+    //     mode: "range",
+    //     minDate: "today",
+    //     dateFormat: "Y-m-d",
+    //     disable: [
+    //       function (date) {
+    //         return !(date.getDate() % 8);
+    //       },
+    //     ],
+    //     onChange: (selectedDates, selectedDateStr) => {
+    //       if (selectedDates.length === 2) {
+    //         const [start, end] = selectedDateStr.split(" to ");
+    //         setStartTime(start);
+    //         setEndTime(end);
+    //       }
+    //     },
+    //   });
+    // }
   }, []);
 
   const handleStartTimeChange = (selectedTime: string) => {

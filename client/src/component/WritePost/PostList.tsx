@@ -59,6 +59,7 @@ const BoardList = () => {
       checkLoginStatus();
 
       setPosts(response.data.data);
+      console.log(response);
     } catch (error) {
       console.error("API 요청 중 오류 발생:", error);
     }
@@ -111,35 +112,38 @@ const BoardList = () => {
           </OptionButton>
         </SectionContainer>
       </PageContainer>
-      {posts.length === 0 ? (
+      {Array.isArray(posts) && posts.length === 0 ? (
         <p>Loading...</p>
       ) : (
         <ul>
-          {posts.map(post => {
-            if (
-              (!animalTagFilter || post.animalTag.includes(animalTagFilter)) &&
-              (!wcTagFilter || post.wcTag === wcTagFilter)
-            ) {
-              return (
-                <ImContainer key={post.wcboardId}>
-                  <Link to={`/board/${post.wcboardId}`}>{post.title}</Link>
-                  <div>{post.animalTag}</div>
-                  <div>{post.areaTag}</div>
-                  <div>
-                    {post.images && (
-                      <img
-                        src={post.images}
-                        alt="이미지"
-                        style={{ maxWidth: "100%", maxHeight: "300px" }}
-                      />
-                    )}
-                    ;
-                  </div>
-                </ImContainer>
-              );
-            }
-            return null;
-          })}
+          {/* 필터 방식 변경 & Array.isArray */}
+          {Array.isArray(posts) &&
+            posts.map(post => {
+              if (
+                (!animalTagFilter ||
+                  post.animalTag.includes(animalTagFilter)) &&
+                (!wcTagFilter || post.wcTag === wcTagFilter)
+              ) {
+                return (
+                  <ImContainer key={post.wcboardId}>
+                    <Link to={`/board/${post.wcboardId}`}>{post.title}</Link>
+                    <div>{post.animalTag}</div>
+                    <div>{post.areaTag}</div>
+                    <div>
+                      {post.images && (
+                        <img
+                          src={post.images}
+                          alt="이미지"
+                          style={{ maxWidth: "100%", maxHeight: "300px" }}
+                        />
+                      )}
+                      ;
+                    </div>
+                  </ImContainer>
+                );
+              }
+              return null;
+            })}
         </ul>
       )}
       <button onClick={moveToWrite}>글쓰기</button>

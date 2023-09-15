@@ -12,7 +12,8 @@ const BookingHistory = () => {
 
   return (
     <Container>
-      <Title>예약 내역</Title>
+      {/* 혼자만 다른 레이아웃이라 이질감이 좀 있음 */}
+      {/* <Title>예약 내역</Title> */}
       <Tabs>
         <TabButton
           onClick={() => handleTabClick("care")}
@@ -28,7 +29,7 @@ const BookingHistory = () => {
         </TabButton>
       </Tabs>
       <Separator />
-      {selectedTab === "care" ? <CareHistory /> : <DepositedHistory />}
+      {/* {selectedTab === "care" ? <CareHistory /> : <DepositedHistory />} */}
     </Container>
   );
 };

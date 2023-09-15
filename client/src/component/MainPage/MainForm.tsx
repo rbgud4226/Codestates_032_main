@@ -66,56 +66,53 @@ function MainForm(props: MainProps) {
     );
   return (
     <Container>
-      <Container>
-        <A>
-          <MainImage src={MainImage1} alt={`Image`} />
-          <TextWrap>
-            <MainText>{"내가 없을 때\n 내 아이는?"}</MainText>
-            <Btn onClick={LoginButtonClick}>예약하기</Btn>
-          </TextWrap>
+      <A>
+        <MainImage src={MainImage1} alt={`Image`} />
+        <TextWrap>
+          <MainText>{"내가 없을 때\n 내 아이는?"}</MainText>
+          <Btn onClick={LoginButtonClick}>예약하기</Btn>
+        </TextWrap>
 
-          <MainLogoImage src={MainLogo} alt={`Image`} />
-          <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
+        <MainLogoImage src={MainLogo} alt={`Image`} />
+        <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
 
-          <A>
-            <NainItwo>
-              <MainImagetwo src={MainImage2} alt={`Image`} />
-              <WhiteImage />
-            </NainItwo>
-            <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
-            <MainTexttwoo>
-              {
-                "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
-              }
-            </MainTexttwoo>
-          </A>
-        </A>
+        <NainItwo>
+          <MainImagetwo src={MainImage2} alt={`Image`} />
+          <WhiteImage />
+        </NainItwo>
+        <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
+        <MainTexttwoo>
+          {
+            "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
+          }
+        </MainTexttwoo>
+      </A>
 
-        <Carousel showThumbs={false}>
-          <div>
-            <img src={MainImage3} alt="Image 3" />
-            <h1>
-              돌봄 맡기기 <br />
-              휴가도 즐겁게!
-            </h1>
-            <p>
-              집을 비우거나 휴가를 떠날 때 <br />
-              혼자 있는 우리 아이 걱정 없이!
-            </p>
-          </div>
-          <div>
-            <img src={MainImage4} alt="Image 4" />
-            <h1>
-              돌봄 맡기기 <br />
-              휴가도 즐겁게!
-            </h1>
-            <p>
-              집을 비우거나 휴가를 떠날 때 <br />
-              혼자 있는 우리 아이 걱정 없이!
-            </p>
-          </div>
-        </Carousel>
-      </Container>
+      <Carousel showThumbs={false}>
+        <div>
+          <img src={MainImage3} alt="Image 3" />
+          <h1>
+            돌봄 맡기기 <br />
+            휴가도 즐겁게!
+          </h1>
+          <p>
+            집을 비우거나 휴가를 떠날 때 <br />
+            혼자 있는 우리 아이 걱정 없이!
+          </p>
+        </div>
+        <div>
+          <img src={MainImage4} alt="Image 4" />
+          <h1>
+            돌봄 맡기기 <br />
+            휴가도 즐겁게!
+          </h1>
+          <p>
+            집을 비우거나 휴가를 떠날 때 <br />
+            혼자 있는 우리 아이 걱정 없이!
+          </p>
+        </div>
+      </Carousel>
+
       <WhiteBoxContainer>
         <WalkButton
           className={selectedButton === "walk" ? "active" : ""}
@@ -140,7 +137,6 @@ function MainForm(props: MainProps) {
     </Container>
   );
 }
-export default MainForm;
 
 const NainItwo = styled.div`
   background-color: White;
@@ -331,7 +327,6 @@ const WhiteImage = styled.div`
 
 const Container = styled.div`
   background-color: white;
-  position: relative;
 `;
 
 const Btn = styled.button`

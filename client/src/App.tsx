@@ -3,9 +3,8 @@ import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import LoginPage from "./page/LoginPage";
-import MemberAgreePage from "./page/signup/MemberAgreePage";
-import SignUpPage from "./page/signup/SignUpPage";
-import SignUpDonePage from "./page/signup/SignUpDonePage";
+import SignUpPage from "./page/SignUpPage";
+// import SignUpDonePage from "./page/SignUpDonePage";
 import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
@@ -28,20 +27,10 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/memberAgree" element={<MemberAgreePage />} />
                 <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/signupDone" element={<SignUpDonePage />} />
+                {/* <Route path="/signupDone" element={<SignUpDonePage />} /> */}
                 <Route path="/" element={<MainPage />} />
-                <Route
-                  path="/members"
-                  element={
-                    window.localStorage.getItem("accessToken") ? (
-                      <Mypage />
-                    ) : (
-                      <LoginPage />
-                    )
-                  }
-                />
+                <Route path="/members" element={<Mypage />} />
                 <Route path="/petsitter" element={<PetSitterPage />} />
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
                 <Route

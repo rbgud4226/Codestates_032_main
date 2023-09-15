@@ -6,22 +6,15 @@ export default function Layout({ children }: any) {
   const { pathname } = useLocation();
 
   return (
-    <Body>
-      <Container>
-        {pathname === "/" || pathname === "/chat" ? (
-          children
-        ) : (
-          <Wrapper>{children}</Wrapper>
-        )}
-      </Container>
-    </Body>
+    <Container>
+      {pathname === "/" || pathname === "/chat" ? (
+        children
+      ) : (
+        <Wrapper>{children}</Wrapper>
+      )}
+    </Container>
   );
 }
-
-const Body = styled.div`
-  width: 100%;
-`;
-
 const Container = styled.div`
   width: 100%;
   min-height: calc(100vh - 70px - 70px);

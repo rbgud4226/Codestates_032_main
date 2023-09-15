@@ -104,11 +104,13 @@ const RecentContainer = styled.div`
   border-radius: 8px;
   box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
   width: 100%;
+  gap: 16px;
 `;
 
 const ReservationItem = styled.div`
   padding: 16px;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid red;
+  background-color: red;
   padding-bottom: 8px; /* 각각의 컨테이너 사이에 간격 추가 */
 `;
 

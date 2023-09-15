@@ -51,7 +51,7 @@ export const NavContainer = styled.nav`
   display: flex;
   height: 70px;
   width: 100%;
-  bottom: 0;
+  bottom: 0px;
   position: sticky;
   width: 100%;
   box-shadow: 0px 10px 34px #272c5614;

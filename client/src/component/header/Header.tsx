@@ -33,9 +33,9 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <LogoLink to={"/"}>
+      <Link to={"/"}>
         <HeadLogo src={petalkText} alt="petTalk"></HeadLogo>
-      </LogoLink>
+      </Link>
       <HeaderBtnContainer>
         {!window.localStorage.getItem("accessToken") ? (
           menuList.map(el => (
@@ -46,7 +46,6 @@ const Header = () => {
         ) : (
           <div
             style={{
-              marginRight: `${global.Spacing[24].value}px`,
               color: `${global.Primary.value}`,
               cursor: "pointer",
             }}
@@ -70,14 +69,10 @@ export const HeaderContainer = styled.header`
   width: 100%;
   top: 0;
   position: sticky;
-  min-width: 320px;
-  max-width: 500px;
   box-shadow: 0px 10px 34px #272c5614;
   background-color: white;
   z-index: 999;
-`;
-export const LogoLink = styled(Link)`
-  margin-left: 20px;
+  padding: 0px 20px;
 `;
 
 export const HeadLogo = styled.img`
@@ -86,11 +81,10 @@ export const HeadLogo = styled.img`
 
 export const HeaderBtnContainer = styled.div`
   display: flex;
+  gap: 16px;
   align-items: end;
-  padding-right: 20px;
 `;
 
 export const MenuLink = styled(Link)`
-  margin-right: ${global.Spacing[24].value}px;
   color: ${global.Primary.value};
 `;

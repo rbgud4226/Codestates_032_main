@@ -230,6 +230,7 @@ const SectionTitle = styled.div`
 `;
 const OptionButtonContainer = styled.div`
   display: flex;
+  gap: 16px;
   justify-content: space-around;
 `;
 
@@ -243,8 +244,8 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 200px;
   height: 44px;
+  width: 100%;
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
@@ -255,7 +256,7 @@ const OptiontwoButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 200px;
+  width: 100%;
   height: 44px;
   border-radius: 4px;
   padding: 8px 16px;
