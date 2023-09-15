@@ -14,39 +14,6 @@ const PetsitterRegister = () => {
   >(null);
   const api = process.env.REACT_APP_DB_HOST;
   const { pathname } = useLocation();
-  console.log(pathname);
-  // useEffect(() => {
-  //   const fetchPetsitterInfo = async () => {
-  //     try {
-  //       const ngrokSkipBrowserWarning = "69420";
-  //       console.log(localStorage.getItem("accessToken"));
-  //       const response = await axios.get(`${api}/petsitter`, {
-  //         headers: {
-  //           Authorization: `${localStorage.getItem("accessToken")}`, // 토큰을 헤더에 추가
-  //           Accept: "application/json",
-  //           "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
-  //         },
-  //       });
-
-  //       if (response.data.petSitterId) {
-  //         console.log("펫시터 수정");
-  //         setFormData({
-  //           name: response.data.name,
-  //           introduce: response.data.introduce,
-  //           smoking: response.data.smoking,
-  //           nowJob: response.data.nowJob,
-  //           exAnimal: response.data.exAnimal,
-  //           info: response.data.info,
-  //           agreement: response.data.agreement,
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("에러:", error);
-  //     }
-  //   };
-
-  //   fetchPetsitterInfo();
-  // }, []); // 페이지 로드 시 한 번만 실행
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === 0 ? 1 : 0);
