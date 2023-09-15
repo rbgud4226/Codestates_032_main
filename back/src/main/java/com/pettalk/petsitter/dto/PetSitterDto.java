@@ -22,6 +22,7 @@ public class PetSitterDto {
 //        private long memberId;
 
         @NotBlank(message = "이름을 적어주세요.")
+        @Size(min = 2, max = 8)
         private String name;
 
         @NotBlank(message = "자기소개를 작성해 주세요.")
