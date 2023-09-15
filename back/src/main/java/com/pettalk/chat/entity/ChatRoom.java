@@ -14,25 +14,14 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-
-//    @ManyToOne
-//    @JoinColumn(name = "pet_sitter_id")
-//    private PetSitter petSitter;
+    private Long wcBoardId;
 
     private Long memberId;
 
     private Long petSitterId;
 
-//    private String message;
-
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    public ChatRoom() {
-        this.createdAt = LocalDateTime.now();
-    }
 
 }
