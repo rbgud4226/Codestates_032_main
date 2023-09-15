@@ -91,7 +91,27 @@ public class PetSitterController {
 //        TODO: 워크케어보드의 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
 //
 //    }
-    @GetMapping("/recent")
+
+
+//    @GetMapping("/recent")
+//    public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
+//                                             @RequestParam @Positive int page,
+//                                             @RequestParam @Positive int size) {
+//        Member member = memberService.findVerifyMember(memberId);
+//        String memberImage = member.getProfileImage();
+//        PetSitter petSitter = member.getPetSitter();
+//
+//        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
+//        List<WcBoard> wcBoardList = wcBoardPage.getContent();
+//
+//        List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
+//
+//        return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
+//        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+//
+//    }
+
+    @GetMapping("/testrecent")
     public  ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
                                              @RequestParam @Positive int page,
                                              @RequestParam @Positive int size) {
@@ -99,13 +119,12 @@ public class PetSitterController {
         String memberImage = member.getProfileImage();
         PetSitter petSitter = member.getPetSitter();
 
-        Page<WcBoard> wcBoardPage = service.getRecentInfo(petSitter, page -1, size);
-        List<WcBoard> wcBoardList = wcBoardPage.getContent();
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(memberId, page, size);
+        List<WcBoard> filteredPosts = wcBoardPage.getContent();
 
-        List<PetSitterDto.multiResponse> response = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
-
-        return new ResponseEntity<>(new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(wcBoardList), wcBoardPage), HttpStatus.OK);
-        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
-
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(filteredPosts), wcBoardPage), HttpStatus.OK);
     }
+        //TODO: 워크케어보드의 클라이언트 이미지, 닉네임, 시작, 끝나는 일자, 산책돌봄 태그
+        //TODO: 로그인한 사람의 최근 케어 내역 단, 진행중, 완료된 것들만.
 }

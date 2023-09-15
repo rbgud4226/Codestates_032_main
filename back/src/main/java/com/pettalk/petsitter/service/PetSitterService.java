@@ -8,11 +8,13 @@ import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
+import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -96,13 +98,23 @@ public class PetSitterService {
     }
 
     //    private WcBoard
-    public Page<WcBoard> getRecentInfo(PetSitter petSitter, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
-
-
+//    public Page<WcBoard> getRecentInfo(PetSitter petSitter, int page, int size) {
+//        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
+//
+//
 //        return wcBoardRepository.findByMember_MemberId(petSitterMemberId, pageRequest);
-        return wcBoardRepository.findByPetSitter_PetSitterId(petSitter.getPetSitterId(), pageRequest);
-        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
+//        return wcBoardRepository.findByPetSitter_PetSitterId(petSitter.getPetSitterId(), pageRequest);
+//        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
+//    }
+
+    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
+        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
+
+        return wcBoards;
     }
 
 }

@@ -27,6 +27,7 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpe
 //    Page<WcBoard> findByAreaTagContaining(String areaTag, PageRequest pageRequest);
 //    Page<WcBoard> findByMember_MemberIdAndPostStatus(Long memberId, WcBoard.PostStatus complete, Pageable pageable);
     Page<WcBoard> findByMember_MemberIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
+    Page<WcBoard> findByPetSitter_PetSitterIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
     Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
     Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
 }
