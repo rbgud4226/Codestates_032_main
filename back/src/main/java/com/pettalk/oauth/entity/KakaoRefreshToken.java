@@ -19,6 +19,6 @@ public class KakaoRefreshToken {
     @Column
     private String refreshToken;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Member member;
 }

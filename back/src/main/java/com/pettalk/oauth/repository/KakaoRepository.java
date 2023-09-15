@@ -1,6 +1,5 @@
 package com.pettalk.oauth.repository;
 
-import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.oauth.entity.KakaoRefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 

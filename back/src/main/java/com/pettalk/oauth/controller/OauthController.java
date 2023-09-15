@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class OauthController {
@@ -45,7 +46,6 @@ public class OauthController {
             return ResponseEntity.badRequest().body("카카오 로그인 실패");
         }
 
-
         Map<String, Object> kakaoProfile;
         try {
             kakaoProfile = kakaoLoginService.getKakaoProfile(kakaoAccessToken);
@@ -57,18 +57,25 @@ public class OauthController {
         member.setKakaoId(String.valueOf(kakaoProfile.get("id")));
         Map<String, Object> kakaoAccount = (Map<String, Object>) kakaoProfile.get("kakao_account");
         Map<String, Object> properties = (Map<String, Object>) kakaoProfile.get("properties");
-        if (kakaoAccount != null) {
-            member.setEmail(String.valueOf(kakaoAccount.get("email")));
-            member.setPhone(String.valueOf(kakaoAccount.get("phone_number")));  // 핸드폰 번호
+        String email = String.valueOf(kakaoAccount.get("email"));
+        Optional<Member> oldMember = memberRepository.findByEmail(email);
+        Member checkmember;
+        if (!oldMember.isPresent()) {
+            checkmember = new Member();
+            checkmember.setKakaoId(String.valueOf(kakaoProfile.get("id")));
+            checkmember.setNickName(String.valueOf(properties.get("nickname")));
+            checkmember.setEmail(email);
+            checkmember.setPhone(String.valueOf(kakaoAccount.get("phone_number")));
+            checkmember.setProfileImage(String.valueOf(properties.get("profile_image")));
+
+            memberRepository.save(checkmember);
+        } else {
+            checkmember = oldMember.get();
         }
-        if (properties != null) {
-            member.setNickName(String.valueOf(properties.get("nickname")));
-            member.setProfileImage(String.valueOf(properties.get("profile_image")));  // 프로필 이미지
-        }
-        memberRepository.save(member);
+
         KakaoRefreshToken kakaoRefreshToken = new KakaoRefreshToken();
         kakaoRefreshToken.setRefreshToken((String) Token.get("refresh_token"));
-        kakaoRefreshToken.setMember(member);
+        kakaoRefreshToken.setMember(checkmember);
         kakaoRepository.save(kakaoRefreshToken);
 
         HttpHeaders responseHeaders = new HttpHeaders();
