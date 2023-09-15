@@ -58,15 +58,6 @@ public class WcBoardController {
         }
     }
 
-//    로그인 검증 로직 없음, 프론트 테스트 전용ㅇ
-//    @PostMapping
-//    public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto){
-//        WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto));
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
-//    }
-
     //게시글에 펫시터 신청
     @PostMapping("/petsitter/{wcboard-id}")
     public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
@@ -78,7 +69,7 @@ public class WcBoardController {
          * Todo 방어로직
          * 1. 자신이 게시글에 신청할 경우 > 완료
          * 2. 펫시터 아이디가 없는 경우 > 완료
-         * 3. 동일한 시간대에 여러게시글에 신청
+         * 3. 동일한 시간대에 여러게시글에 신청 > 흠...
 
          * 방어로직 설계
             Member findMember = memberService.findVerifyMember(memberId);   //토큰에서 멤버아이디 가져오기
@@ -169,14 +160,13 @@ public class WcBoardController {
 
     @GetMapping // 메인 페이지 전체 게시글 로드
     public ResponseEntity findAllPosts(@Positive @RequestParam int page,
-                                       @Positive @RequestParam int size) {
-        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
+                                       @Positive @RequestParam int size,
+                                       @LoginMemberId Long memberId){
+        Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size, memberId); // 페이지 처리
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
-
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         memberService.findMemberByPrincipal(principal.toString());
-
 
         if ("anonymousUser".equals(principal)) {
             return ResponseEntity
@@ -215,6 +205,7 @@ public class WcBoardController {
      }
      */
 
+    //태그 기반 전체조회
     @GetMapping("/tag")
     public ResponseEntity findAllWithTags(
             @RequestParam(name = "page") int page,
@@ -223,16 +214,12 @@ public class WcBoardController {
             @RequestParam(name = "animalTag", required = false) String animalTag,
             @RequestParam(name = "areaTag", required = false) String areaTag){
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        memberService.findMemberByPrincipal(principal.toString());
-
         Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag);
         List<WcBoard> posts = pageWcBoardPosts.getContent();
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts),HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{wcboard-id}")
     public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
@@ -246,9 +233,9 @@ public class WcBoardController {
                     .body("권한이 없어요!");
         }else {
             service.deletePost(wcboardId);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("삭제 완료!");
         }
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body("삭제 완료!");
     }
 }

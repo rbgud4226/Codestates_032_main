@@ -160,4 +160,5 @@ public class MemberService {
     }
 
     public Member findNickName(Long memberId) { return findVerifyNickName(memberId); }
+
 }
