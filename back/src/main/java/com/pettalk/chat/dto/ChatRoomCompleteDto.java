@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChatRoomPostDto {
-    private Long memberId;
+public class ChatRoomCompleteDto {
+    private Long wcboardId;
     private Long petSitterId;
-    private Long wcBoardId;
 }

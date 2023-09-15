@@ -9,5 +9,4 @@ import lombok.Setter;
 public class ChatRoomRequestDto {
     private String userType;
     private String message;
-
 }

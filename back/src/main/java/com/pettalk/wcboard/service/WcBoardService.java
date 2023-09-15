@@ -12,6 +12,7 @@ import com.pettalk.petsitter.service.PetSitterService;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
+
 import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.specification.WcBoardSpecification;
@@ -49,12 +50,8 @@ public class WcBoardService {
     //멤버 검증 로직 포함
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
-        wcboard.setCreatedAt(LocalDateTime.now());
-        //멤버 아이디 가져오기
-        memberService.findVerifyMember(memberId);
         wcboard.setMember(memberService.findVerifyMember(memberId)); // 게시글에 멤버아이디 등록
-
-//        wcboard.getMember().getPetSitter().setPetSitterId(member.getPetSitter().getPetSitterId());
+        //Todo 펫시터 아이디 가져오기
 
         wcBoardRepository.save(wcboard);
         return wcboard;
@@ -72,18 +69,21 @@ public class WcBoardService {
 
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost(WcBoard wcboard, Long memberId) {
-        wcboard.setMember(memberService.findVerifyMember(memberId));    //멤버 아이디 가져오기
+//        wcboard.setMember(memberService.findVerifyMember(memberId));    멤버 아이디 가져오기
         WcBoard findPost = findVerifyPost(wcboard.getWcboardId());      //보드 아이디 가져오기
-
-        if (wcboard.getPostStatus() == WcBoard.PostStatus.DEFAULT) {
-            Optional.ofNullable(wcboard.getTitle())
-                    .ifPresent(title -> findPost.setTitle(title));
-            Optional.ofNullable(wcboard.getContent())
-                    .ifPresent(content -> findPost.setContent(content)); // TODO : 타이틀과 내용말고 다른것도 수정 추가 필요
-        } else {
+        if (findPost.getMember().getMemberId() == memberId) {
+            if (wcboard.getPostStatus() == WcBoard.PostStatus.DEFAULT) {
+                Optional.ofNullable(wcboard.getTitle())
+                        .ifPresent(title -> findPost.setTitle(title));
+                Optional.ofNullable(wcboard.getContent())
+                        .ifPresent(content -> findPost.setContent(content)); // TODO : 타이틀과 내용말고 다른것도 수정 추가 필요
+            } else {
+                throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+            }
+            return wcBoardRepository.save(findPost);
+        }else {
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
-        return wcBoardRepository.save(findPost);
     }
 
     public WcBoard findWcBoardPost(Long wcboardId) {
@@ -102,8 +102,7 @@ public class WcBoardService {
 
     //전체 글 조회 (최신순 정렬)
     public Page<WcBoard> findAllPosts(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
-        return wcBoardRepository.findAll(pageRequest);
+        return wcBoardRepository.findAll(PageRequest.of(page, size, Sort.by("wcboardId").descending()));
     }
 
 
@@ -124,31 +123,6 @@ public class WcBoardService {
         return wcBoardRepository.findAll(spec, pageable);
     }
 
-    public WcBoard whoPetSitterId(WcBoardDto.SubmitPost wcboard, Long memberId) {
-        //토큰에서 petsitterId를 가져왔기 때문에 검증 필요 없음
-        //가져온 petsitterId가 null이면 펫시터 등록을 안한 상태
-        Member member = memberService.findVerifyMember(memberId);
-
-        Long petSitterId = member.getPetSitter().getPetSitterId();
-        PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
-        boolean checkPetSitter = petSitter.getPetSitterId() != null;
-
-        log.info("신청시 펫시터 등록 여부 : " + checkPetSitter);
-
-        WcBoard findWcBoard = wcBoardRepository.findById(wcboard.getWcboardId())
-                .orElseThrow(() ->
-                        new RuntimeException("게시글이 없어요!"));
-        if (!checkPetSitter) {
-            throw new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND);
-        } else {
-            PetSitterApplicant petSitterApplicant = new PetSitterApplicant();
-            petSitterApplicant.setWcboardId(wcboard.getWcboardId());
-            petSitterApplicant.setPetSitter(petSitter);
-            paRepository.save(petSitterApplicant);
-            return findWcBoard;
-        }
-    }
-
     /**
      * Todo 방어로직
      * 1. 자신이 게시글에 신청할 경우 > 완료
@@ -156,10 +130,10 @@ public class WcBoardService {
      * 3. 동일한 시간대에 여러게시글에 신청
      */
     //신청
-    public ResponseEntity submitPetSitter(Long memberId, WcBoardDto.SubmitPost wcboard, Long wcboardId) {
+    public ResponseEntity submitPetSitter(Long memberId, Long wcboardId) {
         Member findMember = memberService.findVerifyMember(memberId);
         WcBoard findPost = findVerifyPost(wcboardId);
-        findPost.setPostStatus(WcBoard.PostStatus.IN_PROGRESS);
+        findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
 
         Member member = memberService.findVerifyMember(memberId);
 
@@ -167,33 +141,30 @@ public class WcBoardService {
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
         boolean checkPetSitter = petSitter.getPetSitterId() != null;
 
-        WcBoard findWcBoard = wcBoardRepository.findById(wcboard.getWcboardId())
+        
+
+        WcBoard findWcBoard = wcBoardRepository.findById(wcboardId)
                 .orElseThrow(() ->
                         new RuntimeException("게시글이 없어요!"));
         if (!checkPetSitter) {
             throw new BusinessLogicException(ExceptionCode.PETSITTER_NOT_FOUND);
         } else {
             PetSitterApplicant petSitterApplicant = new PetSitterApplicant();
-            petSitterApplicant.setWcboardId(wcboard.getWcboardId());
+            petSitterApplicant.setWcboardId(wcboardId);
             petSitterApplicant.setPetSitter(petSitter);
             paRepository.save(petSitterApplicant);
         }
+        log.info ("펫시터가 parepository에 존재하는지 확인" + petSitterExists(petSitterId));
 
-        if (isOwnPost(findMember, findPost)) {
-            return ResponseEntity.ok("자신의 게시글에 신청할수 없어요!");
+        if (petSitterExists(petSitterId)){
+            return ResponseEntity.ok("이미 신청한 게시글 입니다!");
+        }else if (isOwnPost(findMember, findPost)) {
+            return ResponseEntity.ok("자신의 게시글에 신청할 수 없어요!");
         } else if (!isPetSitter(findMember)) {
-            return ResponseEntity.ok("펫시터를 아직 등록하지 않으셨네요!");
+            return ResponseEntity.ok("펫시터를 아직 등록하지 않으셨어요!");
         } else {
             return ResponseEntity.ok("신청 완료!");
         }
-    }
-
-    private boolean isOwnPost(Member member, WcBoard wcBoard) {
-        return member.getMemberId().equals(wcBoard.getMember().getMemberId());
-    }
-
-    private boolean isPetSitter(Member member) {
-        return member.getPetSitter() != null;
     }
 
     /** 0908 태그 다중적용이 안되어 일시 비활성화 처리
@@ -244,4 +215,18 @@ public class WcBoardService {
         List<PetSitterApplicant> petSitterApplicantList = paRepository.findByWcboardId(wcboardId);
         return petSitterApplicantList;
     }
+
+    private boolean isOwnPost(Member member, WcBoard wcBoard) {
+        return member.getMemberId().equals(wcBoard.getMember().getMemberId());
+    }
+
+    private boolean isPetSitter(Member member) {
+        return member.getPetSitter() != null;
+    }
+
+    public boolean petSitterExists(Long petSitterId) {
+        return paRepository.existsById(petSitterId);
+    }
+
+
 }

@@ -141,15 +141,6 @@ public class MemberService {
         return member;
     }
 
-    public boolean confirmDelete(String email, String password) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        if (passwordEncoder.matches(password, member.getPassword())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public Member findVerifyNickName (Long memberId) {
         Optional<Member> optionalNickName = memberRepository.findById(memberId);
 
@@ -160,4 +151,5 @@ public class MemberService {
     }
 
     public Member findNickName(Long memberId) { return findVerifyNickName(memberId); }
+
 }

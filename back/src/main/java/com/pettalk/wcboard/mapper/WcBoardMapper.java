@@ -55,16 +55,11 @@ public interface WcBoardMapper {
           wcTag = wcBoard.getWcTag();
           animalTag = wcBoard.getAnimalTag();
           areaTag = wcBoard.getAreaTag();
+          startTime = wcBoard.getStartTime();
+          endTime = wcBoard.getEndTime();
           if ( wcBoard.getPostStatus() != null ) {
                postStatus = wcBoard.getPostStatus().name();
           }
-          if ( wcBoard.getStartTime() != null ) {
-               startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
-          }
-          if ( wcBoard.getEndTime() != null ) {
-               endTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
-          }
-
           if ( wcBoard.getCreatedAt() != null ) {
                createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
           }
@@ -136,8 +131,8 @@ public interface WcBoardMapper {
           response.setWcTag(wcBoard.getWcTag());
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
-          response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
-          response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
+          response.setStartTime(wcBoard.getStartTime());
+          response.setEndTime(wcBoard.getEndTime());
           response.setPostStatus(wcBoard.getPostStatus().name());
           response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
           response.setNickName(member.getNickName());

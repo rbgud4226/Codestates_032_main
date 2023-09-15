@@ -1,5 +1,12 @@
 package com.pettalk.oauth.service;
 
+import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.exception.ExceptionCode;
+import com.pettalk.member.entity.Member;
+import com.pettalk.member.entity.RefreshToken;
+import com.pettalk.member.repository.MemberRepository;
+import com.pettalk.oauth.entity.KakaoRefreshToken;
+import com.pettalk.oauth.repository.KakaoRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +35,14 @@ public class KakaoLoginService {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect_uri}")
     private String redirectUri;
 
-    public String getAccessTokenFromAuthorizationCode(String authorizationCode) {
+    private final KakaoRepository kakaoRepository;
+    private final MemberRepository  memberRepository;
+    public KakaoLoginService(KakaoRepository kakaoRepository, MemberRepository  memberRepository){
+        this.kakaoRepository = kakaoRepository;
+        this.memberRepository = memberRepository;
+    }
+
+    public Map<String, Object> getTokenFromAuthorizationCode(String authorizationCode) {
         RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -39,16 +53,14 @@ public class KakaoLoginService {
         params.add("code", authorizationCode);
 
         Map<String, Object> response = restTemplate.postForObject("https://kauth.kakao.com/oauth/token", params, Map.class);
-
-        return (String) response.get("access_token");
+        return response;
     }
 
-
-    public String login(String kakaoAccessToken) {
+    public String generateJwtFromKakao(String kakaoAccessToken) {
         Map<String, Object> kakaoProfile =  callKakaoApi(kakaoAccessToken);
         String kakaoId = String.valueOf(kakaoProfile.get("id"));
         long now = System.currentTimeMillis();
-        long expiration = now + 3600000;
+        long expiration = now + (60 * 60000);
 
         String base64EncodedSecretKey = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
 
@@ -60,6 +72,26 @@ public class KakaoLoginService {
                 .compact();
 
         return jwtToken;
+    }
+
+    public String generateJwtFromRefreshToken(String refreshToken) {
+        KakaoRefreshToken repositoryRefreshToken = kakaoRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+
+        Member member = memberRepository.findById(repositoryRefreshToken.getMember().getMemberId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        long now = System.currentTimeMillis();
+        long expiration = now + (60 * 60000);
+        String base64EncodedSecretKey = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
+        String newJwtToken = Jwts.builder()
+                .setSubject(member.getKakaoId())
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(expiration))
+                .signWith(SignatureAlgorithm.HS256, base64EncodedSecretKey)
+                .compact();
+
+        return newJwtToken;
     }
 
     public Map<String, Object> getKakaoProfile(String kakaoAccessToken) {

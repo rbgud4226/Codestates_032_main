@@ -43,17 +43,16 @@ public class WcBoard { //..
     @Column
     private LocalDateTime createdAt = LocalDateTime.now().withNano(0).withSecond(0);
     @Column
-    private LocalDateTime startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
+    private String startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
-    private LocalDateTime endTime;
+    private String endTime;
+
     @Enumerated(value = EnumType.STRING)
     @Column
     private PostStatus postStatus = PostStatus.DEFAULT;
 
-
-
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne

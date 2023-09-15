@@ -23,4 +23,9 @@ public class PetSitterApplicant {
     private PetSitter petSitter;
 
     private Long wcboardId;
+
+//    @OneToOne
+//    @JoinColumn(name = )
+//    private String startTime;
+//    private String endTime;
 }

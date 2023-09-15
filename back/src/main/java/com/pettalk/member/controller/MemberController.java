@@ -1,12 +1,15 @@
 package com.pettalk.member.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
+import com.pettalk.exception.BusinessLogicException;
+import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.dto.GetMemberDto;
 import com.pettalk.member.dto.LoginDto;
 import com.pettalk.member.dto.PatchMemberDto;
 import com.pettalk.member.dto.PostMemberDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
+import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,9 +32,11 @@ import java.util.stream.Collectors;
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
-    public MemberController(MemberService memberService, MemberMapper mapper) {
+    private final MemberRepository memberRepository;
+    public MemberController(MemberService memberService, MemberMapper mapper, MemberRepository memberRepository) {
         this.memberService = memberService;
         this.mapper = mapper;
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/logout")
@@ -93,28 +99,13 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity memberDeleteConfirm(@LoginMemberId Long memberId, @RequestBody LoginDto request) {
+    public ResponseEntity memberDelete(@LoginMemberId Long memberId) {
         try {
-            boolean comfirmDelete = memberService.confirmDelete(request.getEmail(), request.getPassword());
-            if (comfirmDelete) {
-                memberService.deleteMember(memberId);
-                return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("인증 실패", HttpStatus.UNAUTHORIZED);
-            }
-        } catch (Exception e) {
+            memberService.deleteMember(memberId);
+            return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
+        }
+        catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-// 지우면 안됩니다!!
-//    @DeleteMapping
-//    public ResponseEntity memberDelete(@LoginMemberId Long memberId) {
-//        try {
-//            memberService.deleteMember(memberId);
-//            return new ResponseEntity<>("회원 탈퇴가 완료되었습니다", HttpStatus.OK);
-//        }
-//        catch (Exception e){
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-//        }
-//    }
   }
