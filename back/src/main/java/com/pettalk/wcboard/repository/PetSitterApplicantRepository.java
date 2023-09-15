@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.repository;
 
+import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import org.springframework.data.jpa.repository.JpaRepository;

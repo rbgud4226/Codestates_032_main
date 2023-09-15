@@ -5,6 +5,7 @@ import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -21,7 +22,9 @@ public interface WcBoardMapper {
      WcBoard wcBoardPostDtoToWcBoard(WcBoardDto.Post postDto);
      WcBoard wcBoardPatchDtotoWcBoard(WcBoardDto.Patch patchDto);
      //디폴트 구현
-     WcBoardDto.Response wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
+     WcBoardDto.PostResponse wcBoardResponseDtoToWcBoard(WcBoard wcBoard);
+
+//     WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard (WcBoard wcBoard);
 
      //디폴트로 구현
 //     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
@@ -52,23 +55,18 @@ public interface WcBoardMapper {
           wcTag = wcBoard.getWcTag();
           animalTag = wcBoard.getAnimalTag();
           areaTag = wcBoard.getAreaTag();
+          startTime = wcBoard.getStartTime();
+          endTime = wcBoard.getEndTime();
           if ( wcBoard.getPostStatus() != null ) {
                postStatus = wcBoard.getPostStatus().name();
           }
-          if ( wcBoard.getStartTime() != null ) {
-               startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
-          }
-          if ( wcBoard.getEndTime() != null ) {
-               endTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
-          }
-
           if ( wcBoard.getCreatedAt() != null ) {
                createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
           }
 
           String nickName = null;
-
-          nickName = wcBoard.getMember().getNickName();
+          Member findMember = wcBoard.getMember();
+          nickName = findMember.getNickName();
 
           WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName );
 
@@ -88,9 +86,6 @@ public interface WcBoardMapper {
 
           return list;
      }
-
-
-
 
      private WcBoardDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
           if ( petSitterApplicant == null ) {
@@ -136,9 +131,10 @@ public interface WcBoardMapper {
           response.setWcTag(wcBoard.getWcTag());
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
-          response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
-          response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
+          response.setStartTime(wcBoard.getStartTime());
+          response.setEndTime(wcBoard.getEndTime());
           response.setPostStatus(wcBoard.getPostStatus().name());
+          response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
           response.setNickName(member.getNickName());
 
           return response;

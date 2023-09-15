@@ -18,4 +18,5 @@ public class ChatMessageService {
         chatMessage.setRoomId(roomId);
         chatMessageRepository.save(chatMessage);
     }
+
 }

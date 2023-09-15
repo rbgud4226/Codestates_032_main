@@ -60,6 +60,23 @@ public class WcBoardDto {
         }
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class PostResponse {
+        private Long wcboardId;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+        private String startTime;
+        private String endTime;
+        private String postStatus;
+    }
+
+
+
 
     @Getter
     @Setter
@@ -94,13 +111,6 @@ public class WcBoardDto {
         private String endTime;
         private String createdAt;
         private String nickName;
-    }
-
-
-    @Getter
-    @Setter
-    public static class SubmitPost{
-        private Long wcboardId;
     }
 
     @Getter
