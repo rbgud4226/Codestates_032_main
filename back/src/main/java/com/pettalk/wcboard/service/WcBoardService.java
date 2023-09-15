@@ -49,12 +49,8 @@ public class WcBoardService {
     //멤버 검증 로직 포함
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
-        wcboard.setCreatedAt(LocalDateTime.now());
-        //멤버 아이디 가져오기
-        memberService.findVerifyMember(memberId);
         wcboard.setMember(memberService.findVerifyMember(memberId)); // 게시글에 멤버아이디 등록
-
-//        wcboard.getMember().getPetSitter().setPetSitterId(member.getPetSitter().getPetSitterId());
+        //Todo 펫시터 아이디 가져오기
 
         wcBoardRepository.save(wcboard);
         return wcboard;
@@ -72,18 +68,21 @@ public class WcBoardService {
 
     // 구현 주요 로직 : 로그인한 상태라도 본인의 게시글이 아니면 수정 불가
     public WcBoard updateWcBoardPost(WcBoard wcboard, Long memberId) {
-        wcboard.setMember(memberService.findVerifyMember(memberId));    //멤버 아이디 가져오기
+//        wcboard.setMember(memberService.findVerifyMember(memberId));    멤버 아이디 가져오기
         WcBoard findPost = findVerifyPost(wcboard.getWcboardId());      //보드 아이디 가져오기
-
-        if (wcboard.getPostStatus() == WcBoard.PostStatus.DEFAULT) {
-            Optional.ofNullable(wcboard.getTitle())
-                    .ifPresent(title -> findPost.setTitle(title));
-            Optional.ofNullable(wcboard.getContent())
-                    .ifPresent(content -> findPost.setContent(content)); // TODO : 타이틀과 내용말고 다른것도 수정 추가 필요
-        } else {
+        if (findPost.getMember().getMemberId() == memberId) {
+            if (wcboard.getPostStatus() == WcBoard.PostStatus.DEFAULT) {
+                Optional.ofNullable(wcboard.getTitle())
+                        .ifPresent(title -> findPost.setTitle(title));
+                Optional.ofNullable(wcboard.getContent())
+                        .ifPresent(content -> findPost.setContent(content)); // TODO : 타이틀과 내용말고 다른것도 수정 추가 필요
+            } else {
+                throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+            }
+            return wcBoardRepository.save(findPost);
+        }else {
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
-        return wcBoardRepository.save(findPost);
     }
 
     public WcBoard findWcBoardPost(Long wcboardId) {
@@ -101,16 +100,8 @@ public class WcBoardService {
     }
 
     //전체 글 조회 (최신순 정렬)
-    public Page<WcBoard> findAllPosts(int page, int size, Long memberId) {
-//        WcBoard fidnPost = findVerifyPost(wcboardId);
-//        Long memberId = fidnPost.getMember().getMemberId();
-//        Member findNickName = memberService.findNickName(memberId);
-//        memberService.findNickName(memberId);
-//
-//        log.info("전체글 조회시 닉네임 : " + memberService.findNickName(memberId));
-
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("wcboardId").descending());
-        return wcBoardRepository.findAll(pageRequest);
+    public Page<WcBoard> findAllPosts(int page, int size) {
+        return wcBoardRepository.findAll(PageRequest.of(page, size, Sort.by("wcboardId").descending()));
     }
 
 
