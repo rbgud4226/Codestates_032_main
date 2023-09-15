@@ -18,7 +18,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
-    "strictNullChecks": false  //추가 규칙 <undefined error 방지.
+    "strictNullChecks": false //추가 규칙 <undefined error 방지.
   },
   "include": ["src/**/*", "images.d.ts"],
   "exclude": ["node_modules"]
