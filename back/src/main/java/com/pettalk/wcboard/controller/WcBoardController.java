@@ -52,9 +52,8 @@ public class WcBoardController {
     //게시글에 펫시터 신청
     @PostMapping("/petsitter/{wcboard-id}")
     public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
-                                          @Valid @RequestBody WcBoardDto.SubmitPost submitPost,
                                           @Positive @PathVariable("wcboard-id") Long wcboardId) {
-        return service.submitPetSitter(memberId, submitPost, wcboardId);
+        return service.submitPetSitter(memberId, wcboardId);
     }
         /**
          * Todo 방어로직
@@ -146,8 +145,6 @@ public class WcBoardController {
         Page<WcBoard> pageWcBoardPosts = service.findAllPosts(page - 1, size); // 페이지 처리
         log.info ("게시글 전체 조회 컨텐츠 내용" + pageWcBoardPosts.getContent());
         List<WcBoard> posts = pageWcBoardPosts.getContent(); // 전체 게시글 내용 불러오기
-
-
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);

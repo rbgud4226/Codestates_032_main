@@ -113,13 +113,6 @@ public class WcBoardDto {
         private String nickName;
     }
 
-
-    @Getter
-    @Setter
-    public static class SubmitPost{
-        private Long wcboardId;
-    }
-
     @Getter
     @Setter
     public static class petSitterApplicantResponse {
