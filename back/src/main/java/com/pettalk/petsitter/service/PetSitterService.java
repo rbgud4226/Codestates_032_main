@@ -107,7 +107,7 @@ public class PetSitterService {
 //        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
 //    }
 
-    public Page<WcBoard> getRecentPosts(Long memberId, int page, int size) {
+    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
         PetSitter findPetSitter = findVerifiedPetSitter(memberId);
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
@@ -117,14 +117,14 @@ public class PetSitterService {
         return wcBoards;
     }
 
-//    public Page<WcBoard> getRecentPost(Long memberId, int page, int size) {
-//        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
-//
-//        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
-//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
-//        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
-//
-//        return wcBoards;
-//    }
+    public Page<WcBoard> getRecentPost(Long memberId, int page, int size) {
+        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
+
+        return wcBoards;
+    }
 
 }

@@ -115,17 +115,19 @@ public class PetSitterController {
 
     }**/
 
-//    @GetMapping("/recent")
-//    public ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
-//                                            @RequestParam @Positive int page,
-//                                            @RequestParam @Positive int size) {
-//
-//        Member member = memberService.findVerifyMember(memberId);
-//        String memberImage = member.getProfileImage();
-//        Page<WcBoard> recentPost = service.getRecentPost(memberId, page, size);
-//
-//        return new ResponseEntity<>(recentPost, HttpStatus.OK);
-//    }
+    @GetMapping("/recent")
+    public ResponseEntity getRecentWalkCare(@LoginMemberId Long memberId,
+                                            @RequestParam @Positive int page,
+                                            @RequestParam @Positive int size) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        String memberImage = member.getProfileImage();
+        Page<WcBoard> recentPage = service.getRecentPost(memberId, page, size);
+        List<WcBoard> choosePost = recentPage.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.wcBoardstoPetSitterMultiDto(choosePost), recentPage), HttpStatus.OK);
+    }
 
     @GetMapping("/wclist")
     public  ResponseEntity getRecentWcList(@LoginMemberId Long memberId,
@@ -135,7 +137,7 @@ public class PetSitterController {
         String memberImage = member.getProfileImage();
         PetSitter petSitter = member.getPetSitter();
 
-        Page<WcBoard> wcBoardPage = service.getRecentPosts(memberId, page, size);
+        Page<WcBoard> wcBoardPage = service.getRecentInfo(memberId, page, size);
         List<WcBoard> filteredPosts = wcBoardPage.getContent();
 
         return new ResponseEntity<>(
