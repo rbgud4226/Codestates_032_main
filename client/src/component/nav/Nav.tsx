@@ -17,7 +17,7 @@ const BtnArr = [
   {
     text: "예약확인",
     src: bookCheckIcon,
-    link: "/check",
+    link: "/members/recent",
   },
   {
     text: "검색",

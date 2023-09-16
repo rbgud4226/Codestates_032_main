@@ -22,7 +22,6 @@ const MyProfile = () => {
   });
 
   useEffect(() => {
-    // 어딘가에서 accessToken을 얻어온다고 가정
     const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
     if (!accessToken) {
@@ -30,13 +29,9 @@ const MyProfile = () => {
       return;
     }
 
-    // fetchMyPageData 함수를 사용하여 서버에서 데이터를 가져옴
     fetchMyPageData(accessToken)
       .then(response => {
-        // 서버에서 받아온 응답 데이터로 userData 상태를 초기화
         setUserData(response);
-
-        // 데이터를 가져오는 동안 로딩 상태를 처리할 수도 있습니다.
       })
       .catch(error => {
         console.error("Error fetching user data:", error);
