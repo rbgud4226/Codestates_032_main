@@ -52,6 +52,7 @@ public class WcBoardService {
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
         wcboard.setMember(memberService.findVerifyMember(memberId)); // 게시글에 멤버아이디 등록
         //Todo 펫시터 아이디 가져오기
+        log.info("게시글 작성시 멤버아이디 : " + wcboard.getMember().getMemberId());
 
         wcBoardRepository.save(wcboard);
         return wcboard;

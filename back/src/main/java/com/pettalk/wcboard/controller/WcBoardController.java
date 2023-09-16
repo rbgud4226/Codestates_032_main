@@ -41,7 +41,7 @@ public class WcBoardController {
     @PostMapping
     public ResponseEntity WcbPost(@Valid @RequestBody WcBoardDto.Post postDto,
                                   @LoginMemberId @Positive Long memberId){
-        log.info(memberId + "MemberId");
+        log.info(memberId + "Controller MemberId");
 
         WcBoard createdWcBoardPost = service.createWcBoardPost(mapper.wcBoardPostDtoToWcBoard(postDto), memberId);
         return ResponseEntity

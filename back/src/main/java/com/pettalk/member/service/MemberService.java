@@ -65,7 +65,7 @@ public class MemberService {
     public Member updateMember(Member member, Long memberId) {
 
         Member findMember = findVerifyMember(memberId);
-        if (member.getNickName().trim().length() <= 3) {
+        if (member.getNickName().trim().length() < 1) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
             Optional.ofNullable(member.getNickName().trim()).ifPresent(nickName -> findMember.setNickName(nickName));
