@@ -73,6 +73,7 @@ function WritePost() {
       });
     }
   };
+  const accessToken = localStorage.getItem("accessToken");
 
   const Submit = async () => {
     if (isSubmitting) return; // 이미 제출 중이라면 중복 제출 방지
@@ -95,6 +96,7 @@ function WritePost() {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
+          Authorization: `${accessToken}`,
         },
       });
 

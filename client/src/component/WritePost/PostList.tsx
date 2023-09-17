@@ -27,14 +27,27 @@ const BoardList = () => {
   const [animalTagFilter, setAnimalTagFilter] = useState<string | null>(null);
   const [wcTagFilter, setWCTagFilter] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const accessToken = localStorage.getItem("accessToken");
+
+  const checkLoginStatus = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+    console.log("accessToken:", accessToken);
+  };
 
   const postPerPage = 5;
 
+  // 페이지 변경 시에 이동할 URL을 생성하는 함수
+  const goToPage = (selectedPage: number) => {
+    const url = `/mainPage?p=${selectedPage}&size=${postPerPage}`;
+    navigate(url);
+  };
+
+  // 페이지 변경 시 호출되는 함수
   const handlePageChange = (selectedPage: number) => {
     setPage(selectedPage);
-
-    // 페이지 변경 시 API 호출
-    fetchData(selectedPage);
+    // 페이지 이동 함수를 호출하여 URL을 변경합니다.
+    goToPage(selectedPage);
   };
 
   useEffect(() => {
@@ -52,8 +65,9 @@ const BoardList = () => {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
+          Authorization: `Bearer ${accessToken}`,
         },
-        params: { page, size }, // 페이지 번호 및 페이지당 게시글 수 전달
+        params: { page, size },
       });
 
       checkLoginStatus();
@@ -62,11 +76,6 @@ const BoardList = () => {
     } catch (error) {
       console.error("API 요청 중 오류 발생:", error);
     }
-  };
-
-  const checkLoginStatus = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!accessToken);
   };
 
   const moveToWrite = () => {
