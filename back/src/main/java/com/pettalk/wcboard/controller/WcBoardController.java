@@ -40,51 +40,6 @@ public class WcBoardController {
                 .body(mapper.wcBoardResponseDtoToWcBoard(createdWcBoardPost));
     }
 
-    //게시글에 펫시터 신청
-//    @PostMapping("/submit/{wcboard-id}")
-//    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
-//                                          @Positive @PathVariable("wcboard-id") Long wcboardId) {
-//        return service.submitPetSitter(memberId, wcboardId);
-//    }
-        /**
-         * Todo 방어로직
-         * 1. 자신이 게시글에 신청할 경우 > 완료
-         * 2. 펫시터 아이디가 없는 경우 > 완료
-         * 3. 동일한 시간대에 여러게시글에 신청 > 흠...
-
-         * 방어로직 설계
-            Member findMember = memberService.findVerifyMember(memberId);   //토큰에서 멤버아이디 가져오기
-            WcBoard findPost = service.findVerifyPost(wcboardId);
-            Long postMemberId = findPost.getMember().getMemberId();         //게시글 작성자 멤버아이디
-            Long loginMemberId = findMember.getMemberId();                  //로그인한 멤버의 멤버아이디
-            log.info("토큰으로 찾은 멤버아이디 : " + memberId);
-            log.info("로그인한 멤버의 멤버아이디 : " + loginMemberId);
-            log.info("게시글 작성자의 멤버아이디 : " + postMemberId);
-
-            //펫시터 등록 여부 조회 널포인트 예외 처리
-            Long petSitterId = null;
-            PetSitter petSitter = findMember.getPetSitter();
-            if (petSitter != null) {
-                petSitterId = petSitter.getPetSitterId();
-            }
-
-            //방어로직
-            if (loginMemberId.equals(postMemberId)) {
-                return ResponseEntity
-                        .ok()
-                        .body("자신의 게시글에 신청할수 없어요!");
-
-            }else if (petSitterId == null){
-                return ResponseEntity
-                        .ok()
-                        .body("펫시터를 아직 등록하지 않으셨네요!");
-            }else {
-                return ResponseEntity
-                        .ok()
-                        .body("신청 완료!");
-            }
-         */
-
     @PatchMapping("/{wcboard-id}")
     public ResponseEntity WcbPatch (@Valid @RequestBody WcBoardDto.Patch patchDto,
                                     @Positive @PathVariable("wcboard-id") Long wcboardId,
@@ -105,13 +60,6 @@ public class WcBoardController {
      * 태그로 필터링된 관련 게시글을 전체 로드 하면됨
      * TODO : 필터를 통한 전체글 조회 기능 8월 31일 WcTag 구현완료 > 테스트 필요 > 테스트 완료!
      */
-
-    //신청자 조회
-//    @GetMapping("/submit/{wcboard-id}")
-//    public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
-//        List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
-//        return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
-//    }
 
     //게시글 단일 조회
     @GetMapping("/{wcboard-id}")
