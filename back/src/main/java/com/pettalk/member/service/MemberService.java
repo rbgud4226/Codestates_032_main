@@ -96,7 +96,7 @@ public class MemberService {
 
     public List<WcBoardDto.Response> getMembers(Long memberId, int page) {
         Member findMember = findVerifyMember(memberId);
-        int size = 2;
+        int size = 5;
         Pageable pageable = PageRequest.of(page - 1, size);
         List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
         Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
