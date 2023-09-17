@@ -69,12 +69,6 @@ public interface WcBoardMapper {
 //          if ( wcBoard.getCreatedAt() != null ) {
 //               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
 //          }
-          if ( wcBoard.getCreatedAt() != null ) {
-               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
-          }
-          if ( wcBoard.getCreatedAt() != null ) {
-               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
-          }
 
           String nickName = null;
           Member findMember = wcBoard.getMember();

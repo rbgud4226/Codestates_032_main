@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,10 +39,10 @@ public class WcBoardDto {
         @NotNull (message = "1개 이상 선택해주세요")
         private String areaTag;
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-        private LocalDateTime startTime;
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-        private LocalDateTime endTime;
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        private String startTime;
+
+        private String endTime;
 
         private String postStatus;
         private String createdAt;
@@ -74,8 +76,9 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
-        private String startTime;
-        private String endTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
         private String createdAt;
     }
 

@@ -9,10 +9,10 @@ import lombok.Builder;
 import net.bytebuddy.implementation.bind.annotation.Default;
 import org.mapstruct.Mapper;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Mapper(componentModel = "spring")
 public interface PetSitterMapper {
@@ -40,20 +40,20 @@ public interface PetSitterMapper {
 
         Long wcboardId = null;
         String wcTag = null;
-//        String startTime = wcBoard.getStartTime();
-//        String endTime = wcBoard.getEndTime();
-        String startTime = null;
-        String endTime = null;
+        LocalDateTime startTime = wcBoard.getStartTime();
+        LocalDateTime endTime = wcBoard.getEndTime();
+//        String startTime = null;
+//        String endTime = null;
         String memberImage = null;
         String nickName = wcBoard.getMember().getNickName();
         wcboardId = wcBoard.getWcboardId();
         wcTag = wcBoard.getWcTag();
-        if ( wcBoard.getStartTime() != null ) {
-            startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
-        }
-        if ( wcBoard.getEndTime() != null ) {
-            endTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
-        }
+//        if ( wcBoard.getStartTime() != null ) {
+//            startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
+//        }
+//        if ( wcBoard.getEndTime() != null ) {
+//            endTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
+//        }
 
 
         memberImage = wcBoard.getMember().getProfileImage();

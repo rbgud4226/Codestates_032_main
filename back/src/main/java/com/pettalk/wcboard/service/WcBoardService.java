@@ -13,6 +13,7 @@ import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 
+import com.pettalk.wcboard.exception.WcBoardException;
 import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.specification.WcBoardSpecification;
@@ -52,6 +53,11 @@ public class WcBoardService {
     //멤버 검증 로직 포함
     public WcBoard createWcBoardPost (WcBoard wcboard, Long memberId){
         wcboard.setPostStatus(WcBoard.PostStatus.DEFAULT);
+        log.info("게시글 작성시 시작시간 : " + wcboard.getStartTime());
+        log.info("게시글 작성시 종료시간 : " + wcboard.getEndTime());
+        if (memberId == null){
+            throw new WcBoardException("로그인!");
+        }
         wcboard.setMember(memberService.findVerifyMember(memberId)); // 게시글에 멤버아이디 등록
         //Todo 펫시터 아이디 가져오기
         log.info("게시글 작성시 멤버아이디 : " + wcboard.getMember().getMemberId());
