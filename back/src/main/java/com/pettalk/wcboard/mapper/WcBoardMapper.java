@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pettalk.wcboard.utils.LocalDateTimeFormatting.formatLocalDateTime;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface WcBoardMapper {
 //     @Mapping(source = "memberId", target = "member.memberId") // 추후에 member에 맞게 수정
@@ -56,8 +58,6 @@ public interface WcBoardMapper {
           wcTag = wcBoard.getWcTag();
           animalTag = wcBoard.getAnimalTag();
           areaTag = wcBoard.getAreaTag();
-          startTime = wcBoard.getStartTime();
-          endTime = wcBoard.getEndTime();
 
           //createdAt 포매팅 적용후 String 타입으로 변환
           createdAt = wcBoard.getCreatedAt();
@@ -65,9 +65,16 @@ public interface WcBoardMapper {
           if ( wcBoard.getPostStatus() != null ) {
                postStatus = wcBoard.getPostStatus().name();
           }
+          //LocalDateTime 형식일 경우 작성
 //          if ( wcBoard.getCreatedAt() != null ) {
 //               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
 //          }
+          if ( wcBoard.getCreatedAt() != null ) {
+               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
+          }
+          if ( wcBoard.getCreatedAt() != null ) {
+               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getEndTime() );
+          }
 
           String nickName = null;
           Member findMember = wcBoard.getMember();
@@ -136,8 +143,8 @@ public interface WcBoardMapper {
           response.setWcTag(wcBoard.getWcTag());
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
-          response.setStartTime(wcBoard.getStartTime());
-          response.setEndTime(wcBoard.getEndTime());
+          response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
+          response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
           response.setPostStatus(wcBoard.getPostStatus().name());
           response.setCreatedAt(wcBoard.getCreatedAt());
           response.setNickName(member.getNickName());

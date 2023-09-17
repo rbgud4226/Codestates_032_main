@@ -44,9 +44,9 @@ public class WcBoard { //..
     @Column
     private String createdAt = LocalDateTimeFormatting.formatLocalDateTime(LocalDateTime.now());
     @Column
-    private String startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
+    private LocalDateTime startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
-    private String endTime;
+    private LocalDateTime endTime;
 
     @Enumerated(value = EnumType.STRING)
     @Column

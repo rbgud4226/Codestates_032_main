@@ -36,9 +36,9 @@ public class WcBoardDto {
         @NotNull (message = "1개 이상 선택해주세요")
         private String areaTag;
 
-        private String startTime;
+        private LocalDateTime startTime;
         private String endTime;
-        private String postStatus;
+        private LocalDateTime postStatus;
         private String createdAt;
 
     }
