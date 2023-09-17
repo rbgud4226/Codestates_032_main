@@ -161,7 +161,6 @@ public class WcBoardController {
 //                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
 //        }
     }
-
     /**
      * 태그를 활용한 검색의 주요 로직
      * 1. 첫번째 태그를 적용한다.
@@ -174,7 +173,6 @@ public class WcBoardController {
      * 9월 8일 현재 일시 비활성화 처리 후
      * JPA Specification을 Custom해서 적용해볼 예정
      */
-
     /**
      @GetMapping("/walkcare")// 산책 돌봄 태그 선택 시 표출
      public ResponseEntity findPostsWcTag(@Positive @RequestParam int page,
@@ -188,7 +186,6 @@ public class WcBoardController {
      new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
      }
      */
-
     //태그 기반 전체조회
     @GetMapping("/tag")
     public ResponseEntity findAllWithTags(

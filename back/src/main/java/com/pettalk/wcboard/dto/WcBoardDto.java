@@ -72,7 +72,7 @@ public class WcBoardDto {
         private String areaTag;
         private String startTime;
         private String endTime;
-        private String postStatus;
+        private String createdAt;
     }
 
 

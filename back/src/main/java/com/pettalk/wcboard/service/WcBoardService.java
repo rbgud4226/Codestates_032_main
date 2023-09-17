@@ -18,6 +18,7 @@ import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.specification.WcBoardSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +55,7 @@ public class WcBoardService {
         wcboard.setMember(memberService.findVerifyMember(memberId)); // 게시글에 멤버아이디 등록
         //Todo 펫시터 아이디 가져오기
         log.info("게시글 작성시 멤버아이디 : " + wcboard.getMember().getMemberId());
-
+        wcboard.setCreatedAt(formatLocalDateTime(LocalDateTime.now()));
         wcBoardRepository.save(wcboard);
         return wcboard;
     }
@@ -229,5 +231,12 @@ public class WcBoardService {
         return paRepository.existsById(petSitterId);
     }
 
+    private String formatLocalDateTime(LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return dateTime.format(formatter);
+        }
+        return null;
+    }
 
 }

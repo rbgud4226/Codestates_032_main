@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.mapper;
 
+import com.pettalk.wcboard.utils.LocalDateTimeFormatting;
 import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
@@ -57,12 +58,16 @@ public interface WcBoardMapper {
           areaTag = wcBoard.getAreaTag();
           startTime = wcBoard.getStartTime();
           endTime = wcBoard.getEndTime();
+
+          //createdAt 포매팅 적용후 String 타입으로 변환
+          createdAt = wcBoard.getCreatedAt();
+
           if ( wcBoard.getPostStatus() != null ) {
                postStatus = wcBoard.getPostStatus().name();
           }
-          if ( wcBoard.getCreatedAt() != null ) {
-               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
-          }
+//          if ( wcBoard.getCreatedAt() != null ) {
+//               createdAt = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getCreatedAt() );
+//          }
 
           String nickName = null;
           Member findMember = wcBoard.getMember();
@@ -134,20 +139,12 @@ public interface WcBoardMapper {
           response.setStartTime(wcBoard.getStartTime());
           response.setEndTime(wcBoard.getEndTime());
           response.setPostStatus(wcBoard.getPostStatus().name());
-          response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
+          response.setCreatedAt(wcBoard.getCreatedAt());
           response.setNickName(member.getNickName());
 
           return response;
      }
 
-
-     private String formatLocalDateTime(LocalDateTime dateTime) {
-          if (dateTime != null) {
-               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-               return dateTime.format(formatter);
-          }
-          return null;
-     }
 
 
 

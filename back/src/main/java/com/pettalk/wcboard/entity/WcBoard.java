@@ -4,6 +4,7 @@ import com.pettalk.PettalkApplication;
 import com.pettalk.chat.entity.ChatRoom;
 import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
+import com.pettalk.wcboard.utils.LocalDateTimeFormatting;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,7 @@ public class WcBoard { //..
 
 
     @Column
-    private LocalDateTime createdAt = LocalDateTime.now().withNano(0).withSecond(0);
+    private String createdAt = LocalDateTimeFormatting.formatLocalDateTime(LocalDateTime.now());
     @Column
     private String startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
     @Column
@@ -74,15 +75,4 @@ public class WcBoard { //..
 
         PostStatus(String status) { this.status = status; }
     }
-
-    private String formatLocalDateTime(LocalDateTime dateTime) {
-        if (dateTime != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            return dateTime.format(formatter);
-        }
-        return null;
-    }
-
-
-
 }
