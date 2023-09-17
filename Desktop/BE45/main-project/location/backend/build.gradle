@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.15'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	//톰캣 빌드파일
+//	id 'war'
+}
+
+group = 'com.test'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'				// mapping용 으로 추가 pjs 0829
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final' // mapping용 으로 추가 pjs 0829
+
+	//mysql 연동
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	//myql 버전 정보 포함
+//	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	//h2
+//	runtimeOnly 'com.h2database:h2'
+
+	//외장 톰캣 배포파일 war 생성시 필요
+//	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
