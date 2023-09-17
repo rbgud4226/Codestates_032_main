@@ -60,13 +60,11 @@ public class MemberController {
     }
     @GetMapping
     public ResponseEntity memberGet(@LoginMemberId Long memberId,
-                                    @RequestParam int page,
-                                    @RequestParam int size) {
+                                    @RequestParam int page) {
         System.out.println(memberId+"memberIdddd");
         System.out.println(page+"pageeee");
-        System.out.println(size+"sizeeee");
         try {
-            GetMemberDto getMemberDto = memberService.getMember(memberId,page,size);
+            GetMemberDto getMemberDto = memberService.getMember(memberId,page);
             return new ResponseEntity<>(getMemberDto, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -76,10 +74,19 @@ public class MemberController {
 
     @GetMapping("/recent")
     public ResponseEntity getMemberBoards(@LoginMemberId Long memberId,
-                                          @RequestParam int page,
-                                          @RequestParam int size) {
+                                          @RequestParam int page) {
         try {
-            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers(memberId,page,size);
+            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers(memberId,page);
+            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/alls")
+    public ResponseEntity getMemberBoardsAll(@LoginMemberId Long memberId) {
+        try {
+            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMemberAll(memberId);
             return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

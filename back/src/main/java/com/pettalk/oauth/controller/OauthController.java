@@ -1,6 +1,7 @@
 package com.pettalk.oauth.controller;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.oauth.entity.KakaoRefreshToken;
 import com.pettalk.oauth.repository.KakaoRepository;
@@ -73,10 +74,13 @@ public class OauthController {
             checkmember = oldMember.get();
         }
 
-        KakaoRefreshToken kakaoRefreshToken = new KakaoRefreshToken();
-        kakaoRefreshToken.setRefreshToken((String) Token.get("refresh_token"));
-        kakaoRefreshToken.setMember(checkmember);
-        kakaoRepository.save(kakaoRefreshToken);
+        Optional<KakaoRefreshToken> checkRefresh = kakaoRepository.findByMember(checkmember);
+        if (!checkRefresh.isPresent()) {
+            KakaoRefreshToken kakaoRefreshToken = new KakaoRefreshToken();
+            kakaoRefreshToken.setRefreshToken((String) Token.get("refresh_token"));
+            kakaoRefreshToken.setMember(checkmember);
+            kakaoRepository.save(kakaoRefreshToken);
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", "Bearer " + jwtToken);

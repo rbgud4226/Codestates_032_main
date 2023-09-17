@@ -21,13 +21,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer,RefreshTokenRepository refreshTokenRepository){
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -43,6 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return authenticationManager.authenticate(authenticationToken);
     }
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -100,16 +102,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
     private String delegateRefreshToken(Member member) {
+        Optional<RefreshToken> findRefreshToken = refreshTokenRepository.findByMember(member);
         String subject = member.getEmail();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenTime());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        String newRefreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
-        RefreshToken refreshTokenEntity = new RefreshToken();
-        refreshTokenEntity.setToken(refreshToken);
-        refreshTokenEntity.setMember(member);
-        refreshTokenRepository.save(refreshTokenEntity);
-
-        return refreshToken;
+        if (findRefreshToken.isPresent()) {
+            RefreshToken oldRefreshToken = findRefreshToken.get();
+            oldRefreshToken.setToken(newRefreshToken);
+            refreshTokenRepository.save(oldRefreshToken);
+        } else {
+            RefreshToken refreshTokenEntity = new RefreshToken();
+            refreshTokenEntity.setToken(newRefreshToken);
+            refreshTokenEntity.setMember(member);
+            refreshTokenRepository.save(refreshTokenEntity);
+        }
+        return newRefreshToken;
     }
 }
