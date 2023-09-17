@@ -1,5 +1,6 @@
 package com.pettalk.wcboard.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pettalk.petsitter.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,9 +37,12 @@ public class WcBoardDto {
         @NotNull (message = "1개 이상 선택해주세요")
         private String areaTag;
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime startTime;
-        private String endTime;
-        private LocalDateTime postStatus;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
+
+        private String postStatus;
         private String createdAt;
 
     }
