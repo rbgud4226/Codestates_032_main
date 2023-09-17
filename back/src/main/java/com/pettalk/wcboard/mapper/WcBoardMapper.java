@@ -1,19 +1,13 @@
 package com.pettalk.wcboard.mapper;
 
-import com.pettalk.wcboard.utils.LocalDateTimeFormatting;
 import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.dto.WcBoardDto;
-import com.pettalk.wcboard.entity.PetSitterApplicant;
+import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
-import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +24,7 @@ public interface WcBoardMapper {
 //     WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard (WcBoard wcBoard);
 
      //디폴트로 구현
-//     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard (List<WcBoard> wcBoards);
+     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoardss (List<WcBoard> wcBoards);
 
 
 
@@ -77,36 +71,6 @@ public interface WcBoardMapper {
           WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName );
 
           return response;
-     }
-
-     //엔티티 생성으로 인한 PetSitterApplicant 수동 매핑
-     default List<WcBoardDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
-          if ( petSitterApplicant == null ) {
-               return null;
-          }
-
-          List<WcBoardDto.petSitterApplicantResponse> list = new ArrayList<WcBoardDto.petSitterApplicantResponse>( petSitterApplicant.size() );
-          for ( PetSitterApplicant petSitterApplicant1 : petSitterApplicant ) {
-               list.add( petSitterApplicantTopetSitterApplicantResponse( petSitterApplicant1 ) );
-          }
-
-          return list;
-     }
-
-     private WcBoardDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
-          if ( petSitterApplicant == null ) {
-               return null;
-          }
-
-          WcBoardDto.petSitterApplicantResponse petSitterApplicantResponse = new WcBoardDto.petSitterApplicantResponse();
-          PetSitter petSitter = petSitterApplicant.getPetSitter();
-          petSitterApplicantResponse.setName(petSitter.getName());
-          petSitterApplicantResponse.setNowJob(petSitter.getNowJob());
-          petSitterApplicantResponse.setSmoking(petSitter.isSmoking());
-          petSitterApplicantResponse.setPetSitterImage(petSitter.getPetSitterImage());
-
-
-          return petSitterApplicantResponse;
      }
 
      default List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoard(List<WcBoard> wcBoards) {

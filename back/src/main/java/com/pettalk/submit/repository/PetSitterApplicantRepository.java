@@ -1,8 +1,6 @@
-package com.pettalk.wcboard.repository;
+package com.pettalk.submit.repository;
 
-import com.pettalk.petsitter.entity.PetSitter;
-import com.pettalk.wcboard.entity.PetSitterApplicant;
-import com.pettalk.wcboard.entity.WcBoard;
+import com.pettalk.submit.entity.PetSitterApplicant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

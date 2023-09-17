@@ -1,4 +1,4 @@
-package com.pettalk.wcboard.entity;
+package com.pettalk.submit.entity;
 
 import com.pettalk.petsitter.entity.PetSitter;
 import lombok.Getter;

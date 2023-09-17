@@ -9,7 +9,7 @@ public class LocalDateTimeFormatting {
         LocalDateTime now = LocalDateTime.now();
 
         // 원하는 형식의 포맷터 생성
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         // LocalDateTime을 문자열로 변환
         String formattedDateTime = now.format(formatter);

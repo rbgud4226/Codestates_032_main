@@ -1,30 +1,21 @@
 package com.pettalk.wcboard.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
-import com.pettalk.member.entity.Member;
-import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.service.MemberService;
-import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.response.MultiResponseDto;
 import com.pettalk.wcboard.dto.WcBoardDto;
-import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
-import com.pettalk.wcboard.repository.WcBoardRepository;
 import com.pettalk.wcboard.service.WcBoardService;
-import com.pettalk.wcboard.specification.WcBoardSpecification;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
@@ -50,11 +41,11 @@ public class WcBoardController {
     }
 
     //게시글에 펫시터 신청
-    @PostMapping("/petsitter/{wcboard-id}")
-    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
-                                          @Positive @PathVariable("wcboard-id") Long wcboardId) {
-        return service.submitPetSitter(memberId, wcboardId);
-    }
+//    @PostMapping("/submit/{wcboard-id}")
+//    public ResponseEntity PetSitterSubmit(@LoginMemberId Long memberId,
+//                                          @Positive @PathVariable("wcboard-id") Long wcboardId) {
+//        return service.submitPetSitter(memberId, wcboardId);
+//    }
         /**
          * Todo 방어로직
          * 1. 자신이 게시글에 신청할 경우 > 완료
@@ -116,11 +107,11 @@ public class WcBoardController {
      */
 
     //신청자 조회
-    @GetMapping("/submit/{wcboard-id}")
-    public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
-        List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
-        return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
-    }
+//    @GetMapping("/submit/{wcboard-id}")
+//    public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
+//        List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
+//        return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList),HttpStatus.OK);
+//    }
 
     //게시글 단일 조회
     @GetMapping("/{wcboard-id}")
@@ -149,17 +140,6 @@ public class WcBoardController {
         return new ResponseEntity<>(
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
 
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        memberService.findMemberByPrincipal(principal.toString());
-//
-//        if ("anonymousUser".equals(principal)) {
-//            return ResponseEntity
-//                    .status(HttpStatus.NO_CONTENT)
-//                    .body("작성된 글이 없어요!");
-//        }else{
-//            return new ResponseEntity<>(
-//                    new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts), HttpStatus.OK);
-//        }
     }
     /**
      * 태그를 활용한 검색의 주요 로직
@@ -202,6 +182,7 @@ public class WcBoardController {
                 new MultiResponseDto<>(mapper.wcBoardsResponseDtoToWcBoard(posts), pageWcBoardPosts),HttpStatus.OK);
     }
 
+    //게시글 삭제
     @DeleteMapping("/{wcboard-id}")
     public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
 
