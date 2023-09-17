@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import global from "../Data/global";
 import styled from "styled-components";
+import LargeBtn from "../component/Button/LargeCheckBtn";
+import SitterDetailModal from "../component/Modal/SitterDetailModal";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -10,24 +12,37 @@ interface T {
   profileImage: string;
   name: string;
   nowJob: string;
-  isSmoking: string;
+  smoking: string;
+  phone: string;
+  email: string;
+  exAnimal: Array<string>;
+  info: string;
 }
 
 const PostDetailPage = () => {
   const { wcboardId } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
   const [post, setPost] = useState(null);
-  const [applyList, setApplyList] = useState<Array<T>>([
+  const [sitterList, setSitterList] = useState<Array<T>>([
     {
       profileImage: "https://i.imgur.com/d67J76L.png",
       name: "아무개",
       nowJob: "프로그래머",
-      isSmoking: "비흡연자 ",
+      smoking: "비흡연자 ",
+      phone: "01012345678",
+      email: "asdf@gmail.com ",
+      exAnimal: ["개"],
+      info: "잘할수 있을까요?",
     },
     {
       profileImage: "https://i.imgur.com/BNU6iSc.png",
       name: "홍길동",
       nowJob: "동물훈련가",
-      isSmoking: "흡연자",
+      smoking: "흡연자",
+      phone: "01087654321",
+      email: "qwer@gmail.com",
+      exAnimal: ["개", "고양이", "기타"],
+      info: "12년차 베테랑 조교입니다.",
     },
   ]);
 
@@ -38,11 +53,10 @@ const PostDetailPage = () => {
           headers: {
             "Content-Type": "application/json;charset=UTF-8",
             Accept: "application/json",
-            "ngrok-skip-browser-warning": "69420",
           },
         });
         console.log(response.data);
-        setPost(response.data); // 여기에서 .data를 사용하여 데이터를 가져옵니다.
+        setPost(response.data);
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
       }
@@ -51,9 +65,9 @@ const PostDetailPage = () => {
     fetchData();
   }, [wcboardId]);
 
-  // if (!post) {
-  //   return <p>Loading...</p>;
-  // }
+  if (!post) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <PDCtn>
@@ -61,17 +75,12 @@ const PostDetailPage = () => {
       <PostSection>
         <TitleCtn>
           <TagCtn>
-            {"#서울 #산책 #강아지"}
-            {/*`#${post.areaTag} #${post.wcTag} #${post.animalTag}*/}
+            {`#${post.areaTag} #${post.wcTag} #${post.animalTag}`}
           </TagCtn>
-          <TitleText>
-            {"강아지 산책시킬분 구합니다"}
-            {/*post.title*/}
-          </TitleText>
+          <TitleText>{post.title}</TitleText>
           <NickDateCtn>
-            <NickSpan>닉네임</NickSpan>
-            <DateSpan>2023.08.25 13:24</DateSpan>
-            {/* {<NickSpan>{post.nickName}</NickSpan><DateSpan>{post.createdAt}</DateSpan>} */}
+            <NickSpan>{post.nickName}</NickSpan>
+            <DateSpan>{post.createdAt}</DateSpan>
           </NickDateCtn>
         </TitleCtn>
         <ContentCtn>
@@ -79,45 +88,34 @@ const PostDetailPage = () => {
             <ContentBtn style={{ marginRight: "8px" }}>수정 </ContentBtn>
             <span
               style={{ color: `${global.Gray[4].value}`, marginRight: "8px" }}
-            >
-              |{" "}
-            </span>
+            ></span>
             <ContentBtn>삭제</ContentBtn>
           </BtnCtn>
-          <MainContent>
-            {/* {post.content} */}
-            {
-              "본문임시 내용입니다 동해물과 백두산이 만르고닳도록 ㅇㄴㄹ망러ㅣ마ㅓㅇ리ㅏ머리ㅏㅓㅇㄴ미ㅏ러미럼ㄴ이ㅏ러"
-            }
-          </MainContent>
+          <MainContent>{post.content}</MainContent>
         </ContentCtn>
-        <DateInfoText>{"날짜  9월16일"}</DateInfoText>
-        <DateInfoText>{"시간  09:00-11:00"}</DateInfoText>
-        <DateInfoText>{"위치  관악구신사로"}</DateInfoText>
-        {/* <DateInfoText>{`날짜 ${post.start}`}</DateInfoText>
+        {/* <DateInfoText>{"날짜  9월16일"}</DateInfoText>
+        <DateInfoText>{"시간  09:00-11:00"}</DateInfoText> */}
+        <DateInfoText>{`날짜 ${post.start}`}</DateInfoText>
         <DateInfoText>{`시간 ${post.start}-${post.end}`}</DateInfoText>
-        <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
+        <DateInfoText>{"위치  관악구신사로"}</DateInfoText>
+        {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
         {/* 여긴 createdAt이 어떻게 들어올지 감이 안잡혀서 아직 못정함. api명세서에 상세주소가 없음.*/}
       </PostSection>
-      <ApplyCountCtn>{"신청:(0)"}</ApplyCountCtn>
+      <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
       <SitterListSection>
-        {applyList.map((item, index) => (
-          <SitterCtn key={index}>
-            <InfoCtn>
-              <p>{item.name}</p>
-              <p>{item.nowJob}</p>
-              <p>{item.isSmoking}</p>
-            </InfoCtn>
-            <ImgCtn>
-              <img
-                src={item.profileImage}
-                alt="프로필이미지"
-                style={{ height: "64px", width: "64px" }}
-              ></img>
-            </ImgCtn>
-          </SitterCtn>
+        {sitterList.map((item, index) => (
+          <SitterDetailModal
+            key={index}
+            item={item}
+            index={index}
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+          ></SitterDetailModal>
         ))}
       </SitterListSection>
+      <div style={{ width: "120px", marginTop: "16px" }}>
+        <LargeBtn name={"신청하기"} />
+      </div>
     </PDCtn>
   );
 };
@@ -178,7 +176,7 @@ const DateSpan = styled.span`
   font-size: 12px;
   color: ${global.Gray[4].value};
 `;
-
+//수정 삭제가 구현되면 고쳐야됨. 수정은 link로 삭제는 api주소에 삭제요청보내고 예약글페이지로 가야함.
 const ContentCtn = styled.div`
   display: flex;
   flex-direction: column;
@@ -223,27 +221,4 @@ const SitterListSection = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
-`;
-
-const SitterCtn = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 135px;
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 4px 4px 30px 0px #272c564d;
-  margin-top: 20px;
-  padding: 15px 28px;
-`;
-const InfoCtn = styled.div``;
-
-const ImgCtn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 102;
-  height: 102;
-  background-color: ${global.Primary.value};
-  border-radius: 50%;
 `;

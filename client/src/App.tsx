@@ -1,6 +1,11 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams,
+} from "react-router-dom";
 import Layout from "./Layout";
 import LoginPage from "./page/LoginPage";
 import SignUpPage from "./page/signup/SignUpPage";
@@ -16,6 +21,8 @@ import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
 
 function App() {
+  const { wcboardId } = useParams();
+
   return (
     <>
       <Router>
@@ -54,11 +61,7 @@ function App() {
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/mainPage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
-                <Route path="/board" element={<PostDetailPage />} />
-                <Route
-                  path="/members/recent"
-                  element={<BookingHistroyPage />}
-                />
+                <Route path="/board/:wcboardId" element={<PostDetailPage />} />
               </Routes>
             </Layout>
             <Nav />
