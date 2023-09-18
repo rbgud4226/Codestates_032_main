@@ -16,6 +16,7 @@ import ChatPage from "./page/ChatPage";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
+import BookingHistroyPage from "./page/BookingHistoryPage";
 
 function App() {
   return (
@@ -52,6 +53,10 @@ function App() {
                 <Route path="/mainPage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board" element={<PostDetailPage />} />
+                <Route
+                  path="/members/recent"
+                  element={<BookingHistroyPage />}
+                />
               </Routes>
             </Layout>
             <Nav />
