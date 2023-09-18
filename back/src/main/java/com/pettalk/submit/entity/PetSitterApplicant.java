@@ -1,7 +1,9 @@
 package com.pettalk.submit.entity;
 
 import com.pettalk.petsitter.entity.PetSitter;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;

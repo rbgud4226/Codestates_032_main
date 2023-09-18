@@ -1,6 +1,7 @@
 package com.pettalk.submit.mapper;
 
 import com.pettalk.petsitter.entity.PetSitter;
+import com.pettalk.submit.dto.PetSitterApplicantDto;
 import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.wcboard.dto.WcBoardDto;
 import org.mapstruct.Mapper;
@@ -12,12 +13,12 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PetSitterApplicantMapper {
 
-    default List<WcBoardDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
+    default List<PetSitterApplicantDto.petSitterApplicantResponse> petSitterApplicantToPetSitterApplicantResponse (List<PetSitterApplicant> petSitterApplicant){
         if ( petSitterApplicant == null ) {
             return null;
         }
 
-        List<WcBoardDto.petSitterApplicantResponse> list = new ArrayList<WcBoardDto.petSitterApplicantResponse>( petSitterApplicant.size() );
+        List<PetSitterApplicantDto.petSitterApplicantResponse> list = new ArrayList<PetSitterApplicantDto.petSitterApplicantResponse>( petSitterApplicant.size() );
         for ( PetSitterApplicant petSitterApplicant1 : petSitterApplicant ) {
             list.add( petSitterApplicantTopetSitterApplicantResponse( petSitterApplicant1 ) );
         }
@@ -25,12 +26,12 @@ public interface PetSitterApplicantMapper {
         return list;
     }
 
-    private WcBoardDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
+    private PetSitterApplicantDto.petSitterApplicantResponse petSitterApplicantTopetSitterApplicantResponse(PetSitterApplicant petSitterApplicant) {
         if ( petSitterApplicant == null ) {
             return null;
         }
 
-        WcBoardDto.petSitterApplicantResponse petSitterApplicantResponse = new WcBoardDto.petSitterApplicantResponse();
+        PetSitterApplicantDto.petSitterApplicantResponse petSitterApplicantResponse = new PetSitterApplicantDto.petSitterApplicantResponse();
         PetSitter petSitter = petSitterApplicant.getPetSitter();
         petSitterApplicantResponse.setName(petSitter.getName());
         petSitterApplicantResponse.setNowJob(petSitter.getNowJob());

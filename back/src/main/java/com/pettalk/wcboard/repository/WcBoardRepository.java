@@ -20,6 +20,7 @@ import java.util.Optional;
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
     Optional<WcBoard> findById(Long wcboardId);
+    WcBoard findByWcboardId(Long wcboardId);
 
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
 //    Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);

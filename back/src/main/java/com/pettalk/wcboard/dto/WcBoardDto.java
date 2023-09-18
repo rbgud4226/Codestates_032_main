@@ -41,7 +41,7 @@ public class WcBoardDto {
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private String startTime;
-
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private String endTime;
 
         private String postStatus;
@@ -78,6 +78,7 @@ public class WcBoardDto {
         private String areaTag;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         private LocalDateTime endTime;
         private String createdAt;
     }
@@ -120,13 +121,5 @@ public class WcBoardDto {
         private String nickName;
     }
 
-    @Getter
-    @Setter
-    public static class petSitterApplicantResponse {
-        private String name;
-        private String nowJob;
-        private boolean smoking;
-        private String petSitterImage;
-        //Todo 리뷰 포함되야하나?
-    }
+
 }
