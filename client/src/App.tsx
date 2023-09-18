@@ -16,7 +16,6 @@ import ChatPage from "./page/ChatPage";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
-import BookingHistroyPage from "./page/BookingHistoryPage";
 
 function App() {
   return (
