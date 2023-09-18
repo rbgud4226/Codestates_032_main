@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import ReactModal from "react-modal";
 import styled from "styled-components";
 import global from "../../Data/global";
+import axios from "axios";
+
+const api = process.env.REACT_APP_DB_HOST;
 
 interface P {
   profileImage: string;
@@ -12,50 +15,86 @@ interface P {
   email: string;
   exAnimal?: Array<string>;
   info: string;
+  petSitterId: number;
 }
 
 interface T {
+  wcboardId: string;
   index: number;
   item: P;
 }
-const PostDetailModal = ({ item, index }: T) => {
+const PostDetailModal = ({ item, index, wcboardId }: T) => {
   const [modalItem, setModalItem] = useState<P | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [chatAble, setChatAble] = useState(false);
 
   const openModalHdr = (item: P) => {
     setModalItem(item);
     setModalOpen(true);
     console.log(modalItem);
   };
+
+  const chatHdr = async () => {
+    try {
+      const res = await axios.post(
+        `${api}/chat`,
+        { wcboardId: wcboardId, petSitterId: item.petSitterId },
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": "69420",
+          },
+        },
+      );
+      setChatAble(true);
+      setModalOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <SitterCtn>
-      <SitterBtn
-        onClick={() => {
-          openModalHdr(item);
-        }}
-      >
-        <InfoCtn>
-          <p style={{ fontSize: "20px", fontWeight: "600" }}>{item.name}</p>
-          <p style={{ fontSize: "20px", color: `${global.Gray[1].value}` }}>
-            {item.nowJob}
-          </p>
-          <p
-            style={{
-              fontSize: "20px",
-              color: `${global.PrimaryLight.value}`,
-            }}
-          >
-            {item.smoking}
-          </p>
-        </InfoCtn>
-        <ImgCtn>
-          <img
-            src={item.profileImage}
-            alt="프로필이미지"
-            style={{ height: "64px", width: "64px" }}
-          ></img>
-        </ImgCtn>
-      </SitterBtn>
+      {!chatAble ? (
+        <SitterBtn
+          onClick={() => {
+            openModalHdr(item);
+          }}
+        >
+          <InfoCtn>
+            <p style={{ fontSize: "20px", fontWeight: "600" }}>{item.name}</p>
+            <p style={{ fontSize: "20px", color: `${global.Gray[1].value}` }}>
+              {item.nowJob}
+            </p>
+            <p
+              style={{
+                fontSize: "20px",
+                color: `${global.PrimaryLight.value}`,
+              }}
+            >
+              {item.smoking}
+            </p>
+          </InfoCtn>
+          <ImgCtn>
+            <img
+              src={item.profileImage}
+              alt="프로필이미지"
+              style={{ height: "64px", width: "64px" }}
+            ></img>
+          </ImgCtn>
+        </SitterBtn>
+      ) : (
+        <SitterBtn>
+          <ImgCtn>
+            <img
+              src={item.profileImage}
+              alt="프로필이미지"
+              style={{ height: "64px", width: "64px" }}
+            ></img>
+          </ImgCtn>
+        </SitterBtn>
+      )}
+
       <ReactModal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
@@ -127,7 +166,7 @@ const PostDetailModal = ({ item, index }: T) => {
             <SitterInfo>{modalItem?.info}</SitterInfo>
           </div>
         </ModalCtn>
-        <RegisterBtn>지원하기</RegisterBtn>
+        <RegisterBtn onClick={() => chatHdr()}>지원하기</RegisterBtn>
       </ReactModal>
     </SitterCtn>
   );
@@ -213,6 +252,7 @@ const BackBtn = styled.button`
   background-color: white;
   border: 0px;
   font-size: 20px;
+  cursor: pointer;
   color: ${global.Primary.value};
   &:active {
     outline: none;

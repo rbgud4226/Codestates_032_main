@@ -16,6 +16,7 @@ interface T {
   email: string;
   exAnimal: Array<string>;
   info: string;
+  petSitterId: number;
 }
 
 const PostDetailPage = () => {
@@ -31,6 +32,7 @@ const PostDetailPage = () => {
       email: "asdf@gmail.com ",
       exAnimal: ["개"],
       info: "잘할수 있을까요?",
+      petSitterId: 3,
     },
     {
       profileImage: "https://i.imgur.com/BNU6iSc.png",
@@ -41,6 +43,7 @@ const PostDetailPage = () => {
       email: "qwer@gmail.com",
       exAnimal: ["개", "고양이", "기타"],
       info: "12년차 베테랑 조교입니다.",
+      petSitterId: 4,
     },
     {
       profileImage: "https://i.imgur.com/BNU6iSc.png",
@@ -51,6 +54,7 @@ const PostDetailPage = () => {
       email: "zxcv@gmail.com",
       exAnimal: ["기타"],
       info: "공룡 외계인 타조 키워봤습니다.",
+      petSitterId: 5,
     },
   ]);
 
@@ -63,8 +67,27 @@ const PostDetailPage = () => {
             Accept: "application/json",
           },
         });
+        console.log(typeof response.data.wcboardId);
         console.log(response.data);
         setPost(response.data);
+        // try {
+        //   //여기 ngrok임 나중에 주소바꿔야됨
+        //   const response = await axios.get(
+        //     `https://48c9-121-162-236-116.ngrok-free.app/submit/${wcboardId}`,
+        //     {
+        //       headers: {
+        //         Authorization: `${localStorage.getItem("accessToken")}`,
+        //         "Content-Type": "application/json;charset=UTF-8",
+        //         Accept: "application/json",
+        //         "ngrok-skip-browser-warning": "69420",
+        //       },
+        //     },
+        //   );
+        //   console.log(response.data);
+        //   setSitterList(response.data);
+        // } catch (error) {
+        //   console.error("API 요청 중 오류 발생:", error);
+        // }
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
       }
@@ -123,8 +146,8 @@ const PostDetailPage = () => {
         </ContentCtn>
         {/* <DateInfoText>{"날짜  9월16일"}</DateInfoText>
         <DateInfoText>{"시간  09:00-11:00"}</DateInfoText> */}
-        <DateInfoText>{`날짜 ${post.start}`}</DateInfoText>
-        <DateInfoText>{`시간 ${post.start}-${post.end}`}</DateInfoText>
+        <DateInfoText>{`날짜 ${post.startTime}`}</DateInfoText>
+        <DateInfoText>{`시간 ${post.startTime}-${post.endTime}`}</DateInfoText>
         <DateInfoText>{"위치  관악구신사로"}</DateInfoText>
         {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
         {/* 여긴 createdAt이 어떻게 들어올지 감이 안잡혀서 아직 못정함. api명세서에 상세주소가 없음.*/}
@@ -136,6 +159,7 @@ const PostDetailPage = () => {
             key={index}
             item={item}
             index={index}
+            wcboardId={wcboardId}
           ></SitterDetailModal>
         ))}
       </SitterListSection>
