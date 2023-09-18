@@ -141,7 +141,7 @@ public class WcBoardService {
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
         boolean checkPetSitter = petSitter.getPetSitterId() != null;
 
-        
+
 
         WcBoard findWcBoard = wcBoardRepository.findById(wcboardId)
                 .orElseThrow(() ->

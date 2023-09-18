@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
@@ -83,13 +85,9 @@ public class MemberController {
     }
 
     @GetMapping("/alls")
-    public ResponseEntity getMemberBoardsAll(@LoginMemberId Long memberId) {
-        try {
-            List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoards = memberService.getMemberAll(memberId);
-            return new ResponseEntity<>(wcBoards, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity getMemberBoardsAll(@LoginMemberId @Positive Long memberId) {
+        List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoards = memberService.getMemberAll(memberId);
+        return new ResponseEntity<>(wcBoards, HttpStatus.OK);
     }
 
     @PatchMapping

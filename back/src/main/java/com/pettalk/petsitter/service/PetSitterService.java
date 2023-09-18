@@ -124,9 +124,7 @@ public class PetSitterService {
 
     public List<WcBoard> getRecentPost(Long memberId) {
 
-        System.out.println(memberId + "qweqwe");
         Member member = memberService.findVerifyMember(memberId);
-        System.out.println(member.getNickName()+"qwerqwer");
         Long petSitterId = member.getPetSitter().getPetSitterId();
         List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByPetSitter_PetSitterId(petSitterId);
 

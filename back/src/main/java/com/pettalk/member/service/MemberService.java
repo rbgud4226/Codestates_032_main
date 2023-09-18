@@ -37,12 +37,11 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MemberMapper membermapper;
     private final RefreshTokenRepository refreshTokenRepository;
     private final WcBoardRepository wcBoardRepository;
     private final WcBoardMapper wcBoardMapper;
-    private  PetSitterApplicantRepository petSitterApplicantRepository;
-    private PetSitterRepository petSitterRepository;
+    private final PetSitterApplicantRepository petSitterApplicantRepository;
+    private final PetSitterRepository petSitterRepository;
 
     public Member createMember(Member member) {
         if (verifyExistsEmail(member.getEmail())) {
@@ -84,7 +83,7 @@ public class MemberService {
             petSitterProfileImage = findMember.getPetSitter().getMember().getProfileImage();
         }
         int size = 1;
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by("wcboardId").descending());
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
         List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
         Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
         List<WcBoardDto.getMemberResponse> wcBoardDtoGet = wcBoardMapper.wcBoardsToGetMemberResponse(wcBoards.getContent());
@@ -102,25 +101,26 @@ public class MemberService {
         Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse::getWcboardId).reversed());
         return new GetMembersDto(wcBoardDtoGet, wcBoards.getTotalElements());
     }
+
     public List<WcBoardDto.WcBoardWithPetSitterInfo> getMemberAll(Long memberId) {
         List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByMember_MemberId(memberId);
         List<Long> wcBoardIds = findApplicants.stream().map(PetSitterApplicant::getWcboardId).collect(Collectors.toList());
-        List<WcBoard> wcBoards = wcBoardRepository.findAllById(wcBoardIds);
-        List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoardsWithInfo = wcBoards.stream().map(
-                board -> {
-                    PetSitter petSitter = petSitterApplicantRepository.findPetSitterByWcboardId(board.getWcboardId());
-                    String petSitterNickName = petSitter.getName();
-                    String petSitterImage = petSitter.getPetSitterImage();
 
-                    WcBoardDto.WcBoardWithPetSitterInfo dto = new WcBoardDto.WcBoardWithPetSitterInfo();
-                    dto.setWcBoard(board);
-                    dto.setPetSitterNickname(petSitterNickName);
-                    dto.setPetSitterImage(petSitterImage);
+        List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoardsPetSitterInfo = new ArrayList<>();
+        for(Long wcBoardId : wcBoardIds){
+            WcBoard wcBoard = wcBoardRepository.findById(wcBoardId).orElseThrow();
+            PetSitterApplicant petSitterApplicant = petSitterApplicantRepository.findPetSitterApplicantByWcboardId(wcBoardId);
+            PetSitter petSitter = petSitterRepository.findById(petSitterApplicant.getPetSitter().getPetSitterId()).orElseThrow();
 
-                    return dto;
-                }
-        ).collect(Collectors.toList());
-        return wcBoardsWithInfo;
+            WcBoardDto.WcBoardWithPetSitterInfo wcBoardWithPetSitterInfo = new WcBoardDto.WcBoardWithPetSitterInfo();
+            wcBoardWithPetSitterInfo.setPostStatus(wcBoard.getPostStatus());
+            wcBoardWithPetSitterInfo.setStartTime(wcBoard.getStartTime());
+            wcBoardWithPetSitterInfo.setEndTime(wcBoardWithPetSitterInfo.getEndTime());
+            wcBoardWithPetSitterInfo.setPetSitterNickname(petSitter.getName());
+            wcBoardWithPetSitterInfo.setPetSitterImage(petSitter.getPetSitterImage());
+            wcBoardsPetSitterInfo.add(wcBoardWithPetSitterInfo);
+        }
+        return wcBoardsPetSitterInfo;
     }
 
 
@@ -144,7 +144,7 @@ public class MemberService {
 
     public Member findVerifyMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        if(optionalMember.isEmpty()){
+        if (optionalMember.isEmpty()) {
             return null;
         }
 
@@ -160,7 +160,7 @@ public class MemberService {
         return member;
     }
 
-    public Member findVerifyNickName (Long memberId) {
+    public Member findVerifyNickName(Long memberId) {
         Optional<Member> optionalNickName = memberRepository.findById(memberId);
 
         Member findMembersNickName =
@@ -169,6 +169,8 @@ public class MemberService {
         return findMembersNickName;
     }
 
-    public Member findNickName(Long memberId) { return findVerifyNickName(memberId); }
+    public Member findNickName(Long memberId) {
+        return findVerifyNickName(memberId);
+    }
 
 }

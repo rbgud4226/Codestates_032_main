@@ -144,7 +144,9 @@ public class WcBoardDto {
     @Getter
     @Setter
     public static class WcBoardWithPetSitterInfo {
-        private WcBoard wcBoard;
+        private String startTime;
+        private String endTime;
+        private WcBoard.PostStatus postStatus;
         private String petSitterNickname;
         private String petSitterImage;
 
