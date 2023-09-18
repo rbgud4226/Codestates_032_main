@@ -3,10 +3,7 @@ package com.pettalk.member.controller;
 import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
-import com.pettalk.member.dto.GetMemberDto;
-import com.pettalk.member.dto.LoginDto;
-import com.pettalk.member.dto.PatchMemberDto;
-import com.pettalk.member.dto.PostMemberDto;
+import com.pettalk.member.dto.*;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
@@ -21,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,7 +75,7 @@ public class MemberController {
     public ResponseEntity getMemberBoards(@LoginMemberId Long memberId,
                                           @RequestParam int page) {
         try {
-            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMembers(memberId,page);
+            GetMembersDto wcBoardDtoResponses = memberService.getMembers(memberId,page);
             return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -86,8 +85,8 @@ public class MemberController {
     @GetMapping("/alls")
     public ResponseEntity getMemberBoardsAll(@LoginMemberId Long memberId) {
         try {
-            List<WcBoardDto.Response> wcBoardDtoResponses = memberService.getMemberAll(memberId);
-            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
+            List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoards = memberService.getMemberAll(memberId);
+            return new ResponseEntity<>(wcBoards, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }

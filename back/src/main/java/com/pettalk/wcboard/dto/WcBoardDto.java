@@ -1,6 +1,7 @@
 package com.pettalk.wcboard.dto;
 
 import com.pettalk.petsitter.entity.PetSitter;
+import com.pettalk.wcboard.entity.WcBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -121,5 +122,31 @@ public class WcBoardDto {
         private boolean smoking;
         private String petSitterImage;
         //Todo 리뷰 포함되야하나?
+    }
+
+    @Getter
+    @Setter
+    public static class getMemberResponse {
+        private Long wcboardId;
+        private String title;
+        private String content;
+        private String images;
+        private String wcTag;
+        private String animalTag;
+        private String areaTag;
+        private String postStatus;
+        private String startTime;
+        private String endTime;
+        private String createdAt;
+        private String nickName;
+        private String name;
+    }
+    @Getter
+    @Setter
+    public static class WcBoardWithPetSitterInfo {
+        private WcBoard wcBoard;
+        private String petSitterNickname;
+        private String petSitterImage;
+
     }
 }

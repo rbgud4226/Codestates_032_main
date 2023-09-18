@@ -149,6 +149,37 @@ public interface WcBoardMapper {
           return null;
      }
 
+     default List<WcBoardDto.getMemberResponse> wcBoardsToGetMemberResponse(List<WcBoard> wcBoards) {
+          if (wcBoards == null) {
+               return null;
+          }
+          List<WcBoardDto.getMemberResponse> list = new ArrayList<>(wcBoards.size());
+          for (WcBoard wcBoard : wcBoards) {
+               list.add(wcBoardToGetMemberResponse(wcBoard));
+          }
+          return list;
+     }
 
+     private WcBoardDto.getMemberResponse wcBoardToGetMemberResponse(WcBoard wcBoard) {
+          if (wcBoard == null) {
+               return null;
+          }
+          WcBoardDto.getMemberResponse response = new WcBoardDto.getMemberResponse();
+          Member member = wcBoard.getMember();
+          response.setWcboardId(wcBoard.getWcboardId());
+          response.setTitle(wcBoard.getTitle());
+          response.setContent(wcBoard.getContent());
+          response.setImages(wcBoard.getImages());
+          response.setWcTag(wcBoard.getWcTag());
+          response.setAnimalTag(wcBoard.getAnimalTag());
+          response.setAreaTag(wcBoard.getAreaTag());
+          response.setPostStatus(wcBoard.getPostStatus().name());
+          response.setStartTime(wcBoard.getStartTime());
+          response.setEndTime(wcBoard.getEndTime());
+          response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
+          response.setNickName(member.getNickName());
+          response.setName(wcBoard.getPetSitter().getName());
+          return response;
+     }
 
 }
