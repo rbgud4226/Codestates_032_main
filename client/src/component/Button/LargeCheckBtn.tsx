@@ -2,14 +2,20 @@ import React from "react";
 import styled from "styled-components";
 interface T {
   name: string;
+  margin?: string;
+  disabled?: boolean;
 }
-const LargeBtn = ({ name }: T) => {
-  return <Btn>{name}</Btn>;
+const LargeBtn = ({ name, margin, disabled }: T) => {
+  return (
+    <Btn disabled={disabled} style={{ margin: margin }}>
+      {name}
+    </Btn>
+  );
 };
 
 export default LargeBtn;
 
-export const Btn = styled.button`
+const Btn = styled.button`
   width: 100%;
   height: 30px;
   background-color: #279eff;

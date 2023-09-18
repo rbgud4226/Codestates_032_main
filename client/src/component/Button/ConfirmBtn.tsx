@@ -17,7 +17,7 @@ const ConfirmBtn: React.FC<ConsfirmBtnProps> = ({ onClick, isDisable }) => {
 
 export default ConfirmBtn;
 
-export const CFBtn = styled.button`
+const CFBtn = styled.button`
   width: 240px;
   height: 30px;
   background-color: ${global.Primary.value};

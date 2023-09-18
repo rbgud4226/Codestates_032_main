@@ -4,8 +4,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import PhoneBtn from "../../Button/PhoneBtn";
-import global from "../../../Data/global";
+import PhoneBtn from "../Button/PhoneBtn";
+import global from "../../Data/global";
 
 const api = process.env.REACT_APP_DB_HOST;
 
@@ -48,14 +48,14 @@ const VerifyNumber = ({ phoneNum }: T) => {
 
 export default VerifyNumber;
 
-export const MVForm = styled.form`
+const MVForm = styled.form`
   display: flex;
   flex-direction: row;
   width: 240px;
   margin-bottom: 8px;
 `;
 
-export const TextInput = styled.input`
+const TextInput = styled.input`
   height: 31px;
   width: 100%;
   border: 1px inset ${global.Gray[1].value};

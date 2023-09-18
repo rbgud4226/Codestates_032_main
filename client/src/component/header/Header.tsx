@@ -8,7 +8,7 @@ import axios from "axios";
 const api = process.env.REACT_APP_DB_HOST;
 
 const menuList = [
-  { text: "Sign Up", link: "/memberAgree" },
+  { text: "Sign Up", link: "/signup" },
   { text: "Login", link: "/login" },
 ];
 
@@ -62,7 +62,7 @@ const Header = () => {
 
 export default Header;
 
-export const HeaderContainer = styled.header`
+const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -76,21 +76,21 @@ export const HeaderContainer = styled.header`
   background-color: white;
   z-index: 999;
 `;
-export const LogoLink = styled(Link)`
+const LogoLink = styled(Link)`
   margin-left: 20px;
 `;
 
-export const HeadLogo = styled.img`
+const HeadLogo = styled.img`
   height: 28px;
 `;
 
-export const HeaderBtnContainer = styled.div`
+const HeaderBtnContainer = styled.div`
   display: flex;
   align-items: end;
   padding-right: 20px;
 `;
 
-export const MenuLink = styled(Link)`
+const MenuLink = styled(Link)`
   margin-right: ${global.Spacing[24].value}px;
   color: ${global.Primary.value};
 `;

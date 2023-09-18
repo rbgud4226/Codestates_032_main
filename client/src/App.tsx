@@ -3,16 +3,14 @@ import styled, { createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import LoginPage from "./page/LoginPage";
-import MemberAgreePage from "./page/signup/MemberAgreePage";
 import SignUpPage from "./page/signup/SignUpPage";
-import SignUpDonePage from "./page/signup/SignUpDonePage";
 import Mypage from "./page/Mypage";
 import Header from "./component/header/Header";
 import Nav from "./component/nav/Nav";
 import PetSitterPage from "./page/PetsitterRegisterPage";
 import MainPage from "./page/MainPage";
-import BookingHistroyPage from "./page/BookingHistoryPage";
 import ChatPage from "./page/ChatPage";
+import SignUpDonePage from "./page/signup/SignUpDone";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
@@ -29,7 +27,6 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/memberAgree" element={<MemberAgreePage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/signupDone" element={<SignUpDonePage />} />
                 <Route path="/" element={<MainPage />} />

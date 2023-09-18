@@ -97,7 +97,7 @@ const LoginForm = () => {
 
 export default LoginForm;
 
-export const LoginContainer = styled.section`
+const LoginContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -105,13 +105,13 @@ export const LoginContainer = styled.section`
   width: 240px;
 `;
 
-export const LForm = styled.form`
+const LForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 240px;
 `;
-export const InputWrapper = styled.div`
+const InputWrapper = styled.div`
   width: 100%;
   margin-bottom: 8px;
 `;
@@ -127,7 +127,7 @@ export const TextInput = styled.input`
   }
 `;
 
-export const Span = styled.span`
+const Span = styled.span`
   justify-content: flex-start;
   margin-top: 5px;
   color: #279eff;
@@ -135,7 +135,7 @@ export const Span = styled.span`
   margin-bottom: 6px;
 `;
 
-export const ErrMsg = styled.div`
+const ErrMsg = styled.div`
   justify-content: flex-start;
   margin-top: 4px;
   color: #ff2727;
@@ -143,7 +143,7 @@ export const ErrMsg = styled.div`
   margin-bottom: 6px;
 `;
 
-export const SignUpLink = styled(Link)`
+const SignUpLink = styled(Link)`
   margin-top: 6px;
   font-size: 12px;
   color: #636262;

@@ -47,7 +47,7 @@ const Nav = () => {
 
 export default Nav;
 
-export const NavContainer = styled.nav`
+const NavContainer = styled.nav`
   display: flex;
   height: 70px;
   width: 100%;
@@ -63,7 +63,7 @@ const BaseStyledComponent = styled(Link)`
   cursor: pointer;
 `;
 
-export const BookContainer = styled(BaseStyledComponent)`
+const BookContainer = styled(BaseStyledComponent)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,25 +80,15 @@ export const BookContainer = styled(BaseStyledComponent)`
     }
   }
 `;
-export const BookIcon = styled.img`
+const BookIcon = styled.img`
   margin-top: ${global.Spacing[12].value}px;
   width: 24px;
   transition: width 0.2s;
 `;
 
-export const BookLb = styled.label`
+const BookLb = styled.label`
   color: ${global.Primary.value};
   margin-top: ${global.Spacing[8].value}px;
   font-size: ${global.fontSize[12].value}px;
   transition: font-size 0.2s;
-`;
-export const MyPageContainer = styled(BaseStyledComponent)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 25%;
-  background-color: ${global.White.value};
-  &:active {
-    background-color: ${global.Gray[7]};
-  }
 `;
