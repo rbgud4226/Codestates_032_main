@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactModal from "react-modal";
 import styled from "styled-components";
 import global from "../../Data/global";
@@ -17,16 +17,21 @@ interface P {
 interface T {
   index: number;
   item: P;
-  modalOpen: boolean;
-  setModalOpen: (modalOpen: boolean) => void;
 }
-const PostDetailModal = ({ item, index, modalOpen, setModalOpen }: T) => {
+const PostDetailModal = ({ item, index }: T) => {
+  const [modalItem, setModalItem] = useState<P | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const openModalHdr = (item: P) => {
+    setModalItem(item);
+    setModalOpen(true);
+    console.log(modalItem);
+  };
   return (
     <SitterCtn>
       <SitterBtn
         onClick={() => {
-          setModalOpen(true);
-          console.log(item);
+          openModalHdr(item);
         }}
       >
         <InfoCtn>
@@ -61,12 +66,12 @@ const PostDetailModal = ({ item, index, modalOpen, setModalOpen }: T) => {
       >
         {/* /*Modal창에 담을 컴포넌트 구성하기*/}
         <ModalCtn>
-          <div style={{ width: "100%" }}>
-            <BackBtn>{"뒤로가기"}</BackBtn>
+          <div style={{ width: "100%", cursor: "pointer" }}>
+            <BackBtn onClick={() => setModalOpen(false)}>{"뒤로가기"}</BackBtn>
           </div>
           <ImgCtn>
             <img
-              src={item.profileImage}
+              src={modalItem?.profileImage}
               alt="프로필이미지"
               style={{ height: "64px", width: "64px" }}
             ></img>
@@ -78,19 +83,19 @@ const PostDetailModal = ({ item, index, modalOpen, setModalOpen }: T) => {
               marginTop: "12px",
             }}
           >
-            {item.name}
+            {modalItem?.name}
           </p>
           <SitterInfoCtn>
-            <SitterInfo>{item.nowJob}</SitterInfo>
+            <SitterInfo>{modalItem?.nowJob}</SitterInfo>
           </SitterInfoCtn>
           <SitterInfoCtn>
-            <SitterInfo>{item.phone}</SitterInfo>
+            <SitterInfo>{modalItem?.phone}</SitterInfo>
           </SitterInfoCtn>
           <SitterInfoCtn>
-            <SitterInfo>{item.email}</SitterInfo>
+            <SitterInfo>{modalItem?.email}</SitterInfo>
           </SitterInfoCtn>
           <SitterInfoCtn>
-            <SitterInfo>{item.smoking}</SitterInfo>
+            <SitterInfo>{modalItem?.smoking}</SitterInfo>
           </SitterInfoCtn>
           <div
             style={{
@@ -100,7 +105,7 @@ const PostDetailModal = ({ item, index, modalOpen, setModalOpen }: T) => {
               marginTop: "4px",
             }}
           >
-            {item.exAnimal.map((el, i) => (
+            {modalItem?.exAnimal.map((el, i) => (
               <p
                 key={i}
                 style={{
@@ -112,14 +117,14 @@ const PostDetailModal = ({ item, index, modalOpen, setModalOpen }: T) => {
                 {el}
               </p>
             ))}
-            {item.exAnimal ? (
+            {modalItem?.exAnimal ? (
               <p style={{ fontSize: "16px" }}>반려경험 유</p>
             ) : (
               <p style={{ fontSize: "16px" }}>반려경험 무</p>
             )}
           </div>
           <div style={{ marginTop: "16px", width: "100%" }}>
-            <SitterInfo>{item.info}</SitterInfo>
+            <SitterInfo>{modalItem?.info}</SitterInfo>
           </div>
         </ModalCtn>
         <RegisterBtn>지원하기</RegisterBtn>

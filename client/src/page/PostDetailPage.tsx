@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import global from "../Data/global";
 import styled from "styled-components";
-import LargeBtn from "../component/Button/LargeCheckBtn";
 import SitterDetailModal from "../component/Modal/SitterDetailModal";
 
 const api = process.env.REACT_APP_DB_HOST;
@@ -21,7 +20,6 @@ interface T {
 
 const PostDetailPage = () => {
   const { wcboardId } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
   const [post, setPost] = useState(null);
   const [sitterList, setSitterList] = useState<Array<T>>([
     {
@@ -43,6 +41,16 @@ const PostDetailPage = () => {
       email: "qwer@gmail.com",
       exAnimal: ["개", "고양이", "기타"],
       info: "12년차 베테랑 조교입니다.",
+    },
+    {
+      profileImage: "https://i.imgur.com/BNU6iSc.png",
+      name: "고길동",
+      nowJob: "회사원",
+      smoking: "흡연자",
+      phone: "01012344321",
+      email: "zxcv@gmail.com",
+      exAnimal: ["기타"],
+      info: "공룡 외계인 타조 키워봤습니다.",
     },
   ]);
 
@@ -69,18 +77,38 @@ const PostDetailPage = () => {
     return <p>Loading...</p>;
   }
 
+  const animalTagHdr = el => {
+    const temp = el.split(",").join(" ");
+    return temp;
+  };
+
+  const deleteHdr = async () => {
+    //아직 완성된거 아님. 유효성 검사 필요함. 글쓴이와 삭제버튼을 누른사람이 같은지를확인할
+    try {
+      await axios.delete(`${api}/wcboard/${wcboardId}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <PDCtn>
       <Logo src={"/Logo.png"} />
       <PostSection>
         <TitleCtn>
           <TagCtn>
-            {`#${post.areaTag} #${post.wcTag} #${post.animalTag}`}
+            {`#${post.areaTag} #${post.wcTag} #${animalTagHdr(post.animalTag)}`}
           </TagCtn>
           <TitleText>{post.title}</TitleText>
           <NickDateCtn>
             <NickSpan>{post.nickName}</NickSpan>
-            <DateSpan>{post.createdAt}</DateSpan>
+            <DateSpan>{post.createdAt.replace("T", " ").slice(0, -3)}</DateSpan>
           </NickDateCtn>
         </TitleCtn>
         <ContentCtn>
@@ -89,7 +117,7 @@ const PostDetailPage = () => {
             <span
               style={{ color: `${global.Gray[4].value}`, marginRight: "8px" }}
             ></span>
-            <ContentBtn>삭제</ContentBtn>
+            <ContentBtn onClick={deleteHdr}>삭제</ContentBtn>
           </BtnCtn>
           <MainContent>{post.content}</MainContent>
         </ContentCtn>
@@ -108,13 +136,11 @@ const PostDetailPage = () => {
             key={index}
             item={item}
             index={index}
-            modalOpen={modalOpen}
-            setModalOpen={setModalOpen}
           ></SitterDetailModal>
         ))}
       </SitterListSection>
-      <div style={{ width: "120px", marginTop: "16px" }}>
-        <LargeBtn name={"신청하기"} />
+      <div style={{ marginTop: "16px" }}>
+        <RegisterBtn>신청하기</RegisterBtn>
       </div>
     </PDCtn>
   );
@@ -193,6 +219,7 @@ const ContentBtn = styled.button`
   font-size: 12px;
   background-color: ${global.White.value};
   border: 0px;
+  cursor: pointer;
   &:active {
     outline: none;
   }
@@ -221,4 +248,23 @@ const SitterListSection = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+const RegisterBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${global.Primary.value};
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  width: 120px;
+  height: 36px;
+  border: 0px;
+  cursor: pointer;
+  &:active {
+    outline: none;
+    background-color: ${global.PrimaryActive.value};
+  }
 `;
