@@ -2,14 +2,10 @@ package com.pettalk.submit.controller;
 
 import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.service.MemberService;
-import com.pettalk.submit.dto.TimeFilter;
 import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.submit.mapper.PetSitterApplicantMapper;
 import com.pettalk.submit.service.PetSitterApplicantService;
 import com.pettalk.submit.service.TimeService;
-import com.pettalk.wcboard.entity.WcBoard;
-import com.pettalk.wcboard.mapper.WcBoardMapper;
-import com.pettalk.wcboard.service.WcBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
