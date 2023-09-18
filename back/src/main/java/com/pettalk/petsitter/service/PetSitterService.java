@@ -1,7 +1,6 @@
 package com.pettalk.petsitter.service;
 
 
-import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
@@ -9,12 +8,10 @@ import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
-import com.pettalk.wcboard.dto.WcBoardDto;
 import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
-import com.pettalk.wcboard.service.WcBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,7 +35,6 @@ public class PetSitterService {
     private final PetSitterRepository petSitterRepository;
     private final MemberRepository memberRepository;
     private final WcBoardRepository wcBoardRepository;
-    private final WcBoardService wcBoardService;
     private final MemberService memberService;
     private final PetSitterApplicantRepository petSitterApplicantRepository;
 
@@ -128,25 +124,29 @@ public class PetSitterService {
 
     public List<WcBoard> getRecentPost(Long memberId) {
 
+        System.out.println(memberId + "qweqwe");
         Member member = memberService.findVerifyMember(memberId);
+        System.out.println(member.getNickName()+"qwerqwer");
         Long petSitterId = member.getPetSitter().getPetSitterId();
         List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByPetSitter_PetSitterId(petSitterId);
 
-//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
-//
-//        return wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findApplicants, wcBoardStatus);
-        return findApplicants.stream()
-                .map(petSitterApplicant -> {
-                    WcBoard wcboard = wcBoardRepository.findByWcboardId(petSitterApplicant.getWcboardId());
-                    if (wcboard != null) {
-                        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
-
-                        return wcBoardRepository.findByPostStatusIn(wcBoardStatus);
-                    }
-                    return null;
-                })
-                .filter(Objects::nonNull)
+        // PetSitterApplicant 객체들의 wcboardId를 추출하여 리스트로 만듭니다.
+        List<Long> wcboardIds = findApplicants.stream()
+                .map(PetSitterApplicant::getWcboardId)
                 .collect(Collectors.toList());
+
+        // wcboardIds를 사용하여 해당하는 WcBoard 객체들을 조회합니다.
+        List<WcBoard> wcBoards = wcBoardRepository.findAllById(wcboardIds);
+
+        // 상태가 필터링 조건에 맞는 WcBoard 객체들을 필터링하여 반환합니다.
+        List<WcBoard> filteredBoards = wcBoards.stream()
+                .filter(board -> {
+                    List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
+                    return wcBoardStatus.contains(board.getPostStatus());
+                })
+                .collect(Collectors.toList());
+
+        return filteredBoards;
     }
 
     public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
