@@ -1,87 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
 
 const CareHistory = () => {
-  const wcBoards = [
-    {
-      id: 1,
-      wcTag: "산책",
-      profileImage: "", // 프로필 이미지를 여기에 추가해야 합니다.
-      startTime: "2023-09-01 10:00",
-      endTime: "2023-09-01 11:00",
-      userName: "홍길동",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    {
-      id: 2,
-      wcTag: "케어",
-      profileImage: "", // 프로필 이미지를 여기에 추가해야 합니다.
-      startTime: "2023-09-02 14:00",
-      endTime: "2023-09-02 15:00",
-      userName: "김루피",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    {
-      id: 3,
-      wcTag: "케어",
-      profileImage: "", // 프로필 이미지를 여기에 추가해야 합니다.
-      startTime: "2023-09-02 14:00",
-      endTime: "2023-09-02 15:00",
-      userName: "신조로",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    {
-      id: 4,
-      wcTag: "케어",
-      profileImage: "", // 프로필 이미지를 여기에 추가해야 합니다.
-      startTime: "2023-09-02 14:00",
-      endTime: "2023-09-02 15:00",
-      userName: "송로빈",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    {
-      id: 5,
-      wcTag: "케어",
-      profileImage: "", // 프로필 이미지를 여기에 추가해야 합니다.
-      startTime: "2023-09-02 14:00",
-      endTime: "2023-09-02 15:00",
-      userName: "최우솝",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    // 추가적인 예약 정보를 필요에 따라 배열에 추가할 수 있습니다.
-  ];
+  const [wcBoardList, setWcBoardList] = useState([]);
+  const [totalBoard, setTotalBoard] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
+  useEffect(() => {
+    const api = process.env.REACT_APP_DB_HOST;
+    const ngrokSkipBrowserWarning = "69420";
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${api}/members/alls`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+        });
+
+        const responseData = response.data;
+        setWcBoardList(responseData.wcBoardList);
+        setTotalBoard(responseData.totalBoard);
+        console.log(responseData);
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const calculateDuration = (startTime, endTime) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    const timeDifferenceInMs = end.getTime() - start.getTime();
+
+    const hours = Math.floor(timeDifferenceInMs / 3600000);
+    const remainingMilliseconds = timeDifferenceInMs % 3600000;
+    const minutes = Math.floor(remainingMilliseconds / 60000);
+
+    return `${hours}시간 ${minutes}분`;
+  };
+
+  const loadMoreData = () => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const newData = wcBoardList.slice(startIndex, endIndex);
+
+    if (newData.length === 0) {
+      setHasMore(false);
+    } else {
+      setWcBoardList(prevData => [...prevData, ...newData]);
+      setPage(page + 1);
+    }
+  };
 
   return (
     <Container>
       <CategoryTitle>맡긴 내역</CategoryTitle>
-
-      <RecentContainer>
-        {wcBoards.map(wcBoard => (
-          <ReservationItem key={wcBoard.id}>
+      <InfiniteScroll
+        dataLength={wcBoardList.length}
+        next={loadMoreData}
+        hasMore={hasMore}
+        loader={<Loader>Loading...</Loader>}
+        style={{ height: "auto", overflow: "unset" }}
+      >
+        {wcBoardList.map(wcBoard => (
+          <ReservationItem key={wcBoard.wcboardId}>
             <Top>
-              {wcBoard.wcTag} {wcBoard.duration}
+              <TopLeft>
+                {wcBoard.wcTag}{" "}
+                {calculateDuration(wcBoard.startTime, wcBoard.endTime)}
+              </TopLeft>
+              <TopRight>
+                {wcBoard.postStatus === "COMPLETE" ? "완료" : "예약중"}
+              </TopRight>
             </Top>
             <Bottom>
-              <Left>
+              <BottomLeft>
                 <ImgContainer>
-                  <img src={wcBoard.profileImage} alt="프로필 이미지" />
+                  <ProfileImage
+                    src={wcBoard.images} // 서버에서 받아온 프로필 이미지 URL을 사용
+                    alt="Profile Image"
+                  />
                 </ImgContainer>
-              </Left>
-              <Details>
-                <Item>{wcBoard.userName}님</Item>
+              </BottomLeft>
+              <BottomRight>
+                <Item>{wcBoard.nickName}님</Item>
                 <TimeItem>
                   {wcBoard.startTime}-{wcBoard.endTime}
                 </TimeItem>
-              </Details>
+              </BottomRight>
             </Bottom>
           </ReservationItem>
         ))}
-      </RecentContainer>
+      </InfiniteScroll>
     </Container>
   );
 };
@@ -98,18 +117,11 @@ const CategoryTitle = styled.p`
   margin-bottom: 8px;
 `;
 
-const RecentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
-  box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
-  width: 100%;
-`;
-
 const ReservationItem = styled.div`
   padding: 16px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 8px; /* 각각의 컨테이너 사이에 간격 추가 */
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
 `;
 
 const ImgContainer = styled.div`
@@ -124,7 +136,12 @@ const ImgContainer = styled.div`
   border-radius: 50%;
 `;
 
-const Details = styled.div`
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+const BottomRight = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -136,8 +153,16 @@ const Item = styled.p`
 `;
 
 const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const TopLeft = styled.div`
   color: #279eff;
-  font-size: 20px;
+  font-size: 16px;
+`;
+const TopRight = styled.div`
+  color: #279eff;
+  font-size: 16px;
 `;
 
 const Bottom = styled.div`
@@ -146,7 +171,8 @@ const Bottom = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const Left = styled.div`
+
+const BottomLeft = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -156,4 +182,12 @@ const Left = styled.div`
 
 const TimeItem = styled.div`
   font-size: 12px;
+`;
+
+const Loader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  font-size: 16px;
 `;

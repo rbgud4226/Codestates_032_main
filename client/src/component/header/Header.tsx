@@ -25,7 +25,7 @@ const Header = () => {
       });
       console.log(res);
       window.localStorage.clear();
-      window.location.href = "/";
+      // window.location.href = "/";
     } catch (error) {
       console.log("로그아웃에러", error);
     }

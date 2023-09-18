@@ -1,8 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProfileImg from "./ProfileImg";
+import axios from "axios";
 
 const RecentReservation = () => {
+  const [wcBoardList, setWcBoardList] = useState([]);
+
+  useEffect(() => {
+    const api = process.env.REACT_APP_DB_HOST;
+    const ngrokSkipBrowserWarning = "69420";
+    const page = 1;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${api}/members`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+          params: {
+            page: page,
+          },
+        });
+
+        const responseData = response.data;
+        setWcBoardList(responseData.wcBoardDtoGet);
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("최근맡긴내역 :", wcBoardList);
+
+  //총 시간 계산
+  const calculateDuration = (startTime, endTime) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    const timeDifferenceInMs = end.getTime() - start.getTime();
+
+    const hours = Math.floor(timeDifferenceInMs / 3600000);
+    const remainingMilliseconds = timeDifferenceInMs % 3600000;
+    const minutes = Math.floor(remainingMilliseconds / 60000);
+
+    return `${hours}시간 ${minutes}분`;
+  };
+
   // 예약 내역 더미 데이터
   const reservations = [
     {
@@ -40,14 +86,20 @@ const RecentReservation = () => {
       <Category>
         <CategoryTitle>최근 맡긴 예약</CategoryTitle>
         <RecentContainer>
-          {entrustedReservations.map(reservation => (
-            <ReservationItem key={reservation.id}>
+          {wcBoardList.map(reservation => (
+            <ReservationItem key={reservation.wcboardId}>
               <Left>
-                {reservation.wcTag} {reservation.duration}
-                <ImgContainer>{reservation.profileImage}</ImgContainer>
+                {reservation.wcTag}{" "}
+                {calculateDuration(reservation.startTime, reservation.endTime)}
+                <ImgContainer>
+                  <ProfileImage
+                    src={reservation.images} // 서버에서 받아온 프로필 이미지 URL을 사용
+                    alt="Profile Image"
+                  />
+                </ImgContainer>
               </Left>
               <Details>
-                <Item>{reservation.userName}님</Item>
+                <Item>{reservation.name}님</Item>
                 <TimeItem>
                   {reservation.startTime}-{reservation.endTime}
                 </TimeItem>
@@ -123,6 +175,11 @@ const ImgContainer = styled.div`
   margin-top: 8px;
   background-color: #279eff;
   border-radius: 50%;
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const Details = styled.div`

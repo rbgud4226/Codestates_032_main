@@ -17,8 +17,6 @@ const MyProfile = () => {
     email: "",
     phone: "",
     profileImage: "",
-    // wcBoardDtoGet: [],
-    // checkPetSitter: true,
   });
 
   useEffect(() => {
