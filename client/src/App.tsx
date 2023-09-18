@@ -49,7 +49,7 @@ function App() {
                   element={<BookingHistroyPage />}
                 />
                 <Route path="/chat" element={<ChatPage />} />
-                <Route path="/mainpage" element={<BorderListPage />} />
+                <Route path="/mainPage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board" element={<PostDetailPage />} />
               </Routes>

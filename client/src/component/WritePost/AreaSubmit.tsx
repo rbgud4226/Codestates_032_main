@@ -27,23 +27,20 @@ function AreaSubmit({ onRegionSelect }: AreaSubmitProps) {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(
     "지역검색",
   );
-
+  const [open, setOpen] = useState(false);
   const handleRegionSelect = (regionName: string | null) => {
     setSelectedRegion(regionName);
+    setOpen(false);
     onRegionSelect(regionName); // 선택된 지역을 부모 컴포넌트로 전달
   };
 
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 초기 선택 설정
-    setSelectedRegion(" 지역검색");
-  }, []);
   return (
     <PageListContainer>
       <PageContainer>
-        <AreaListButton onClick={() => handleRegionSelect("지역검색")}>
-          {selectedRegion === "지역검색" ? "지역검색" : selectedRegion}
+        <AreaListButton onClick={() => setOpen(true)}>
+          {selectedRegion}
         </AreaListButton>
-        {selectedRegion === "지역검색" && (
+        {open && (
           <AreaContainer>
             {regions.map(region => (
               <AreaSListButton
@@ -88,10 +85,12 @@ const AreaListButton = styled.button`
 
 const AreaContainer = styled.div`
   background-color: white;
-  padding: 36px;
-  display: flex;
+  padding: 12px 20px;
+  display: grid;
   flex-wrap: wrap;
+  border-radius: 4px;
   justify-content: flex-end;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 8px;
   border: 1px solid #595959;
 `;
@@ -101,8 +100,9 @@ const AreaSListButton = styled.button`
   background-color: white;
   font-size: 12px;
   padding: 4px 8px;
-  width: calc(20% - 8px);
-  border: 2px solid #279eff;
+  border: 1px solid gray;
   cursor: pointer;
+  border-radius: 4px;
   margin-top: 8px;
+  height: 28px;
 `;

@@ -69,11 +69,11 @@ function UploadImage({ handleImageChange, images }: UploadImageProps) {
       {imagePreview && (
         <img src={imagePreview} alt="미리보기" style={{ maxWidth: "100%" }} />
       )}
-      <div className="flex justify-end">
-        <button onClick={onClick} disabled={loading}>
+      <ImageContai className="flex justify-end">
+        <ImageButton onClick={onClick} disabled={loading}>
           {loading ? "업로딩 중..." : "이미지 "}
-        </button>
-      </div>
+        </ImageButton>
+      </ImageContai>
     </div>
   );
 }
@@ -81,3 +81,19 @@ function UploadImage({ handleImageChange, images }: UploadImageProps) {
 export default UploadImage;
 
 const InputImage = styled.input<InputImageProps>``;
+const ImageContai = styled.div`
+  text-align: center;
+`;
+const ImageButton = styled.button`
+  color: white;
+  background-color: #279eff;
+  border: 1px solid #279eff;
+  width: 120px;
+  height: 44px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  justify-content: space-around;
+  font-size: 16px;
+  margin-top: 48px;
+`;

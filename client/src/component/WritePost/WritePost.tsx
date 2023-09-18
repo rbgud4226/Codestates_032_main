@@ -16,13 +16,15 @@ function WritePost() {
     wcTag: "",
     animalTag: "",
     areaTag: "",
-    // startTime: "",
-    //  endTime: "",
+    startTime: "",
+    endTime: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false); // 추가
   const [images, setImages] = useState<string[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기 추가
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<Date | null>(null); // startDate 초기화
+  const [endDate, setEndDate] = useState<Date | null>(null); // endDate 초기화
 
   const navigate = useNavigate();
 
@@ -88,8 +90,8 @@ function WritePost() {
         post.content,
         post.areaTag,
         post.images,
-        // post.startTime,
-        // post.endTime,
+        post.startTime,
+        post.endTime,
       );
       const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
@@ -112,8 +114,8 @@ function WritePost() {
         content: "",
         images: "",
         areaTag: "",
-        // startTime: "",
-        // endTime: "",
+        startTime: "",
+        endTime: "",
       });
 
       navigate("/mainPage");
@@ -140,6 +142,8 @@ function WritePost() {
         handleImageChange={handleImageChange}
         images={images}
         imagePreview={imagePreview}
+        startDate={startDate} // startDate 추가
+        endDate={endDate}
       />
     </div>
   );

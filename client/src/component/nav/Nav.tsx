@@ -12,7 +12,7 @@ const BtnArr = [
     text: "예약하기",
     src: bookIcon,
 
-    link: "/mainpage",
+    link: "/mainPage",
   },
   {
     text: "예약확인",

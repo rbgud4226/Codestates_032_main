@@ -10,7 +10,7 @@
 
 # production
 /build
-utils.tsx
+
 # misc
 
 .env
