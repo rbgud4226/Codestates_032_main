@@ -1,11 +1,14 @@
 package com.pettalk.wcboard.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.wcboard.entity.WcBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -28,6 +31,7 @@ public class WcBoardDto {
 
         private String images;
 
+
         @NotNull (message = "1개 이상 선택해주세요")
         private String wcTag;
 
@@ -37,8 +41,14 @@ public class WcBoardDto {
         @NotNull (message = "1개 이상 선택해주세요")
         private String areaTag;
 
+        private String location;
+
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private String startTime;
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private String endTime;
+
+
         private String postStatus;
         private String createdAt;
 
@@ -53,6 +63,7 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
+        private String location;
         private String startTime;
         private String endTime;
         private String postStatus;
@@ -71,9 +82,12 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
-        private String startTime;
-        private String endTime;
-        private String postStatus;
+        private String location;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
+        private String createdAt;
     }
 
 
@@ -89,6 +103,7 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
+        private String location;
         private String postStatus;
         private String startTime;
         private String endTime;
@@ -107,6 +122,7 @@ public class WcBoardDto {
         private String wcTag;
         private String animalTag;
         private String areaTag;
+        private String location;
         private String postStatus;
         private String startTime;
         private String endTime;
