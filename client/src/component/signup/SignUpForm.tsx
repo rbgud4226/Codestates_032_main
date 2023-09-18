@@ -68,6 +68,9 @@ const SignUpForm = ({ phoneNum }: T) => {
       try {
         imageHdr();
         const resData = await axios.post(`${api}/check`, { email: data.email });
+        // const resData = await axios.post(`${api}/check/nickname`, {
+        //   nickName: data.nickName,
+        // });
 
         if (resData.data) {
           try {
@@ -205,7 +208,6 @@ const MASection = styled.section`
   flex-direction: column;
   width: 239px;
 `;
-
 const AllAgree = styled.label`
   display: flex;
   cursor: pointer;
