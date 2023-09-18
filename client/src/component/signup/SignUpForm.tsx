@@ -101,10 +101,13 @@ const SignUpForm = ({ phoneNum }: T) => {
       setValue("check1", false);
       setValue("check2", false);
       setValue("check3", false);
+      console.log(getValues("check1"), getValues("check2"));
     } else {
       setValue("check1", true);
       setValue("check2", true);
       setValue("check3", true);
+
+      console.log(getValues("check1"), getValues("check2"));
     }
   };
   return (
