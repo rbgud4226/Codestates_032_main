@@ -8,10 +8,12 @@ import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
-import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.submit.entity.PetSitterApplicant;
+import com.pettalk.submit.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.repository.WcBoardRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +25,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PetSitterService {
 
     private final PetSitterRepository petSitterRepository;
     private final MemberRepository memberRepository;
     private final WcBoardRepository wcBoardRepository;
     private final MemberService memberService;
+    private final PetSitterApplicantRepository petSitterApplicantRepository;
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
@@ -107,24 +112,51 @@ public class PetSitterService {
 //        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
 //    }
 
-    public Page<WcBoard> getRecentPosts(Long memberId, int page, int size) {
-        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
-        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
-        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
-
-        return wcBoards;
-    }
-
-//    public Page<WcBoard> getRecentPost(Long memberId, int page, int size) {
+//    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
 //        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
 //
 //        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
-//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
+//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
 //        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
 //
 //        return wcBoards;
 //    }
+
+    public List<WcBoard> getRecentPost(Long memberId) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        Long petSitterId = member.getPetSitter().getPetSitterId();
+        List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByPetSitter_PetSitterId(petSitterId);
+
+        // PetSitterApplicant 객체들의 wcboardId를 추출하여 리스트로 만듭니다.
+        List<Long> wcboardIds = findApplicants.stream()
+                .map(PetSitterApplicant::getWcboardId)
+                .collect(Collectors.toList());
+
+        // wcboardIds를 사용하여 해당하는 WcBoard 객체들을 조회합니다.
+        List<WcBoard> wcBoards = wcBoardRepository.findAllById(wcboardIds);
+
+        // 상태가 필터링 조건에 맞는 WcBoard 객체들을 필터링하여 반환합니다.
+        List<WcBoard> filteredBoards = wcBoards.stream()
+                .filter(board -> {
+                    List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
+                    return wcBoardStatus.contains(board.getPostStatus());
+                })
+                .collect(Collectors.toList());
+
+        return filteredBoards;
+    }
+
+    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        PetSitter findPetSitter = member.getPetSitter();
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
+        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
+
+        return wcBoards;
+    }
 
 }

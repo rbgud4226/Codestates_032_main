@@ -20,6 +20,7 @@ import java.util.Optional;
  */
 public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpecificationExecutor<WcBoard> {
     Optional<WcBoard> findById(Long wcboardId);
+    WcBoard findByWcboardId(Long wcboardId);
 
 //    Page<WcBoard> findByPostStatus(WcBoard.PostStatus postStatus, PageRequest pageRequest);  혹시 모를.. 게시글 상태로 조회
 //    Page<WcBoard> findByWcTagContaining(String wcTag, Pageable pageable);
@@ -28,6 +29,10 @@ public interface WcBoardRepository extends JpaRepository<WcBoard, Long> , JpaSpe
 //    Page<WcBoard> findByMember_MemberIdAndPostStatus(Long memberId, WcBoard.PostStatus complete, Pageable pageable);
     Page<WcBoard> findByMember_MemberIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
     Page<WcBoard> findByPetSitter_PetSitterIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList, Pageable pageable);
-    Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
-    Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
+//    List<WcBoard> findByPetSitter_PetSitterIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList);
+//    List<WcBoard> findByMember_MemberIdAndPostStatusIn(Long memberId, List<WcBoard.PostStatus> postStatusList);
+//    Page<WcBoard> findByPetSitter_PetSitterId(Long memberId, PageRequest pageRequest);
+//    Page<WcBoard> findByMember_MemberId(Long memberId, Pageable pageable);
+//    WcBoard findByPostStatusIn(List<WcBoard.PostStatus> wcBoardStatus);
+//    List<WcBoard> findByMember_MemberId(Long memberId);
 }

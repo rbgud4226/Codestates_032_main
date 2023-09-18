@@ -1,7 +1,7 @@
 package com.pettalk.member.entity;
 
 import com.pettalk.petsitter.entity.PetSitter;
-import com.pettalk.wcboard.entity.PetSitterApplicant;
+import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,4 +48,10 @@ public class Member implements Serializable{
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private PetSitter petSitter;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PetSitterApplicant> petSitterApplicant;
+
+
+
 }
