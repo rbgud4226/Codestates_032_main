@@ -10,6 +10,5 @@ public interface PetSitterApplicantRepository extends JpaRepository<PetSitterApp
     List<PetSitterApplicant> findByWcboardId (Long wcboardId);
     List<PetSitterApplicant> findByPetSitter_PetSitterId (Long petSitterId);
     Optional<PetSitterApplicant> findPetsitterIdByWcboardId (Long wcboardid);
-
     Long countByPetSitter_PetSitterId (Long petSitterId);
 }

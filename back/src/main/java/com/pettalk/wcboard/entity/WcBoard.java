@@ -31,6 +31,8 @@ public class WcBoard { //..
     private String content;
     @Column
     private String images;
+    @Column
+    private String location;
 
 
     @Column(nullable = false)

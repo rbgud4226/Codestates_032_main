@@ -23,9 +23,6 @@ public interface WcBoardMapper {
 
 //     WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard (WcBoard wcBoard);
 
-     //디폴트로 구현
-     List<WcBoardDto.Response> wcBoardsResponseDtoToWcBoardss (List<WcBoard> wcBoards);
-
 
 
      default WcBoardDto.GetResponse wcBoardGetResponseDtoToWcBoard(WcBoard wcBoard) {
@@ -40,10 +37,12 @@ public interface WcBoardMapper {
           String wcTag = null;
           String animalTag = null;
           String areaTag = null;
+          String location = null;
           String postStatus = null;
           String startTime = null;
           String endTime = null;
           String createdAt = null;
+
 
           wcboardId = wcBoard.getWcboardId();
           title = wcBoard.getTitle();
@@ -52,6 +51,7 @@ public interface WcBoardMapper {
           wcTag = wcBoard.getWcTag();
           animalTag = wcBoard.getAnimalTag();
           areaTag = wcBoard.getAreaTag();
+          location = wcBoard.getLocation();
 
           //createdAt 포매팅 적용후 String 타입으로 변환
           createdAt = wcBoard.getCreatedAt();
@@ -68,7 +68,7 @@ public interface WcBoardMapper {
           Member findMember = wcBoard.getMember();
           nickName = findMember.getNickName();
 
-          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, postStatus, startTime, endTime, createdAt, nickName );
+          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, location, postStatus, startTime, endTime, createdAt, nickName );
 
           return response;
      }
@@ -101,6 +101,7 @@ public interface WcBoardMapper {
           response.setWcTag(wcBoard.getWcTag());
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
+          response.setLocation(wcBoard.getLocation());
           response.setStartTime(formatLocalDateTime(wcBoard.getStartTime()));
           response.setEndTime(formatLocalDateTime(wcBoard.getEndTime()));
           response.setPostStatus(wcBoard.getPostStatus().name());

@@ -15,6 +15,7 @@ public class PetSitterApplicantDto {
         private String nowJob;
         private boolean smoking;
         private String petSitterImage;
+
         //Todo 리뷰 포함되야하나?
     }
 }
