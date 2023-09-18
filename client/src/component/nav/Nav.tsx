@@ -92,13 +92,3 @@ const BookLb = styled.label`
   font-size: ${global.fontSize[12].value}px;
   transition: font-size 0.2s;
 `;
-const MyPageContainer = styled(BaseStyledComponent)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 25%;
-  background-color: ${global.White.value};
-  &:active {
-    background-color: ${global.Gray[7]};
-  }
-`;
