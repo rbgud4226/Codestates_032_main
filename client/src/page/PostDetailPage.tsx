@@ -22,6 +22,7 @@ interface T {
 const PostDetailPage = () => {
   const { wcboardId } = useParams();
   const [post, setPost] = useState(null);
+  const [applyErrMsg, setApplyErrMsg] = useState("");
   const [sitterList, setSitterList] = useState<Array<T>>([
     {
       profileImage: "https://i.imgur.com/d67J76L.png",
@@ -57,7 +58,7 @@ const PostDetailPage = () => {
       petSitterId: 5,
     },
   ]);
-
+  //본문과 신청자 리스트를 가져옴
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,12 +100,28 @@ const PostDetailPage = () => {
   if (!post) {
     return <p>Loading...</p>;
   }
-
+  //에니멀태그 정리
   const animalTagHdr = el => {
     const temp = el.split(",").join(" ");
     return temp;
   };
 
+  const applyHdr = async (item: number) => {
+    try {
+      await axios.post(`${api}/wcboard/petsitter/${wcboardId}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json;charset=UTF-8",
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  //글삭제
   const deleteHdr = async () => {
     //아직 완성된거 아님. 유효성 검사 필요함. 글쓴이와 삭제버튼을 누른사람이 같은지를확인할
     try {
@@ -119,6 +136,23 @@ const PostDetailPage = () => {
       console.log(e);
     }
   };
+
+  //날짜 포멧함수
+  function formatDate(longDateStr) {
+    const longDate = new Date(longDateStr); // 입력된 문자열을 Date 객체로 파싱합니다.
+    // 월과 일을 추출합니다.
+    const month = String(longDate.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 두 자릿수로 포맷팅합니다.
+    const day = String(longDate.getDate()).padStart(2, "0"); // 일도 두 자릿수로 포맷팅합니다.
+    // 월과 일을 조합하여 결과를 반환합니다.
+    const formattedDateStr = `${month}월${day}일`;
+    return formattedDateStr;
+  }
+
+  //시간 포멧 함수
+  function extractTime(longDateStr) {
+    const timePart = longDateStr.split(" ")[1].split(":").slice(0, 2).join(":");
+    return timePart;
+  }
 
   return (
     <PDCtn>
@@ -144,13 +178,12 @@ const PostDetailPage = () => {
           </BtnCtn>
           <MainContent>{post.content}</MainContent>
         </ContentCtn>
-        {/* <DateInfoText>{"날짜  9월16일"}</DateInfoText>
-        <DateInfoText>{"시간  09:00-11:00"}</DateInfoText> */}
-        <DateInfoText>{`날짜 ${post.startTime}`}</DateInfoText>
-        <DateInfoText>{`시간 ${post.startTime}-${post.endTime}`}</DateInfoText>
+        <DateInfoText>{`날짜 ${formatDate(post.startTime)}`}</DateInfoText>
+        <DateInfoText>{`시간 ${extractTime(post.startTime)}-${extractTime(
+          post.endTime,
+        )}`}</DateInfoText>
         <DateInfoText>{"위치  관악구신사로"}</DateInfoText>
         {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
-        {/* 여긴 createdAt이 어떻게 들어올지 감이 안잡혀서 아직 못정함. api명세서에 상세주소가 없음.*/}
       </PostSection>
       <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
       <SitterListSection>
@@ -163,8 +196,13 @@ const PostDetailPage = () => {
           ></SitterDetailModal>
         ))}
       </SitterListSection>
-      <div style={{ marginTop: "16px" }}>
-        <RegisterBtn>신청하기</RegisterBtn>
+      <div
+        style={{ marginTop: "16px", display: "flex", flexDirection: "column" }}
+      >
+        <RegisterBtn onClick={() => applyHdr(post.wcboardId)}>
+          신청하기
+        </RegisterBtn>
+        <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
       </div>
     </PDCtn>
   );

@@ -19,6 +19,7 @@ import SignUpDonePage from "./page/signup/SignUpDone";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
+import BookingHistroyPage from "./page/BookingHistoryPage";
 
 function App() {
   const { wcboardId } = useParams();

@@ -35,6 +35,8 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
   };
 
   const chatHdr = async () => {
+    setChatAble(true);
+    setModalOpen(false);
     try {
       const res = await axios.post(
         `${api}/chat`,
@@ -47,8 +49,6 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           },
         },
       );
-      setChatAble(true);
-      setModalOpen(false);
     } catch (err) {
       console.log(err);
     }
@@ -85,6 +85,7 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
         </SitterBtn>
       ) : (
         <SitterBtn>
+          <PetalkChat>펫톡쳇입장</PetalkChat>
           <ImgCtn>
             <img
               src={item.profileImage}
@@ -266,6 +267,15 @@ const SitterInfoCtn = styled.div`
 
 const SitterInfo = styled.p`
   font-size: 16px;
+`;
+
+const PetalkChat = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${global.Primary.value};
+  font-size: 20px;
+  font-weight: 600;
 `;
 
 const RegisterBtn = styled.button`
