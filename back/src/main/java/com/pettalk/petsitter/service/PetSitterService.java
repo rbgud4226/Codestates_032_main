@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.service;
 
 
+import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.entity.Member;
@@ -9,9 +10,13 @@ import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.repository.PetSitterRepository;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
+import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
+import com.pettalk.wcboard.service.WcBoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +28,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PetSitterService {
 
     private final PetSitterRepository petSitterRepository;
     private final MemberRepository memberRepository;
     private final WcBoardRepository wcBoardRepository;
+    private final WcBoardService wcBoardService;
     private final MemberService memberService;
+    private final PetSitterApplicantRepository petSitterApplicantRepository;
 
     public PetSitter createPetSitter(PetSitter petSitter) {
 
@@ -107,18 +116,43 @@ public class PetSitterService {
 //        //닉네임은 member쪽에서., 시작끝시간, 산책돌봄태그, 클라이언트 이미지
 //    }
 
-    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
-        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
+//    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
+//        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
+//
+//        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
+//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
+//        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
+//
+//        return wcBoards;
+//    }
 
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
-        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
-        Page<WcBoard> wcBoards = wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findPetSitter.getPetSitterId(), wcBoardStatus, pageable);
+    public List<WcBoard> getRecentPost(Long memberId) {
 
-        return wcBoards;
+        Member member = memberService.findVerifyMember(memberId);
+        Long petSitterId = member.getPetSitter().getPetSitterId();
+        List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByPetSitter_PetSitterId(petSitterId);
+
+//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
+//
+//        return wcBoardRepository.findByPetSitter_PetSitterIdAndPostStatusIn(findApplicants, wcBoardStatus);
+        return findApplicants.stream()
+                .map(petSitterApplicant -> {
+                    WcBoard wcboard = wcBoardRepository.findByWcboardId(petSitterApplicant.getWcboardId());
+                    if (wcboard != null) {
+                        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
+
+                        return wcBoardRepository.findByPostStatusIn(wcBoardStatus);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    public Page<WcBoard> getRecentPost(Long memberId, int page, int size) {
-        PetSitter findPetSitter = findVerifiedPetSitter(memberId);
+    public Page<WcBoard> getRecentInfo(Long memberId, int page, int size) {
+
+        Member member = memberService.findVerifyMember(memberId);
+        PetSitter findPetSitter = member.getPetSitter();
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("wcboardId").descending());
         List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);

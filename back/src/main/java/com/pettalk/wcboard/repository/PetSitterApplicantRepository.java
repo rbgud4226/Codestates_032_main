@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface PetSitterApplicantRepository extends JpaRepository<PetSitterApplicant, Long> {
     List<PetSitterApplicant> findByWcboardId (Long wcboardId);
+    List<PetSitterApplicant> findByPetSitter_PetSitterId(Long petSitterId);
 }
