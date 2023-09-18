@@ -63,7 +63,7 @@ const CareHistory = () => {
 
   return (
     <Container>
-      <CategoryTitle>맡긴 내역</CategoryTitle>
+      <CategoryTitle>케어 내역</CategoryTitle>
       <InfiniteScroll
         dataLength={wcBoardList.length}
         next={loadMoreData}
