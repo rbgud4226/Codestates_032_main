@@ -1,7 +1,7 @@
 package com.pettalk.member.entity;
 
 import com.pettalk.petsitter.entity.PetSitter;
-import com.pettalk.wcboard.entity.PetSitterApplicant;
+import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -112,13 +112,13 @@ public interface WcBoardMapper {
      }
 
 
-     private String formatLocalDateTime(LocalDateTime dateTime) {
-          if (dateTime != null) {
-               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-               return dateTime.format(formatter);
-          }
-          return null;
-     }
+//     private String formatLocalDateTime(LocalDateTime dateTime) {
+//          if (dateTime != null) {
+//               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//               return dateTime.format(formatter);
+//          }
+//          return null;
+//     }
 
      default List<WcBoardDto.getMemberResponse> wcBoardsToGetMemberResponse(List<WcBoard> wcBoards) {
           if (wcBoards == null) {
@@ -145,9 +145,9 @@ public interface WcBoardMapper {
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
           response.setPostStatus(wcBoard.getPostStatus().name());
-          response.setStartTime(wcBoard.getStartTime());
-          response.setEndTime(wcBoard.getEndTime());
-          response.setCreatedAt(formatLocalDateTime(wcBoard.getCreatedAt()));
+          response.setStartTime(wcBoard.getStartTime().toString());
+          response.setEndTime(wcBoard.getEndTime().toString());
+          response.setCreatedAt(wcBoard.getCreatedAt());
           response.setNickName(member.getNickName());
           response.setName(wcBoard.getPetSitter().getName());
           return response;
