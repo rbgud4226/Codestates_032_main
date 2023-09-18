@@ -47,20 +47,20 @@ const MobileVerify = ({ setPhoneNum }: T) => {
 
 export default MobileVerify;
 
-export const MVCtn = styled.div`
+const MVCtn = styled.div`
   display: flex;
   flex-direction: column;
   width: 240px;
 `;
 
-export const MVForm = styled.form`
+const MVForm = styled.form`
   display: flex;
   flex-direction: row;
   width: 240px;
   margin-top: 20px;
 `;
 
-export const TextInput = styled.input`
+const TextInput = styled.input`
   height: 31px;
   width: 100%;
   border: 1px inset ${global.Gray[1].value};
@@ -71,7 +71,7 @@ export const TextInput = styled.input`
   }
 `;
 
-export const Span = styled.span`
+const Span = styled.span`
   justify-content: flex-start;
   margin-top: 4px;
   color: ${global.Primary.value};

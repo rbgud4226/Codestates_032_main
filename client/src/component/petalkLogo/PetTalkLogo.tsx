@@ -7,4 +7,4 @@ const PetTalkLogo = () => {
 
 export default PetTalkLogo;
 
-export const PTLogo = styled.img``;
+const PTLogo = styled.img``;

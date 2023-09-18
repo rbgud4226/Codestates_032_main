@@ -11,7 +11,7 @@ const PhoneBtn = ({ name, onSubmit }: T) => {
 
 export default PhoneBtn;
 
-export const Btn = styled.button`
+const Btn = styled.button`
   width: 54px;
   height: 30px;
   display: flex;

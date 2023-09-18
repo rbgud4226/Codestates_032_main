@@ -48,14 +48,14 @@ const VerifyNumber = ({ phoneNum }: T) => {
 
 export default VerifyNumber;
 
-export const MVForm = styled.form`
+const MVForm = styled.form`
   display: flex;
   flex-direction: row;
   width: 240px;
   margin-bottom: 8px;
 `;
 
-export const TextInput = styled.input`
+const TextInput = styled.input`
   height: 31px;
   width: 100%;
   border: 1px inset ${global.Gray[1].value};
