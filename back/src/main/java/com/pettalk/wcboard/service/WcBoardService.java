@@ -32,9 +32,6 @@ import java.util.Optional;
 public class WcBoardService {
     private final WcBoardRepository wcBoardRepository;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
-    private final PetSitterService petSitterService;
-    private final PetSitterApplicantRepository paRepository;
 
     //구현 주요 로직 로그인한 경우에만 게시글 작성 가능
     // 컨트롤러와 동일하게 멤버검증 부분 테스트와 서버용 분리

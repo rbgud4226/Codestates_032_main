@@ -39,6 +39,9 @@ public class PetSitterApplicantController {
     //신청자 조회
     @GetMapping("/{wcboard-id}")
     public ResponseEntity getPetSitterApplicant(@PathVariable("wcboard-id") @Positive Long wcboardId){
+//        WcBoard findPost = findVerifyPost(wcboardId);
+//        memberService.findNickName(findPost.getMember().getMemberId());
+
         List<PetSitterApplicant> petSitterApplicantList = service.findApplicantPetsitter(wcboardId);
         return new ResponseEntity<>(mapper.petSitterApplicantToPetSitterApplicantResponse(petSitterApplicantList), HttpStatus.OK);
     }

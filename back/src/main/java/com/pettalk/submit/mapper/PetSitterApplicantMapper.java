@@ -1,5 +1,6 @@
 package com.pettalk.submit.mapper;
 
+import com.pettalk.member.entity.Member;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.submit.dto.PetSitterApplicantDto;
 import com.pettalk.submit.entity.PetSitterApplicant;
@@ -31,13 +32,21 @@ public interface PetSitterApplicantMapper {
             return null;
         }
 
+
         PetSitterApplicantDto.petSitterApplicantResponse petSitterApplicantResponse = new PetSitterApplicantDto.petSitterApplicantResponse();
+
         PetSitter petSitter = petSitterApplicant.getPetSitter();
+        Member member = petSitterApplicant.getPetSitter().getMember();
+
+        petSitterApplicantResponse.setPetSitterImage(petSitter.getPetSitterImage());
         petSitterApplicantResponse.setName(petSitter.getName());
         petSitterApplicantResponse.setNowJob(petSitter.getNowJob());
         petSitterApplicantResponse.setSmoking(petSitter.isSmoking());
-        petSitterApplicantResponse.setPetSitterImage(petSitter.getPetSitterImage());
-
+        petSitterApplicantResponse.setPhone(member.getPhone());
+        petSitterApplicantResponse.setEmail(member.getEmail());
+        petSitterApplicantResponse.setExAnimal(petSitter.getExAnimal());
+        petSitterApplicantResponse.setInfo(petSitter.getInfo());
+        petSitterApplicantResponse.setPetSitterId(petSitter.getPetSitterId());
 
         return petSitterApplicantResponse;
     }

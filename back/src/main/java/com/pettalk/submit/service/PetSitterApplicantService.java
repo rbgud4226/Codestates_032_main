@@ -28,7 +28,6 @@ import java.util.Optional;
 @RequiredArgsConstructor //private final 된것만
 @Slf4j
 public class PetSitterApplicantService {
-    private final WcBoardRepository wcBoardRepository;
     private final MemberService memberService;
     private final PetSitterService petSitterService;
     private final WcBoardService wcBoardService;
@@ -37,7 +36,7 @@ public class PetSitterApplicantService {
 
     public ResponseEntity submitPetSitter(Long memberId, Long wcboardId) {
         Member findMember = memberService.findVerifyMember(memberId);
-        WcBoard findPost = wcBoardService.findVerifyPost(wcboardId);
+        WcBoard findPost = wcBoardService.findVerifyPost(wcboardId); //wcBoardRepository.finallById(wcboardId);
 
         findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
 
@@ -73,15 +72,6 @@ public class PetSitterApplicantService {
             return ResponseEntity.ok("신청 완료!");
         }
     }
-
-//    public PetSitterApplicant findVerifyPaPetSitterId (Long wcboardId) {
-//        Optional<PetSitterApplicant> optionalPOST = paRepository.findPetsitterIdByPetSitterApplicantId(wcboardId);
-//
-//        PetSitterApplicant findPaPetSitterId =
-//                optionalPOST.orElseThrow(() ->
-//                        new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
-//        return findPaPetSitterId;
-//    }
 
 
     public List<PetSitterApplicant> findApplicantPetsitter(Long wcboardId) {
