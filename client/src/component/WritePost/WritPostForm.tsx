@@ -188,7 +188,7 @@ function PostForm({
             </OptionButtonContainer>
           </SectionContainer>
           <SectionContainer>
-            <SectionTitle>동물 선택</SectionTitle>
+            <SectionTitle>반려 동물 선택</SectionTitle>
             <OptionButtonContainer>
               <OptiontwoButton
                 selected={selectedAnimalTags.includes("강아지")}
