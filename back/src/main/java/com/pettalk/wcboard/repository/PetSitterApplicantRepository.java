@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PetSitterApplicantRepository extends JpaRepository<PetSitterApplicant, Long> {
+    List<PetSitterApplicant> findByMember_MemberId(Long memberId);
+
     List<PetSitterApplicant> findByWcboardId (Long wcboardId);
+
+    PetSitter findPetSitterByWcboardId(Long wcboardId);
     List<PetSitterApplicant> findByPetSitter_PetSitterId(Long petSitterId);
 }

@@ -3,19 +3,26 @@ package com.pettalk.member.service;
 import com.pettalk.exception.BusinessLogicException;
 import com.pettalk.exception.ExceptionCode;
 import com.pettalk.member.dto.GetMemberDto;
+import com.pettalk.member.dto.GetMembersDto;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.entity.RefreshToken;
 import com.pettalk.member.mapper.MemberMapper;
 import com.pettalk.member.repository.MemberRepository;
 import com.pettalk.member.repository.RefreshTokenRepository;
 import com.pettalk.petsitter.entity.PetSitter;
+import com.pettalk.petsitter.repository.PetSitterRepository;
 import com.pettalk.wcboard.dto.WcBoardDto;
+import com.pettalk.wcboard.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import com.pettalk.wcboard.mapper.WcBoardMapper;
 //import com.pettalk.wcboard.mapper.WcBoardMapperImpl;
+import com.pettalk.wcboard.repository.PetSitterApplicantRepository;
 import com.pettalk.wcboard.repository.WcBoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,18 +41,8 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final WcBoardRepository wcBoardRepository;
     private final WcBoardMapper wcBoardMapper;
-
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, MemberMapper membermapper, RefreshTokenRepository refreshTokenRepository, WcBoardRepository wcBoardRepository, WcBoardMapper wcBoardMapper) {
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.membermapper = membermapper;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.wcBoardRepository = wcBoardRepository;
-        this.wcBoardMapper = wcBoardMapper;
-
-
-    }
+    private  PetSitterApplicantRepository petSitterApplicantRepository;
+    private PetSitterRepository petSitterRepository;
 
     public Member createMember(Member member) {
         if (verifyExistsEmail(member.getEmail())) {
@@ -65,7 +64,7 @@ public class MemberService {
     public Member updateMember(Member member, Long memberId) {
 
         Member findMember = findVerifyMember(memberId);
-        if (member.getNickName().trim().length() <= 3) {
+        if (member.getNickName().trim().length() < 1) {
             throw new RuntimeException("닉네임이 NULL값 입니다");
         } else {
             Optional.ofNullable(member.getNickName().trim()).ifPresent(nickName -> findMember.setNickName(nickName));
@@ -74,7 +73,7 @@ public class MemberService {
     }
 
 
-    public GetMemberDto getMember(Long memberId, int page, int size) {
+    public GetMemberDto getMember(Long memberId, int page) {
         Member findMember = findVerifyMember(memberId);
         boolean checkPetSitter = findMember.getPetSitter() != null;
 
@@ -84,26 +83,46 @@ public class MemberService {
             petSitterId = findMember.getPetSitter().getPetSitterId();
             petSitterProfileImage = findMember.getPetSitter().getMember().getProfileImage();
         }
-        Pageable pageable = PageRequest.of(page-1, size);
+        int size = 1;
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("wcboardId").descending());
         List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE);
         Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
-
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
-        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
+        List<WcBoardDto.getMemberResponse> wcBoardDtoGet = wcBoardMapper.wcBoardsToGetMemberResponse(wcBoards.getContent());
+//        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse:: getWcboardId));
         return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet, checkPetSitter, petSitterId);
     }
 
-    public List<WcBoardDto.Response> getMembers(Long memberId, int page, int size) {
+    public GetMembersDto getMembers(Long memberId, int page) {
         Member findMember = findVerifyMember(memberId);
-
+        int size = 4;
         Pageable pageable = PageRequest.of(page - 1, size);
-        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS);
+        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
         Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
-
-        List<WcBoardDto.Response> wcBoardDtoGet = wcBoardMapper.wcBoardsResponseDtoToWcBoard(wcBoards.getContent());
-        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.Response::getStartTime).reversed());
-        return wcBoardDtoGet;
+        List<WcBoardDto.getMemberResponse> wcBoardDtoGet = wcBoardMapper.wcBoardsToGetMemberResponse(wcBoards.getContent());
+        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse::getWcboardId).reversed());
+        return new GetMembersDto(wcBoardDtoGet, wcBoards.getTotalElements());
     }
+    public List<WcBoardDto.WcBoardWithPetSitterInfo> getMemberAll(Long memberId) {
+        List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByMember_MemberId(memberId);
+        List<Long> wcBoardIds = findApplicants.stream().map(PetSitterApplicant::getWcboardId).collect(Collectors.toList());
+        List<WcBoard> wcBoards = wcBoardRepository.findAllById(wcBoardIds);
+        List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoardsWithInfo = wcBoards.stream().map(
+                board -> {
+                    PetSitter petSitter = petSitterApplicantRepository.findPetSitterByWcboardId(board.getWcboardId());
+                    String petSitterNickName = petSitter.getName();
+                    String petSitterImage = petSitter.getPetSitterImage();
+
+                    WcBoardDto.WcBoardWithPetSitterInfo dto = new WcBoardDto.WcBoardWithPetSitterInfo();
+                    dto.setWcBoard(board);
+                    dto.setPetSitterNickname(petSitterNickName);
+                    dto.setPetSitterImage(petSitterImage);
+
+                    return dto;
+                }
+        ).collect(Collectors.toList());
+        return wcBoardsWithInfo;
+    }
+
 
     public void deleteMember(Long memberId) {
         Member findMember = findVerifyMember(memberId);
