@@ -23,13 +23,13 @@ public class GetMemberDto {
     @NotBlank
     private String profileImage;
 
-    private List<WcBoardDto.Response> wcBoardDtoGet;
+    private List<WcBoardDto.getMemberResponse> wcBoardDtoGet;
 
     private boolean checkPetSitter;
 
     private Long petSitterId;
 
-    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.Response> wcBoardDtoGet , boolean checkPetSitter, Long petSitterId) {
+    public GetMemberDto(String nickName, String email, String phone, String profileImage, List<WcBoardDto.getMemberResponse> wcBoardDtoGet , boolean checkPetSitter, Long petSitterId) {
         this.nickName = nickName;
         this.email = email;
         this.phone = phone;

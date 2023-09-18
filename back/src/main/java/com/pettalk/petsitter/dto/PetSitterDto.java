@@ -1,5 +1,6 @@
 package com.pettalk.petsitter.dto;
 
+import com.pettalk.wcboard.entity.WcBoard;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -107,5 +108,6 @@ public class PetSitterDto {
         private LocalDateTime startTime;
         private LocalDateTime endTime;
         private String memberImage;
+        private WcBoard.PostStatus postStatus;
     }
 }

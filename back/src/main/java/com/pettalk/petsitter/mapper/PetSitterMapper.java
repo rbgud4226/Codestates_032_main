@@ -48,6 +48,7 @@ public interface PetSitterMapper {
         String nickName = wcBoard.getMember().getNickName();
         wcboardId = wcBoard.getWcboardId();
         wcTag = wcBoard.getWcTag();
+        WcBoard.PostStatus postStatus = wcBoard.getPostStatus();
 //        if ( wcBoard.getStartTime() != null ) {
 //            startTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format( wcBoard.getStartTime() );
 //        }
@@ -58,7 +59,7 @@ public interface PetSitterMapper {
 
         memberImage = wcBoard.getMember().getProfileImage();
 
-        PetSitterDto.multiResponse multiResponse = new PetSitterDto.multiResponse( wcboardId, wcTag, nickName, startTime, endTime, memberImage );
+        PetSitterDto.multiResponse multiResponse = new PetSitterDto.multiResponse( wcboardId, wcTag, nickName, startTime, endTime, memberImage, postStatus);
 
         return multiResponse;
     }

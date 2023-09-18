@@ -1,14 +1,19 @@
 package com.pettalk.member.entity;
 
 import com.pettalk.petsitter.entity.PetSitter;
+import com.pettalk.submit.entity.PetSitterApplicant;
+import com.pettalk.wcboard.entity.WcBoard;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,4 +48,10 @@ public class Member implements Serializable{
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.REMOVE)
     private PetSitter petSitter;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PetSitterApplicant> petSitterApplicant;
+
+
+
 }
