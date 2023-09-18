@@ -8,7 +8,7 @@ import axios from "axios";
 const api = process.env.REACT_APP_DB_HOST;
 
 const menuList = [
-  { text: "Sign Up", link: "/memberAgree" },
+  { text: "Sign Up", link: "/signup" },
   { text: "Login", link: "/login" },
 ];
 

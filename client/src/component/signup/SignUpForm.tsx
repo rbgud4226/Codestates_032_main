@@ -3,17 +3,16 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import * as yup from "yup";
-import LargeBtn from "../../Button/LargeCheckBtn";
+import LargeBtn from "../Button/LargeCheckBtn";
 import axios from "axios";
-import { iconImg } from "../../../Data/IconImg";
-import global from "../../../Data/global";
+import { iconImg } from "../../Data/IconImg";
+import global from "../../Data/global";
 
 interface T {
   phoneNum: string;
 }
 
 const api = process.env.REACT_APP_DB_HOST;
-console.log(api);
 type FormData = {
   email: string;
   nickName: string;
@@ -23,7 +22,14 @@ type FormData = {
 };
 
 const schema = yup.object().shape({
-  email: yup.string().email().required("email형식으로 입력하세요"),
+  email: yup
+    .string()
+    .email("email형식으로 입력하세요")
+    .required("이메일은 필수입니다"),
+  selectAll: yup.bool(),
+  check1: yup.boolean().oneOf([true], "필수 약관에 동의해야 합니다."),
+  check2: yup.boolean().oneOf([true], "필수 약관에 동의해야 합니다."),
+  check3: yup.boolean(),
   nickName: yup.string().trim().required("닉네임을 입력해주세요"),
   password: yup
     .string()
@@ -38,18 +44,18 @@ const schema = yup.object().shape({
       return this.parent.password === value;
     })
     .required("비밀번호가 일치하지 않습니다."),
-  // phone: yup.string().trim().required("전화번호인증 해야합니다."),
 });
 
 const SignUpForm = ({ phoneNum }: T) => {
   const [emailErr, setEmailErr] = useState("");
   const [phoneErr, setPhoneErr] = useState("");
-  const [err, setErr] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+    setValue,
+    getValues,
+  } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
   // 랜덤으로 이미지 추출하는 함수
   const imageHdr = () => {
     const iconId = Math.floor(Math.random() * (18 - 1)) + 1;
@@ -77,9 +83,7 @@ const SignUpForm = ({ phoneNum }: T) => {
             if (resData2) {
               window.location.replace("/signupDone");
             }
-          } catch (e) {
-            setErr("알수 없는 에러가 발생");
-          }
+          } catch (e) {}
         }
       } catch (e) {
         setEmailErr("중복된 email 입니다.");
@@ -89,28 +93,30 @@ const SignUpForm = ({ phoneNum }: T) => {
     }
   };
 
+  const handleCheckAll = () => {
+    if (getValues("selectAll")) {
+      setValue("check1", false);
+      setValue("check2", false);
+      setValue("check3", false);
+    } else {
+      setValue("check1", true);
+      setValue("check2", true);
+      setValue("check3", true);
+    }
+  };
   return (
     <SUForm onSubmit={handleSubmit(signupHdr)}>
       <InputWrapper>
         <TextInput placeholder="이메일을 입력하세요" {...register("email")} />
-        {emailErr ? (
-          <ErrMsg> {emailErr}</ErrMsg>
-        ) : !errors.email ? (
-          <Span>email을 입력하세요.</Span>
-        ) : (
-          <ErrMsg>{errors.email.message}</ErrMsg>
-        )}
+        <ErrMsg>{errors.email?.message}</ErrMsg>
+        <ErrMsg>{emailErr}</ErrMsg>
       </InputWrapper>
       <InputWrapper>
         <TextInput
           placeholder="닉네임을 입력하세요"
           {...register("nickName")}
         />
-        {!errors.nickName ? (
-          <Span>닉네임을 입력하세요.</Span>
-        ) : (
-          <ErrMsg>{errors.nickName.message}</ErrMsg>
-        )}
+        <ErrMsg>{errors.nickName?.message}</ErrMsg>
       </InputWrapper>
       <InputWrapper>
         <TextInput
@@ -118,11 +124,7 @@ const SignUpForm = ({ phoneNum }: T) => {
           type="password"
           {...register("password")}
         />
-        {!errors.password ? (
-          <Span>패스워드를 입력하세요.</Span>
-        ) : (
-          <ErrMsg>{errors.password.message}</ErrMsg>
-        )}
+        <ErrMsg>{errors.password?.message}</ErrMsg>
       </InputWrapper>
       <InputWrapper>
         <TextInput
@@ -130,24 +132,37 @@ const SignUpForm = ({ phoneNum }: T) => {
           type="password"
           {...register("passwordCf")}
         />
-        {!errors.passwordCf ? (
-          <Span>패스워드 재입력하세요.</Span>
-        ) : (
-          <ErrMsg>{errors.passwordCf.message}</ErrMsg>
-        )}
+        <ErrMsg>{errors.passwordCf?.message}</ErrMsg>
       </InputWrapper>
+      <MASection>
+        <AllAgree onClick={handleCheckAll}>
+          <input
+            onChange={handleCheckAll}
+            type="checkbox"
+            {...register("selectAll")}
+          ></input>
+          모두 동의 합니다.
+        </AllAgree>
+        <ServiceAgree>
+          <input type="checkbox" {...register("check1")}></input>
+          이용약관에 동의합니다.(필수)
+        </ServiceAgree>
+        <ServiceAgree>
+          <input type="checkbox" {...register("check2")}></input>
+          개인정보처리방침에 동의합니다.(필수)
+        </ServiceAgree>
+        <ServiceAgree>
+          <input type="checkbox" {...register("check3")}></input>
+          유용한 소식 받기.(선택)
+        </ServiceAgree>
+        <ErrMsg>{errors.check1?.message || errors.check2?.message}</ErrMsg>
+      </MASection>
       <div style={{ marginTop: "12px", width: "100%" }}>
-        <LargeBtn name={"회원가입"} />
+        <LargeBtn
+          name={"회원가입"}
+          disabled={!getValues("check1") && !getValues("check2")}
+        />
         {!phoneNum ? <ErrMsg>{phoneErr}</ErrMsg> : ""}
-        {/* {!errors.phone ? (
-          err ? (
-            <ErrMsg>{err}</ErrMsg>
-          ) : (
-            ""
-          )
-        ) : (
-          <ErrMsg>{errors.phone.message}</ErrMsg>
-        )} */}
       </div>
     </SUForm>
   );
@@ -155,7 +170,7 @@ const SignUpForm = ({ phoneNum }: T) => {
 
 export default SignUpForm;
 
-export const SUForm = styled.form`
+const SUForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,18 +178,18 @@ export const SUForm = styled.form`
   margin-top: 20px;
 `;
 
-export const InputWrapper = styled.div`
+const InputWrapper = styled.div`
   width: 100%;
   margin-bottom: 8px;
 `;
-export const ErrMsg = styled.div`
+const ErrMsg = styled.div`
   justify-content: flex-start;
   margin-top: 4px;
   color: ${global.ErrorMsgRed.value};
   font-size: 10px;
   margin-bottom: 6px;
 `;
-export const TextInput = styled.input`
+const TextInput = styled.input`
   height: 31px;
   width: 100%;
   border: 1px inset ${global.Gray[1].value};
@@ -184,17 +199,37 @@ export const TextInput = styled.input`
     outline: none;
   }
 `;
-export const Span = styled.span`
-  justify-content: flex-start;
-  margin-top: 4px;
-  color: ${global.Primary.value};
-  font-size: 10px;
-  margin-bottom: 6px;
+
+const MASection = styled.section`
+  display: flex;
+  flex-direction: column;
+  width: 239px;
 `;
 
-export const PhoneForm = styled.form`
+const AllAgree = styled.label`
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 8px;
+  cursor: pointer;
+  gap: 4px;
+  align-items: center;
+  border: 1px solid #bdbdbd;
+  background-color: #e9eeff;
+  border-radius: 4px;
+  height: 30px;
+  font-size: 12px;
+  color: #2a2a2a;
+  padding-left: 18px;
+  margin-top: 14px;
+`;
+
+const ServiceAgree = styled.label`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #2a2a2a;
+  padding-left: 18px;
+  cursor: pointer;
+  margin-top: 12px;
 `;
