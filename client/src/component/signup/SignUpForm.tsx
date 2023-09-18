@@ -164,10 +164,8 @@ const SignUpForm = ({ phoneNum }: T) => {
         <ErrMsg>{errors.check1?.message || errors.check2?.message}</ErrMsg>
       </MASection>
       <div style={{ marginTop: "12px", width: "100%" }}>
-        <LargeBtn
-          name={"회원가입"}
-          disabled={!getValues("check1") && !getValues("check2")}
-        />
+        <LargeBtn name={"회원가입"} disabled={false} />
+        {/* disabled={!getValues("check1") && !getValues("check2")} 원래이건데 작동을 잘 안함 */}
         {!phoneNum ? <ErrMsg>{phoneErr}</ErrMsg> : ""}
       </div>
     </SUForm>
