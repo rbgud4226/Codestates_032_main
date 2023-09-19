@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "styled-components";
 import bookIcon from "../../asset/NavAsset/book-icon.png";
 import bookCheckIcon from "../../asset/NavAsset/book-check-icon.png";
-import searchIcon from "../../asset/NavAsset/search-icon.png";
+// import searchIcon from "../../asset/NavAsset/search-icon.png";
 import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
 import global from "../../Data/global";
