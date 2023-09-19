@@ -1,9 +1,9 @@
 package com.pettalk.location.controller;
 
+import com.pettalk.location.dto.LocationDTO;
 import com.pettalk.location.entity.LocationEntity;
 import com.pettalk.location.mapper.LocationMapper;
 import com.pettalk.location.service.LocationService;
-import com.test.location.dto.LocationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
