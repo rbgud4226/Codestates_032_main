@@ -32,7 +32,6 @@ public class WcBoardDto {
 
         private String images;
 
-
         @NotNull (message = "1개 이상 선택해주세요")
         private String wcTag;
 
@@ -92,9 +91,6 @@ public class WcBoardDto {
         private String createdAt;
     }
 
-
-
-
     @Getter
     @Setter
     public static class Response {
@@ -126,8 +122,10 @@ public class WcBoardDto {
         private String areaTag;
         private String location;
         private String postStatus;
-        private String startTime;
-        private String endTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
         private String createdAt;
         private String nickName;
     }
