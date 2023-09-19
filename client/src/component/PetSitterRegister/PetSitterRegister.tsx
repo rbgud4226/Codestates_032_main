@@ -6,14 +6,16 @@ import Experience, { ExperienceFormData } from "./Experience";
 import axios from "axios"; // Axios를 import
 import before from "../../asset/PetsitterRegisterAsset/Before.png";
 import next from "../../asset/PetsitterRegisterAsset/Next.png";
+import { useNavigate } from "react-router-dom";
 
 const PetsitterRegister = () => {
+  const navigate = useNavigate();
+  const api = process.env.REACT_APP_DB_HOST;
+  const { pathname } = useLocation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [formData, setFormData] = useState<
     BasicInfoFormData | ExperienceFormData | null
   >(null);
-  const api = process.env.REACT_APP_DB_HOST;
-  const { pathname } = useLocation();
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === 0 ? 1 : 0);
@@ -57,6 +59,7 @@ const PetsitterRegister = () => {
           });
 
           console.log("서버 응답:", response.data);
+          navigate("/members");
         } else {
           // 다른 경로에서는 POST 요청을 보냄
           const response = await axios.post(`${api}/petsitter`, formData, {
@@ -68,6 +71,7 @@ const PetsitterRegister = () => {
           });
 
           console.log("서버 응답:", response.data);
+          navigate("/members");
         }
       } catch (error) {
         console.error("서버 요청 중 오류 발생:", error);

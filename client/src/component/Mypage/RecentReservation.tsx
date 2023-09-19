@@ -4,13 +4,14 @@ import ProfileImg from "./ProfileImg";
 import axios from "axios";
 
 const RecentReservation = () => {
-  const [wcBoardList, setWcBoardList] = useState([]);
+  const [deposited, setdeposited] = useState([]);
+  const [careRecent, setCareRecent] = useState([]);
 
   useEffect(() => {
     const api = process.env.REACT_APP_DB_HOST;
     const ngrokSkipBrowserWarning = "69420";
     const page = 1;
-    const fetchData = async () => {
+    const fetchRecentDeposits = async () => {
       try {
         const response = await axios.get(`${api}/members`, {
           headers: {
@@ -24,16 +25,37 @@ const RecentReservation = () => {
         });
 
         const responseData = response.data;
-        setWcBoardList(responseData.wcBoardDtoGet);
+        setdeposited(responseData.wcBoardDtoGet);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
       }
     };
 
-    fetchData();
+    const fetchRecentCare = async () => {
+      try {
+        const response = await axios.get(`${api}/petsitter/recent`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+          params: {
+            page: page,
+          },
+        });
+
+        const responseData = response.data;
+        setCareRecent(responseData.data);
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      }
+    };
+
+    fetchRecentDeposits();
+    fetchRecentCare();
   }, []);
 
-  console.log("최근맡긴내역 :", wcBoardList);
+  console.log("최근맡긴내역 :", deposited);
 
   //총 시간 계산
   const calculateDuration = (startTime, endTime) => {
@@ -49,57 +71,25 @@ const RecentReservation = () => {
     return `${hours}시간 ${minutes}분`;
   };
 
-  // 예약 내역 더미 데이터
-  const reservations = [
-    {
-      id: 1,
-      wcTag: "산책",
-      profileImage: <ProfileImg />,
-      startTime: "2023-09-01 10:00",
-      endTime: "2023-09-01 11:00",
-      userName: "홍길동",
-      duration: "1시간",
-      category: "entrusted",
-    },
-    {
-      id: 2,
-      wcTag: "돌봄",
-      profileImage: <ProfileImg />,
-      startTime: "2023-09-02 14:00",
-      endTime: "2023-09-02 16:00",
-      userName: "이몽룡",
-      duration: "2시간",
-      category: "cared",
-    },
-  ];
-
-  const entrustedReservations = reservations.filter(
-    reservation => reservation.category === "entrusted",
-  );
-
-  const caredReservations = reservations.filter(
-    reservation => reservation.category === "cared",
-  );
-
   return (
     <Container>
       <Category>
         <CategoryTitle>최근 맡긴 예약</CategoryTitle>
         <RecentContainer>
-          {wcBoardList.map(reservation => (
+          {deposited.map(reservation => (
             <ReservationItem key={reservation.wcboardId}>
               <Left>
                 {reservation.wcTag}{" "}
                 {calculateDuration(reservation.startTime, reservation.endTime)}
                 <ImgContainer>
                   <ProfileImage
-                    src={reservation.images} // 서버에서 받아온 프로필 이미지 URL을 사용
+                    src={reservation.petSitterImage}
                     alt="Profile Image"
                   />
                 </ImgContainer>
               </Left>
               <Details>
-                <Item>{reservation.name}님</Item>
+                <Item>{reservation.petSitterNickname}님</Item>
                 <TimeItem>
                   {reservation.startTime}-{reservation.endTime}
                 </TimeItem>
@@ -112,16 +102,22 @@ const RecentReservation = () => {
       <Category>
         <CategoryTitle>최근 케어 내역</CategoryTitle>
         <RecentContainer>
-          {caredReservations.map(reservation => (
+          {careRecent.map(reservation => (
             <ReservationItem key={reservation.id}>
               <Left>
-                {reservation.wcTag} {reservation.duration}
-                <ImgContainer>{reservation.profileImage}</ImgContainer>
+                {reservation.wcTag}{" "}
+                {calculateDuration(reservation.startTime, reservation.endTime)}
+                <ImgContainer>
+                  <ProfileImage
+                    src={reservation.memberImage} // 서버에서 받아온 프로필 이미지 URL을 사용
+                    alt="Profile Image"
+                  />
+                </ImgContainer>
               </Left>
               <Details>
-                <Item>{reservation.userName}님</Item>
+                <Item>{reservation.nickName}님</Item>
                 <TimeItem>
-                  {reservation.startTime}-{reservation.endTime}
+                  {reservation.startTime} - {reservation.endTime}
                 </TimeItem>
               </Details>
             </ReservationItem>
