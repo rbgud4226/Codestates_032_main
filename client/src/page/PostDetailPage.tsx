@@ -32,12 +32,12 @@ const PostDetailPage = () => {
           headers: {
             "Content-Type": "application/json;charset=UTF-8",
             Accept: "application/json",
+            "ngrok-skip-browser-warning": "69420",
           },
         });
         console.log(response.data);
         setPost(response.data);
         try {
-          //여기 ngrok임 나중에 주소바꿔야됨
           const response = await axios.get(`${api}/submit/${wcboardId}`, {
             headers: {
               Authorization: `${localStorage.getItem("accessToken")}`,
@@ -72,7 +72,7 @@ const PostDetailPage = () => {
 
   const applyHdr = async (item: number) => {
     try {
-      await axios.post(`${api}/wcboard/${wcboardId}`, {
+      await axios.post(`${api}/submit/${wcboardId}`, {
         headers: {
           Authorization: `${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json;charset=UTF-8",
