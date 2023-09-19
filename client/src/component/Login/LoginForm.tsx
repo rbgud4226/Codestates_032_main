@@ -89,7 +89,7 @@ const LoginForm = () => {
           <LargeBtn name={"로그인"} />
         </div>
         <ErrMsg>{errorMsg}</ErrMsg>
-        <SignUpLink to={"/memberAgree"}>회원가입</SignUpLink>
+        <SignUpLink to={"/signup"}>회원가입</SignUpLink>
       </LForm>
     </LoginContainer>
   );

@@ -2,10 +2,10 @@ import React from "react";
 import { styled } from "styled-components";
 import bookIcon from "../../asset/NavAsset/book-icon.png";
 import bookCheckIcon from "../../asset/NavAsset/book-check-icon.png";
-import searchIcon from "../../asset/NavAsset/search-icon.png";
+// import searchIcon from "../../asset/NavAsset/search-icon.png";
 import myPageIcon from "../../asset/NavAsset/mypage-icon.png";
 import { Link } from "react-router-dom";
-import global from "../../Data/global.js";
+import global from "../../Data/global";
 
 const BtnArr = [
   {
@@ -19,12 +19,12 @@ const BtnArr = [
     src: bookCheckIcon,
     link: "/members/recent",
   },
-  {
-    text: "검색",
-    src: searchIcon,
+  // {
+  //   text: "검색",
+  //   src: searchIcon,
 
-    link: "/mainpage",
-  },
+  //   link: "/mainpage",
+  // },
   {
     text: "마이페이지",
     src: myPageIcon,
@@ -56,6 +56,7 @@ const NavContainer = styled.nav`
   width: 100%;
   box-shadow: 0px 10px 34px #272c5614;
   background-color: ${global.White.value};
+  justify-content: space-between;
 `;
 
 const BaseStyledComponent = styled(Link)`

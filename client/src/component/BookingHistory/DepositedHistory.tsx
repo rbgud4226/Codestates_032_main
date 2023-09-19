@@ -10,11 +10,10 @@ const DepositedHistory = () => {
   const [totalBoard, setTotalBoard] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const pageSize = 2;
+  const pageSize = 3;
+  const api = process.env.REACT_APP_DB_HOST;
+  const ngrokSkipBrowserWarning = "69420";
   useEffect(() => {
-    const api = process.env.REACT_APP_DB_HOST;
-    const ngrokSkipBrowserWarning = "69420";
-
     const fetchData = async () => {
       try {
         const response = await axios.get(`${api}/members/alls`, {
@@ -23,12 +22,24 @@ const DepositedHistory = () => {
             Accept: "application/json",
             "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
           },
+          params: {
+            page,
+            pageSize,
+          },
         });
 
         const responseData = response.data;
-        setWcBoardList(responseData.wcBoardList);
+
+        if (!responseData || !responseData.wcBoardWithPetSitterInfos) {
+          throw new Error("서버 응답 데이터가 올바르지 않습니다.");
+        }
+
+        const initialData = responseData.wcBoardWithPetSitterInfos.slice(
+          0,
+          pageSize,
+        );
+        setWcBoardList(initialData);
         setTotalBoard(responseData.totalBoard);
-        console.log(responseData);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
       }
@@ -37,7 +48,7 @@ const DepositedHistory = () => {
     fetchData();
   }, []);
 
-  //총 시간 계산
+  // 총 시간 계산
   const calculateDuration = (startTime, endTime) => {
     const start = new Date(startTime);
     const end = new Date(endTime);
@@ -51,16 +62,45 @@ const DepositedHistory = () => {
     return `${hours}시간 ${minutes}분`;
   };
 
-  const loadMoreData = () => {
-    const startIndex = (page - 1) * pageSize;
+  const loadMoreData = async () => {
+    const startIndex = page * pageSize;
     const endIndex = startIndex + pageSize;
-    const newData = wcBoardList.slice(startIndex, endIndex);
 
-    if (newData.length === 0) {
+    if (startIndex >= totalBoard) {
+      // 모든 데이터를 로드한 경우 hasMore를 false로 설정하여 스크롤 중단
       setHasMore(false);
     } else {
-      setWcBoardList(prevData => [...prevData, ...newData]);
-      setPage(page + 1);
+      try {
+        const response = await axios.get(`${api}/members/alls`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
+          },
+          params: {
+            page: page + 1, // 다음 페이지 요청
+            pageSize,
+          },
+        });
+
+        const responseData = response.data;
+        console.log(responseData);
+        if (!responseData || !responseData.wcBoardWithPetSitterInfos) {
+          console.error(
+            "서버 응답 데이터에 wcBoardList가 없거나 배열이 아닙니다.",
+          );
+          return; // 데이터가 없는 경우 함수 실행 중단
+        }
+        // 추가 데이터를 wcBoardList에 5개씩 추가
+        const newData = responseData.wcBoardWithPetSitterInfos.slice(
+          startIndex,
+          endIndex,
+        );
+        setWcBoardList(prevData => [...prevData, ...newData]);
+        setPage(page + 1);
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      }
     }
   };
 
@@ -101,13 +141,13 @@ const DepositedHistory = () => {
                 <BottomLeft>
                   <ImgContainer>
                     <ProfileImage
-                      src={wcBoard.images} // 서버에서 받아온 프로필 이미지 URL을 사용
+                      src={wcBoard.petSitterImage} // 서버에서 받아온 프로필 이미지 URL을 사용
                       alt="Profile Image"
                     />
                   </ImgContainer>
                 </BottomLeft>
                 <BottomRight>
-                  <Item>{wcBoard.name}님</Item>
+                  <Item>{wcBoard.petSitterNickname}님</Item>
                   <TimeItem>
                     {wcBoard.startTime}-{wcBoard.endTime}
                   </TimeItem>
