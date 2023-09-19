@@ -57,6 +57,8 @@ public class PetSitterService {
             petSitter.setExAnimal(petSitter.getExAnimal());
             petSitter.setInfo(petSitter.getInfo());
             petSitter.setCreatedAt(LocalDateTime.now());
+            petSitter.setPetSitterImage(findMember.getProfileImage());
+
 
             return petSitterRepository.save(petSitter);
         }
