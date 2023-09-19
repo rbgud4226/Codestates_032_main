@@ -25,7 +25,7 @@ const Header = () => {
       });
       console.log(res);
       window.localStorage.clear();
-      // window.location.href = "/";
+      window.location.href = "/";
     } catch (error) {
       console.log("로그아웃에러", error);
     }
@@ -74,7 +74,7 @@ const HeaderContainer = styled.header`
   max-width: 500px;
   box-shadow: 0px 10px 34px #272c5614;
   background-color: white;
-  z-index: 999;
+  z-index: 1;
 `;
 const LogoLink = styled(Link)`
   margin-left: 20px;
