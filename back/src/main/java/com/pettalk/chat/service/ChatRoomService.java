@@ -5,6 +5,7 @@ import com.pettalk.chat.entity.ChatRoom;
 import com.pettalk.chat.exception.ChatRoomException;
 import com.pettalk.chat.repository.ChatRoomRepository;
 import com.pettalk.member.entity.Member;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.service.PetSitterService;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -22,6 +23,7 @@ public class ChatRoomService {
     private final WcBoardService wcBoardService;
     private final WcBoardRepository wcBoardRepository;
     private final PetSitterService petSitterService;
+    private final MemberService memberService;
 
     public ChatRoom createChatRoom(ChatRoom chatRoom){
         boolean chatRoomExists = chatRoomRepository.existsByWcBoardId(chatRoom.getWcBoardId());
@@ -36,11 +38,11 @@ public class ChatRoomService {
     }
 
     public ChatRoom getChatRoom(Long wcboardId, Long memberId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(wcboardId).orElseThrow(() -> new ChatRoomException("채팅방이 없습니다."));
-        if(chatRoom.getMemberId() != memberId){
-            throw new ChatRoomException("본인의 채팅방이 없습니다.");
+        Long petSitterId = memberService.findVerifyMember(memberId).getPetSitter().getPetSitterId();
+        ChatRoom chatRoom = chatRoomRepository.findByWcBoardIdAndMemberIdOrWcBoardIdAndPetSitterId(wcboardId, memberId, wcboardId, petSitterId);
+        if(chatRoom == null){
+            throw new ChatRoomException("채팅방이 없습니다.");
         }
-
         return chatRoom;
     }
 
@@ -62,5 +64,17 @@ public class ChatRoomService {
         wcBoard.setPostStatus(WcBoard.PostStatus.COMPLETE);
         wcBoard.setPetSitter(petSitter);
         wcBoardRepository.save(wcBoard);
+    }
+
+    public boolean checkSender(Long memberId) {
+        ChatRoom chatRoomMember = chatRoomRepository.findByMemberId(memberId);
+        Member member = memberService.findVerifyMember(chatRoomMember.getMemberId());
+        if(chatRoomMember.getMemberId().equals(memberId)){
+            return true;
+        }else if(chatRoomMember.getPetSitterId().equals(member.getPetSitter().getPetSitterId())){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

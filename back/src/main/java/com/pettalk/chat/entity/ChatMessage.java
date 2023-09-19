@@ -18,10 +18,9 @@ public class ChatMessage {
 
     private String message;
 
+    private Long memberId;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    // 사용자의 역할을 나타내는 필드 (예: "applicant" 또는 "petSitter")
-    private String userType;
 
 }
