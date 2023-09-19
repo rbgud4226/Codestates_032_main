@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import MainImage1 from "../../asset/MainAsset/MainImage1.png";
 import MainLogo from "../../asset/MainAsset/MainLogo.png";
@@ -7,55 +8,77 @@ import MainImage2 from "../../asset/MainAsset/MainImage2.png";
 import MainImage3 from "../../asset/MainAsset/MainImage3.png";
 import MainImage4 from "../../asset/MainAsset/MainImage4.png";
 import WhiteBox from "../../asset/MainAsset/WhiteBox.png";
-import { useNavigate } from "react-router-dom";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // 슬라이더 스타일 import
-import { Carousel } from "react-responsive-carousel"; // 슬라이더 컴포넌트 import
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
-/* 이미지 안에 글씨를 넣어서 크기에 맞게 같이 작아지는걸 하고싶은데 어떻게 하는지 모르겠다. 나중에 물어봐야겠다. */
 interface MainProps {
   propertyName: string;
-  // 필요한 프로퍼티 타입 정의
 }
 
 function MainForm(props: MainProps) {
   const navigate = useNavigate();
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
+  useEffect(() => {
+    // 이미지 로딩을 1초 뒤에 완료되도록 설정
+    setTimeout(() => {
+      setImagesLoaded(true);
+    }, 200);
+  }, []);
   const LoginButtonClick = () => {
-    // 버튼 클릭 시 '/login' 경로로 이동
     navigate("/login");
   };
 
-  const [textPosition, setTextPosition] = useState<number>(0); // 숫자로 변경
+  const [textPosition, setTextPosition] = useState<number>(0);
   const [textOpacity, setTextOpacity] = useState<number>(1);
-  const [imagePosition, setImagePosition] = useState<string>("translateY(0)");
-  const [imageOpacity, setImageOpacity] = useState<number>(1);
-
+  const [imageOpacity, setImageOpacity] = useState<number>(0); // 이미지 투명도를 0으로 초기화
+  const [imagePosition, setImagePosition] =
+    useState<string>("translateY(100px)");
+  const [text2Position, setText2Position] =
+    useState<string>("translateX(-100%)");
+  const [text2Visibility, setText2Visibility] = useState<boolean>(false);
   const handleScroll = () => {
     const scrollY = window.scrollY || window.pageYOffset;
     const startScroll = 200;
-    const endScroll = 800;
+    const endScroll = 1200; // 변경된 스크롤 위치
 
     if (scrollY <= startScroll) {
       setTextPosition(0);
       setTextOpacity(1);
+      setImageOpacity(0);
+      setImagePosition("translateY(100px)");
+      setText2Visibility(false); // 초기에는 숨기도록 설정
     } else if (scrollY >= startScroll && scrollY <= endScroll) {
       const normalizedScroll =
         (scrollY - startScroll) / (endScroll - startScroll);
 
-      // 텍스트를 스크롤을 따라 아래로 이동
-      setTextPosition(normalizedScroll * 100); // 예시로 100px 아래로 이동
-
+      setTextPosition(normalizedScroll * 100);
       setTextOpacity(1 - normalizedScroll);
+      setImageOpacity(normalizedScroll);
+
+      const imageScrollDistance = normalizedScroll * 100;
+      setImagePosition(`translateY(-${100 - imageScrollDistance}px)`);
+
+      // 스크롤 위치에 따라 text2Position 값을 변경하여 왼쪽에서 오른쪽으로 나오게 설정
+      const text2ScrollDistance = normalizedScroll * 100;
+      setText2Position(`translateX(${text2ScrollDistance - 100}%)`); // 왼쪽에서 오른쪽으로 나오는 애니메이션
+
+      // 스크롤 위치에 따라 text2Visibility 값을 변경하여 나타나도록 설정
+      if (!text2Visibility) {
+        setText2Visibility(true);
+      }
     } else {
-      setTextPosition(100); // 스크롤을 아래로 내린 후 텍스트를 고정시킴
+      setTextPosition(100);
       setTextOpacity(0);
+      setImageOpacity(1);
+      setImagePosition("translateY(0)");
+      setText2Visibility(true); // 최종에는 나타나도록 설정
     }
   };
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -63,11 +86,10 @@ function MainForm(props: MainProps) {
 
   const [selectedButton, setSelectedButton] = useState("walk");
 
-  const [scrollPosition, setScrollPosition] = useState(0);
-
   const handleButtonClick = (buttonName: string) => {
     setSelectedButton(buttonName);
   };
+
   const whiteBoxText =
     selectedButton === "walk" ? (
       <>
@@ -86,7 +108,7 @@ function MainForm(props: MainProps) {
       <>
         <WalkText>
           맞춤 배식
-          <WalkSText>사료와 간식, 물 급여 </WalkSText>
+          <WalkSText>사료와 간식, 물 급여하면 건강 형성. </WalkSText>
           <HR />
           신나는 놀이
           <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
@@ -97,46 +119,61 @@ function MainForm(props: MainProps) {
         </WalkText>
       </>
     );
+
   return (
     <PageListContainer>
       <PageContainer>
         <SectionContainer>
-          <MainImage
-            src={MainImage1}
-            alt={`Image`}
-            style={{
-              transform: `translateX(${textPosition}px)`, // 수정된 부분
-              opacity: imageOpacity * textOpacity,
-            }}
-          />
+          <MainImage src={MainImage1} alt={`Image`} />
           <TextWrap style={{ position: "absolute" }}>
-            <MainText textPosition={textPosition}>
-              {"내가 없을 때\n 내 아이는?"}
-            </MainText>
-            <Btn onClick={LoginButtonClick}>예약하기</Btn>
+            <AnimatedText textPosition={textPosition}>
+              {"내가 없을 때 \n 내 아이는?"}
+              <Btn onClick={LoginButtonClick}>예약하기</Btn>
+            </AnimatedText>
           </TextWrap>
         </SectionContainer>
+      </PageContainer>
 
-        <SectionContainer>
-          <MainLogoImage src={MainLogo} alt={`Image`} />
-          <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
-        </SectionContainer>
+      <SectionContainer>
+        <MainLogoImage src={MainLogo} alt={`Image`} />
+        <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
+      </SectionContainer>
 
-        <SectionContainer>
-          <NainItwo>
-            <MainImagetwo src={MainImage2} alt={`Image`} />
-            <WhiteImage>
-              <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
-              <MainTexttwoo>
-                {
-                  "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
-                }
-              </MainTexttwoo>
-            </WhiteImage>
-          </NainItwo>
-        </SectionContainer>
+      <SectionContainer>
+        <NainItwo>
+          <MainImagetwo
+            src={MainImage2}
+            alt={`Image`}
+            style={{
+              transform: imagePosition,
+              opacity: imageOpacity,
+            }}
+          />
+          <WhiteImage>
+            <MainTexttwo
+              style={{
+                visibility: text2Visibility ? "visible" : "hidden", // 스크롤 위치에 따라 숨기거나 나타나도록 설정
+                transform: text2Position, // 왼쪽에서 오른쪽으로 나오는 애니메이션
+              }}
+            >
+              {"산책시 실시간\n 위치확인까지!"}
+            </MainTexttwo>
+            <MainTexttwoo
+              style={{
+                visibility: text2Visibility ? "visible" : "hidden", // 스크롤 위치에 따라 숨기거나 나타나도록 설정
+                transform: text2Position, // 왼쪽에서 오른쪽으로 나오는 애니메이션
+              }}
+            >
+              {
+                "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
+              }
+            </MainTexttwoo>
+          </WhiteImage>
+        </NainItwo>
+      </SectionContainer>
 
-        <SectionContainer>
+      <SectionContainer>
+        {imagesLoaded && (
           <Carousel showThumbs={false}>
             <div>
               <img src={MainImage3} alt="Image 3" />
@@ -161,34 +198,50 @@ function MainForm(props: MainProps) {
               </p>
             </div>
           </Carousel>
-        </SectionContainer>
-      </PageContainer>
-
-      <WhiteBoxContainer>
-        <WalkButton
-          className={selectedButton === "walk" ? "active" : ""}
-          onClick={() => handleButtonClick("walk")}
-        >
-          산책
-        </WalkButton>
-        <CareButton
-          className={selectedButton === "care" ? "active" : ""}
-          onClick={() => handleButtonClick("care")}
-        >
-          돌봄
-        </CareButton>
-
-        <WhiteBoxImage src={WhiteBox} alt={`Image`} />
-        <TextWrap1>
-          {" "}
-          <WhiteBoxText>{whiteBoxText}</WhiteBoxText>
-          <WalkSbutton onClick={LoginButtonClick}>예약하기</WalkSbutton>
-        </TextWrap1>
-      </WhiteBoxContainer>
+        )}
+      </SectionContainer>
+      <SectionContainer>
+        {imagesLoaded && (
+          <WhiteBoxContainer>
+            <WalkButton
+              className={selectedButton === "walk" ? "active" : ""}
+              onClick={() => handleButtonClick("walk")}
+            >
+              산책
+            </WalkButton>
+            <CareButton
+              className={selectedButton === "care" ? "active" : ""}
+              onClick={() => handleButtonClick("care")}
+            >
+              돌봄
+            </CareButton>
+            <SubContainer>
+              <ListContainer>
+                <TextWrap1>
+                  {" "}
+                  <WhiteBoxText>{whiteBoxText}</WhiteBoxText>
+                  <WalkSbutton onClick={LoginButtonClick}>맡기기</WalkSbutton>
+                </TextWrap1>
+              </ListContainer>
+            </SubContainer>
+          </WhiteBoxContainer>
+        )}
+      </SectionContainer>
     </PageListContainer>
   );
 }
+
 export default MainForm;
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 16px;
+  margin-top; 100px;
+  color: wihte;
+`;
 
 const PageListContainer = styled.div`
   text-align: left;
@@ -200,6 +253,7 @@ const PageContainer = styled.div`
 
 const SectionContainer = styled.div`
   margin-bottom: 32px;
+  position: relative;
 `;
 
 const HR = styled.hr`
@@ -218,23 +272,25 @@ const NainItwo = styled.div`
 `;
 
 const WalkText = styled.div`
-  font-size: 16px;
-  margin-top: 100px;
+  font-size: 24px;
+  margin-top: 50px;
 `;
 
 const WalkSText = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   margin: 20px;
 `;
+
 const WalkSbutton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
-  padding: 8px 24px;
+  top: 100px;
+  padding: 8px 4px;
   position: relative;
-  top: 30px;
-  width: 120px;
-  left: 180px;
+  left: 50px;
+  width: 50%;
+  border-radius: 4px;
   border: 2px solid #279eff;
   cursor: pointer;
 `;
@@ -249,7 +305,6 @@ const WhiteBoxText = styled.div`
   color: black;
   font-size: 16px;
   font-weight: bold;
-  margin-left: 120px;
   white-space: nowrap;
   line-height: 1.5;
 `;
@@ -262,6 +317,17 @@ const WhiteBoxImage = styled.img`
   margin-top: 60%;
 `;
 
+const slideInRight = keyframes`
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
+
 const slideDown = keyframes`
   from {
     transform: translateY(-100%);
@@ -272,26 +338,27 @@ const slideDown = keyframes`
 `;
 
 const MainImage = styled.img`
-  display: flex;
-  justify-content: center;
+  display: block;
+  margin: 0 auto;
   width: 100%;
   height: auto;
-  margin: 0px auto;
-  animation: ${slideDown} 1s ease; /* keyframes 애니메이션을 적용합니다. */
-  animation-fill-mode: forwards; /* 애니메이션 종료 후 상태를 유지합니다. */
+  animation: ${slideDown} 1s ease;
+  animation-fill-mode: forwards;
+  position: relative;
+`;
+
+const TextWrap = styled.div`
+  position: absolute;
+  white-space: pre-line;
+  top: 50%;
+  left: 0%;
+  color: white;
+  padding: 10px;
 `;
 
 const h1 = styled.div`
   color: "#279eff";
   margin-top: "30%";
-`;
-const MainLogoImage = styled.img`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: auto;
-  margin-top: 52px;
-  margin-bottom: 24px;
 `;
 
 const MainImagetwo = styled.img`
@@ -300,40 +367,44 @@ const MainImagetwo = styled.img`
 `;
 
 const TextWrap1 = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
-  top: -800px;
+  top: 10px;
   white-space: pre-line;
 `;
-
-const TextWrap = styled.div`
-  position: absolute;
+const SubContainer = styled.div`
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
-  top: 0;
-  white-space: pre-line;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(34, 39, 76, 0.2);
+  width: 80%;
+  height: 600px;
+  margin-left: auto;
+  margin-right: auto;
 `;
-
 const MainText = styled.div<{ textPosition: number }>`
-  transform: translateX(${props => props.textPosition}px); // 수정된 부분
+  transform: translateY(${props => props.textPosition}px);
   margin-top: 350px;
   color: White;
   margin-left: 24px;
   font-size: 36px;
   font-weight: bold;
 `;
+
 const WalkButton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
   padding: 24px 52px;
   position: relative;
-  top: 280px;
-  left: 80px;
+  margin-top: 200px;
+  top: -50px;
+  left: 50px;
   border: 2px solid #279eff;
   cursor: pointer;
-
+  border-radius: 8px;
   &.active {
     background-color: #279eff;
     color: white;
@@ -346,15 +417,26 @@ const CareButton = styled.button`
   font-size: 16px;
   padding: 24px 52px;
   position: relative;
-  top: 280px;
-  left: 160px;
+  margin-top: 200px;
+  top: -50px;
+  left: 170px;
   border: 2px solid #279eff;
   cursor: pointer;
-
+  border-radius: 8px;
   &.active {
     background-color: #279eff;
     color: white;
   }
+`;
+
+const MainLogoImage = styled.img`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: 80px;
+  margin-bottom: 24px;
+  animation: ${slideInRight} 1s ease;
 `;
 
 const MainLogoText = styled.div`
@@ -365,6 +447,7 @@ const MainLogoText = styled.div`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 50%;
+  animation: ${slideInRight} 1s ease;
 `;
 
 const MainTexttwo = styled.div`
@@ -382,7 +465,6 @@ const MainTexttwoo = styled.div`
   margin-top: 15px;
   color: black;
   font-size: 16px;
-
   white-space: pre-line;
 `;
 
@@ -407,9 +489,16 @@ const Btn = styled.button`
   font-size: 12px;
   padding: 8px 12px;
   position: relative;
-  top: 30px;
+  top: 40px;
   width: 80px;
-  left: 40px;
+  left: -120px;
   border: 2px solid #279eff;
   cursor: pointer;
+`;
+
+const AnimatedText = styled.div<{ textPosition: number }>`
+  font-size: 36px;
+  font-weight: bold;
+  transform: translateY(${props => props.textPosition}px);
+  animation: ${slideInRight} 1s ease-in-out;
 `;
