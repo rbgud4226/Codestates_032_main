@@ -36,7 +36,6 @@ const BoardList = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [animalTagFilter, setAnimalTagFilter] = useState<string | null>(null);
   const [wcTagFilter, setWCTagFilter] = useState<string | null>(null);
-  const [paginationPage, setPaginationPage] = useState<number>(currentPage);
   const [isLoading, setIsLoading] = useState(true);
   const accessToken = localStorage.getItem("accessToken");
   const location = useLocation();
@@ -45,6 +44,8 @@ const BoardList = () => {
   const [totalItemsCount, setTotalItemsCount] = useState<number>(0);
   const [wcTags, setWCTags] = useState<string[]>([]); // 추가된 WC 태그
   const [animalTags, setAnimalTags] = useState<string[]>([]); // 추가된 동물 태그
+  const [paginationPage, setPaginationPage] = useState<number>(currentPage);
+  const PAGE_SIZE = 5;
 
   const checkLoginStatus = () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -52,15 +53,6 @@ const BoardList = () => {
   };
 
   const [pageSize, setPageSize] = useState<number>(5);
-
-  const [filteredPosts, setFilteredPosts] = useState<Board[]>([]);
-
-  // 페이지별 필터링된 게시물을 가져오는 함수
-  const getFilteredPostsForPage = (page: number, pageSize: number) => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return filteredPosts.slice(startIndex, endIndex);
-  };
 
   // WC 태그와 동물 태그를 가져오는 함수
   const fetchTags = async (
@@ -77,7 +69,6 @@ const BoardList = () => {
           Authorization: `Bearer ${accessToken}`,
         },
         params: {
-          size: pageSize,
           page: selectedPage, // 현재 페이지
           wcTag: wcTagFilter,
           animalTag: animalTagFilter,
@@ -132,34 +123,20 @@ const BoardList = () => {
         },
       });
 
+      // 데이터 설정
       checkLoginStatus();
-      const allPosts = response.data.data.sort(
-        (a, b) => b.wcboardId - a.wcboardId,
-      );
+      setPosts(response.data.data.sort((a, b) => b.wcboardId - a.wcboardId));
+      const pageInfo: PageInfo = response.data.pageInfo;
 
-      // 필터링된 게시물을 filteredPosts 배열에 저장
-      const filtered = allPosts.filter(
-        post =>
-          (!animalTagFilter || post.animalTag.includes(animalTagFilter)) &&
-          (!wcTagFilter || post.wcTag === wcTagFilter),
-      );
-      setFilteredPosts(filtered);
+      setTotalItemsCount(pageInfo.totalElements);
 
-      // 페이지네이션을 위해 필터링된 결과만 사용
-      const pageInfo: PageInfo = {
-        page: selectedPage,
-        size: pageSize,
-        totalElements: filtered.length,
-        totalPages: Math.ceil(filtered.length / pageSize),
-      };
+      setIsLoading(false);
 
       // 페이지가 없으면 1로 보내기
       if (selectedPage > pageInfo.totalPages) {
-        const url = `/mainPage?page=1`;
+        const url = `/mainPage?p=1`;
         navigate(url);
       }
-
-      setIsLoading(false);
     } catch (error) {
       console.error("API 요청 중 오류 발생:", error);
       setIsLoading(false);
@@ -180,14 +157,24 @@ const BoardList = () => {
     navigate(url);
   };
 
-  const handlePageChange = (selectedPage: number) => {
-    setPaginationPage(selectedPage); // 페이지네이션 숫자를 업데이트
+  const handleAnimalTagChange = (animalTag: string) => {
+    setSelectedAnimalTags([animalTag]);
+    setPaginationPage(1); // 페이지를 1페이지로 초기화
 
-    // fetchData 함수 호출
-    fetchData(selectedPage, animalTagFilter, wcTagFilter);
+    const url = `/mainPage?p=1&animalTag=${encodeURIComponent(
+      animalTag,
+    )}&wcTag=${selectedWCTag || ""}`;
+    navigate(url);
+  };
 
-    // 페이지 이동 처리
-    goToPage(selectedPage);
+  const handleWCTagChange = (wcTag: string) => {
+    setSelectedWCTag(wcTag);
+    setPaginationPage(1); // 페이지를 1페이지로 초기화
+
+    const url = `/mainPage?p=1&animalTag=${selectedAnimalTags.join(
+      ",",
+    )}&wcTag=${wcTag}`;
+    navigate(url);
   };
 
   useEffect(() => {
@@ -208,6 +195,16 @@ const BoardList = () => {
     );
   }, [location.search]);
 
+  const handlePageChange = (selectedPage: number) => {
+    setPaginationPage(selectedPage); // 페이지네이션 숫자를 업데이트
+
+    // fetchData 함수 호출
+    fetchData(selectedPage, animalTagFilter, wcTagFilter);
+
+    // 페이지 이동 처리
+    goToPage(selectedPage);
+  };
+
   const moveToWrite = () => {
     if (isLoggedIn) {
       navigate("/writpost");
@@ -215,31 +212,6 @@ const BoardList = () => {
       navigate("/login");
       alert("로그인해주세요");
     }
-  };
-
-  const handleAnimalTagChange = (animalTag: string) => {
-    let updatedAnimalTags: string[] = [];
-
-    // 선택한 동물 태그만 배열에 추가
-    if (selectedAnimalTags.includes(animalTag)) {
-      updatedAnimalTags = selectedAnimalTags.filter(tag => tag !== animalTag);
-    } else {
-      updatedAnimalTags = [animalTag];
-    }
-
-    setSelectedAnimalTags(updatedAnimalTags);
-    const url = `/mainPage?page=1&animalTag=${updatedAnimalTags.join(
-      ",",
-    )}&wcTag=${selectedWCTag || ""}`;
-    navigate(url);
-  };
-
-  const handleWCTagChange = (wcTag: string) => {
-    setSelectedWCTag(wcTag);
-    const url = `/mainPage?page=1&animalTag=${selectedAnimalTags.join(
-      ",",
-    )}&wcTag=${wcTag}`;
-    navigate(url);
   };
 
   return (
@@ -335,7 +307,7 @@ const BoardList = () => {
       <Pagination
         activePage={paginationPage}
         itemsCountPerPage={pageSize}
-        totalItemsCount={filteredPosts.length} // 필터링된 결과의 길이로 설정
+        totalItemsCount={totalItemsCount}
         pageRangeDisplayed={5}
         prevPageText={"‹"}
         nextPageText={"›"}
