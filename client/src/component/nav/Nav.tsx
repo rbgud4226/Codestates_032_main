@@ -19,12 +19,12 @@ const BtnArr = [
     src: bookCheckIcon,
     link: "/members/recent",
   },
-  {
-    text: "검색",
-    src: searchIcon,
+  // {
+  //   text: "검색",
+  //   src: searchIcon,
 
-    link: "/mainpage",
-  },
+  //   link: "/mainpage",
+  // },
   {
     text: "마이페이지",
     src: myPageIcon,
@@ -56,6 +56,7 @@ const NavContainer = styled.nav`
   width: 100%;
   box-shadow: 0px 10px 34px #272c5614;
   background-color: ${global.White.value};
+  justify-content: space-between;
 `;
 
 const BaseStyledComponent = styled(Link)`
