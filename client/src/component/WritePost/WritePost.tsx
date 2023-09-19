@@ -72,7 +72,7 @@ function WritePost() {
     } else {
       setPost({
         ...post,
-        animalTag: [...animalTag.split(","), animal].join(","),
+        animalTag: [...animalTag.split(","), animal].join(" "),
       });
     }
   };

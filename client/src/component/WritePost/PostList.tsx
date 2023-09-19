@@ -36,41 +36,32 @@ const BoardList = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [animalTagFilter, setAnimalTagFilter] = useState<string | null>(null);
   const [wcTagFilter, setWCTagFilter] = useState<string | null>(null);
-  const [page, setPage] = useState<number>(currentPage);
-  const [totalItemsCount, setTotalItemsCount] = useState<number>(0);
-  const [paginationPage, setPaginationPage] = useState<number>(currentPage);
   const [isLoading, setIsLoading] = useState(true);
   const accessToken = localStorage.getItem("accessToken");
   const location = useLocation();
   const [selectedWCTag, setSelectedWCTag] = useState<string | null>(null);
   const [selectedAnimalTags, setSelectedAnimalTags] = useState<string[]>([]);
+  const [totalItemsCount, setTotalItemsCount] = useState<number>(0);
+  const [wcTags, setWCTags] = useState<string[]>([]); // 추가된 WC 태그
+  const [animalTags, setAnimalTags] = useState<string[]>([]); // 추가된 동물 태그
+  const [paginationPage, setPaginationPage] = useState<number>(currentPage);
+  const PAGE_SIZE = 5;
 
-  const [userData, setUserData] = useState({
-    nickName: "",
-    email: "",
-    phone: "",
-    profileImage: "",
-  });
-
-  //로그인 토근 확인하는거
   const checkLoginStatus = () => {
     const accessToken = localStorage.getItem("accessToken");
     setIsLoggedIn(!!accessToken);
   };
 
-  const postPerPage = 5;
+  const [pageSize, setPageSize] = useState<number>(5);
 
-  //tag불러오기
-  const fetchData = async (
+  // WC 태그와 동물 태그를 가져오는 함수
+  const fetchTags = async (
     selectedPage: number,
-    animalTagFilter: string | null,
     wcTagFilter: string | null,
+    animalTagFilter: string | null,
   ) => {
-    const size = String(postPerPage);
-    setIsLoading(true);
-
     try {
-      const response = await axios.get(`${api}/wcboard/tag`, {
+      const wcTagsResponse = await axios.get(`${api}/wcboard/tag`, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
@@ -78,19 +69,68 @@ const BoardList = () => {
           Authorization: `Bearer ${accessToken}`,
         },
         params: {
-          page: selectedPage,
-          size,
+          page: selectedPage, // 현재 페이지
           wcTag: wcTagFilter,
           animalTag: animalTagFilter,
         },
       });
 
+      const animalTagsResponse = await axios.get(`${api}/wcboard/tag`, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          page: selectedPage, // 현재 페이지
+          wcTag: wcTagFilter,
+          animalTag: animalTagFilter,
+        },
+      });
+
+      setWCTags(wcTagsResponse.data); // WC 태그 설정
+      setAnimalTags(animalTagsResponse.data); // 동물 태그 설정
+    } catch (error) {
+      console.error("태그 불러오기 중 오류 발생:", error);
+    }
+  };
+
+  // 태그 불러오기
+  const fetchData = async (
+    selectedPage: number,
+    animalTagFilter: string | null,
+    wcTagFilter: string | null,
+  ) => {
+    // 페이지 크기를 문자열로 변환
+    const size = String(pageSize);
+    setIsLoading(true);
+
+    try {
+      const response = await axios.get(`${api}/wcboard`, {
+
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          page: selectedPage, // 현재 페이지
+          size, // 페이지 크기
+          wcTag: wcTagFilter,
+          animalTag: animalTagFilter,
+          sort: "wcboardId",
+        },
+      });
+
       // 데이터 설정
       checkLoginStatus();
-      setPosts(response.data.data); // 이 부분을 변경하여 정렬하지 않고 그대로 설정합니다.
-
+      setPosts(response.data.data.sort((a, b) => b.wcboardId - a.wcboardId));
       const pageInfo: PageInfo = response.data.pageInfo;
+
       setTotalItemsCount(pageInfo.totalElements);
+
       setIsLoading(false);
 
       // 페이지가 없으면 1로 보내기
@@ -103,13 +143,59 @@ const BoardList = () => {
       setIsLoading(false);
     }
   };
+
   const goToPage = (selectedPage: number) => {
-    // 페이지 이동 시 'p' 파라미터 변경
-    const url = `/mainPage?p=${selectedPage}`;
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.set("p", String(selectedPage)); // 페이지 번호 추가
+    if (selectedWCTag) {
+      urlSearchParams.set("wcTag", selectedWCTag); // WC 태그 추가
+    }
+    if (selectedAnimalTags.length > 0) {
+      urlSearchParams.set("animalTag", selectedAnimalTags.join(",")); // 동물 태그 추가
+    }
+
+    const url = `/mainPage?${urlSearchParams.toString()}`;
     navigate(url);
   };
 
-  //페이지 필터 데이터
+  const handleAnimalTagChange = (animalTag: string) => {
+    setSelectedAnimalTags([animalTag]);
+    setPaginationPage(1); // 페이지를 1페이지로 초기화
+
+    const url = `/mainPage?p=1&animalTag=${encodeURIComponent(
+      animalTag,
+    )}&wcTag=${selectedWCTag || ""}`;
+    navigate(url);
+  };
+
+  const handleWCTagChange = (wcTag: string) => {
+    setSelectedWCTag(wcTag);
+    setPaginationPage(1); // 페이지를 1페이지로 초기화
+
+    const url = `/mainPage?p=1&animalTag=${selectedAnimalTags.join(
+      ",",
+    )}&wcTag=${wcTag}`;
+    navigate(url);
+  };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const currentPageFromURL = parseInt(searchParams.get("p") || "1", 10);
+    setPaginationPage(currentPageFromURL);
+    setAnimalTagFilter(searchParams.get("animalTag") || null);
+    setWCTagFilter(searchParams.get("wcTag") || null);
+    fetchData(
+      currentPageFromURL,
+      searchParams.get("animalTag"),
+      searchParams.get("wcTag"),
+    );
+    fetchTags(
+      currentPageFromURL,
+      searchParams.get("wcTag"),
+      searchParams.get("animalTag"),
+    );
+  }, [location.search]);
+
   const handlePageChange = (selectedPage: number) => {
     setPaginationPage(selectedPage); // 페이지네이션 숫자를 업데이트
 
@@ -119,38 +205,6 @@ const BoardList = () => {
     // 페이지 이동 처리
     goToPage(selectedPage);
   };
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const currentPageFromURL = parseInt(searchParams.get("p") || "1", 10);
-    setPaginationPage(currentPageFromURL);
-    // fetchData 함수를 호출하여 페이지 주소가 변경될 때마다 데이터를 다시 가져오도록 합니다.
-    fetchData(currentPageFromURL, animalTagFilter, wcTagFilter);
-  }, [location.search, animalTagFilter, wcTagFilter]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const ngrokSkipBrowserWarning = "69420";
-
-        const response = await axios.get(`${api}/members`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
-            "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
-          },
-        });
-
-        if (isLoggedIn) {
-          setUserData(response.data);
-        }
-      } catch (error) {
-        console.error("Error occurred:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [accessToken, isLoggedIn]);
 
   const moveToWrite = () => {
     if (isLoggedIn) {
@@ -161,43 +215,12 @@ const BoardList = () => {
     }
   };
 
-  const handlePostSubmit = () => {
-    fetchData(1, animalTagFilter, wcTagFilter);
-    goToPage(1);
-  };
-
-  const handleAnimalTagChange = (animalTag: string) => {
-    const isSelected = selectedAnimalTags.includes(animalTag);
-
-    if (isSelected) {
-      // 이미 선택된 버튼을 클릭한 경우, 선택 취소
-      setSelectedAnimalTags(prevTags =>
-        prevTags.filter(tag => tag !== animalTag),
-      );
-    } else {
-      // 다른 버튼을 클릭한 경우, 해당 버튼 선택
-      setSelectedAnimalTags(prevTags => [...prevTags, animalTag]);
-    }
-  };
-
-  const handleWCTagChange = (wcTag: string) => {
-    // 이미 선택된 산책/돌봄 태그를 클릭한 경우, 선택 취소
-    if (selectedWCTag === wcTag) {
-      setSelectedWCTag(null);
-      fetchData(1, animalTagFilter, null); // 돌봄 태그 선택 취소 시, 해당 태그로 필터링하지 않음
-    } else {
-      // 다른 산책/돌봄 태그를 클릭한 경우, 해당 태그 선택
-      setSelectedWCTag(wcTag);
-      setPage(1);
-      fetchData(1, animalTagFilter, wcTag);
-    }
-  };
   return (
     <PageListContainer>
       <PageContainer>
         <SectionContainer>
           <OptionButton
-            selected={selectedAnimalTags.length === 0 && !selectedWCTag}
+            selected={!selectedAnimalTags.length && !selectedWCTag}
             onClick={() => {
               setAnimalTagFilter(null);
               setWCTagFilter(null);
@@ -211,61 +234,36 @@ const BoardList = () => {
             모두
           </OptionButton>
           <OptionButton
-            selected={selectedAnimalTags.includes("고양이")}
-            onClick={() => {
-              setAnimalTagFilter("고양이");
-              setPage(1);
-              fetchData(1, "고양이", animalTagFilter);
-
-              handleAnimalTagChange("고양이");
-            }}
-          >
-            고양이
-          </OptionButton>
-          <OptionButton
             selected={selectedAnimalTags.includes("강아지")}
-            onClick={() => {
-              setAnimalTagFilter("강아지");
-              setPage(1);
-              fetchData(1, "강아지", animalTagFilter);
-              handleAnimalTagChange("강아지");
-            }}
+            onClick={() => handleAnimalTagChange("강아지")}
           >
             강아지
           </OptionButton>
           <OptionButton
+            selected={selectedAnimalTags.includes("고양이")}
+            onClick={() => handleAnimalTagChange("고양이")}
+          >
+            고양이
+          </OptionButton>
+          <OptionButton
             selected={selectedAnimalTags.includes("기타동물")}
-            onClick={() => {
-              setAnimalTagFilter("기타동물");
-              setPage(1);
-              fetchData(1, "기타동물", animalTagFilter);
-              handleAnimalTagChange("기타동물");
-            }}
+            onClick={() => handleAnimalTagChange("기타동물")}
           >
             기타
           </OptionButton>
         </SectionContainer>
         <SectionContainer>
           <WcOptionButton
-            selected={selectedWCTag === "돌봄"}
-            onClick={() => {
-              setSelectedWCTag("돌봄");
-              handleWCTagChange("돌봄");
-              setPage(1);
-              fetchData(1, "돌봄", wcTagFilter);
-            }}
-          >
-            돌봄
-          </WcOptionButton>
-          <WcOptionButton
             selected={selectedWCTag === "산책"}
-            onClick={() => {
-              setSelectedWCTag("산책");
-              handleWCTagChange("산책");
-              fetchData(1, "산책", wcTagFilter);
-            }}
+            onClick={() => handleWCTagChange("산책")}
           >
             산책
+          </WcOptionButton>
+          <WcOptionButton
+            selected={selectedWCTag === "돌봄"}
+            onClick={() => handleWCTagChange("돌봄")}
+          >
+            돌봄
           </WcOptionButton>
         </SectionContainer>
       </PageContainer>
@@ -295,7 +293,6 @@ const BoardList = () => {
                         <SubPageContainer>
                           <TitlePage>{post.title}</TitlePage>
                           <ContentPage>{post.content}</ContentPage>
-                          <NickNamePage>{userData.nickName}</NickNamePage>
                         </SubPageContainer>
                       </ListContainer>
                     </ImContainer>
@@ -310,7 +307,7 @@ const BoardList = () => {
       <PostButton onClick={moveToWrite}>글쓰기</PostButton>
       <Pagination
         activePage={paginationPage}
-        itemsCountPerPage={postPerPage}
+        itemsCountPerPage={pageSize}
         totalItemsCount={totalItemsCount}
         pageRangeDisplayed={5}
         prevPageText={"‹"}
