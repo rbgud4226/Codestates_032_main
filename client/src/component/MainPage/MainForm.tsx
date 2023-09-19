@@ -227,6 +227,40 @@ function MainForm(props: MainProps) {
           </WhiteBoxContainer>
         )}
       </SectionContainer>
+      <SectionendContainer>
+        {imagesLoaded && (
+          <EndContainer>
+            <EndPage>
+              <GilinLinkF href="https://github.com/sebfe45kimck">
+                FE김철기
+              </GilinLinkF>
+              <GilinLinkB href="https://github.com/j00r6">BE박진수</GilinLinkB>
+            </EndPage>
+            <EndPage>
+              <GilinLinkF href="https://github.com/udaeng8286">
+                FE송유정
+              </GilinLinkF>
+              <GilinLinkB href="https://github.com/SEBBE45JGH">
+                BE장근호
+              </GilinLinkB>
+            </EndPage>
+            <EndPage>
+              <GilinLinkF href="https://github.com/Dohyun12259">
+                FE최도현
+              </GilinLinkF>
+              <GilinLinkB href="https://github.com/gord10011">
+                BE전찬혁
+              </GilinLinkB>
+            </EndPage>
+            <EndPage>
+              <GilinLinkF></GilinLinkF>
+              <GilinLinkB href="https://github.com/rbgud4226">
+                BE황규형
+              </GilinLinkB>
+            </EndPage>
+          </EndContainer>
+        )}
+      </SectionendContainer>
     </PageListContainer>
   );
 }
@@ -242,6 +276,9 @@ const ListContainer = styled.div`
   margin-top; 100px;
   color: wihte;
 `;
+const EndPage = styled.div`
+  display: flex;
+`;
 
 const PageListContainer = styled.div`
   text-align: left;
@@ -254,6 +291,25 @@ const PageContainer = styled.div`
 const SectionContainer = styled.div`
   margin-bottom: 32px;
   position: relative;
+`;
+
+const SectionendContainer = styled.div`
+  position: relative;
+`;
+
+const EndContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(34, 39, 76, 0.2);
+  height: 100px;
+
+  margin-right: auto;
+  background-color: #279eff;
+  justify-content: center;
+  align-items: center;
 `;
 
 const HR = styled.hr`
@@ -276,6 +332,19 @@ const WalkText = styled.div`
   margin-top: 50px;
 `;
 
+const GilinLinkB = styled.a`
+  margin-right: 10px;
+  width: 100px;
+  height: 20px;
+  color: white;
+`;
+
+const GilinLinkF = styled.a`
+  margin-right: 10px;
+  width: 100px;
+  height: 20px;
+  color: white;
+`;
 const WalkSText = styled.div`
   font-size: 16px;
   margin: 20px;
