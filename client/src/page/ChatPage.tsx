@@ -46,7 +46,7 @@ export const PetalkBtnCtn = styled.div`
   top: 70px;
   position: sticky;
   background-color: ${global.White.value};
-  z-index: 999;
+  z-index: 1;
 `;
 
 export const ActiveBtn = styled.button`

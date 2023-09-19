@@ -20,7 +20,7 @@ const ClientChatDesign: React.FC<CCDProps> = ({ input, createAt }) => {
 
 export default ClientChatDesign;
 
-export const ChatCtn = styled.div`
+const ChatCtn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -29,7 +29,7 @@ export const ChatCtn = styled.div`
   margin-left: 20px;
 `;
 
-export const ChatDesign = styled.div`
+const ChatDesign = styled.div`
   white-space: normal;
   justify-content: center;
   text-align: center;
@@ -40,7 +40,7 @@ export const ChatDesign = styled.div`
   padding: 12px 24px;
 `;
 
-export const TimeDesign = styled.div`
+const TimeDesign = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

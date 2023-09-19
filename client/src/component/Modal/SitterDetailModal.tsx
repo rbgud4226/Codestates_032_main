@@ -35,7 +35,6 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
   };
   //지원하기 버튼 입력시 채팅룸 생성.
   const chatHdr = async () => {
-    setChatAble(true);
     setModalOpen(false);
     try {
       const res = await axios.post(
@@ -49,6 +48,7 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           },
         },
       );
+      setChatAble(true);
       console.log(res.data);
     } catch (err) {
       console.log(err);
@@ -222,12 +222,6 @@ const customModalStyles: ReactModal.Styles = {
   },
 };
 
-const ModalCtn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
 const SitterCtn = styled.div`
   display: flex;
   flex-direction: row;
@@ -266,7 +260,12 @@ const ImgCtn = styled.div`
 `;
 
 //여기서부터 모달 스타일
-
+const ModalCtn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
 const BackBtn = styled.button`
   background-color: white;
   border: 0px;

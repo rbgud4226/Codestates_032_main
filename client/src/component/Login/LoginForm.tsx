@@ -40,13 +40,15 @@ const LoginForm = () => {
   const loginHdr = async (data: FormData) => {
     try {
       const res: any = await axios.post(`${api}/members/login`, data);
-      console.log(res.data);
+      console.log(res.headers);
       const userData = {
         nickName: res.data.nickName,
         profileImage: res.data.profileImage,
         accessToken: res.headers.authorization,
         refreshToken: res.headers.refresh,
+        memberid: res.headers.memberid,
       };
+      localStorage.setItem("memberId", userData.memberid);
       localStorage.setItem("nickName", userData.nickName);
       localStorage.setItem("profileImage", userData.profileImage);
       localStorage.setItem("refreshToken", userData.refreshToken);
