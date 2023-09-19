@@ -13,10 +13,10 @@ type PetsitterProps = {
 const Petsitter: React.FC<PetsitterProps> = ({ checkPetSitter }) => {
   const navigate = useNavigate();
   const dummyData = {
-    name: "홍길동",
-    careActivities: 10,
-    reviewCount: 5,
-    averageRating: 4.5,
+    name: "마동석",
+    careActivities: 0,
+    reviewCount: 0,
+    averageRating: 0,
   };
   //서버 통신 임시 구현
   // const [userData, setUserData] = useState({

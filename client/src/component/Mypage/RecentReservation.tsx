@@ -74,54 +74,68 @@ const RecentReservation = () => {
     <Container>
       <Category>
         <CategoryTitle>최근 맡긴 예약</CategoryTitle>
-        <RecentContainer>
-          {deposited.map(reservation => (
-            <ReservationItem key={reservation.wcboardId}>
-              <Left>
-                {reservation.wcTag}{" "}
-                {calculateDuration(reservation.startTime, reservation.endTime)}
-                <ImgContainer>
-                  <ProfileImage
-                    src={reservation.petSitterImage}
-                    alt="Profile Image"
-                  />
-                </ImgContainer>
-              </Left>
-              <Details>
-                <Item>{reservation.petSitterNickname}님</Item>
-                <TimeItem>
-                  {reservation.startTime}-{reservation.endTime}
-                </TimeItem>
-              </Details>
-            </ReservationItem>
-          ))}
-        </RecentContainer>
+        {deposited.length === 0 ? (
+          <Message>아직 맡긴 내역이 없습니다!</Message>
+        ) : (
+          <RecentContainer>
+            {deposited.map(reservation => (
+              <ReservationItem key={reservation.wcboardId}>
+                <Left>
+                  {reservation.wcTag}{" "}
+                  {calculateDuration(
+                    reservation.startTime,
+                    reservation.endTime,
+                  )}
+                  <ImgContainer>
+                    <ProfileImage
+                      src={reservation.petSitterImage}
+                      alt="Profile Image"
+                    />
+                  </ImgContainer>
+                </Left>
+                <Details>
+                  <Item>{reservation.petSitterNickname}님</Item>
+                  <TimeItem>
+                    {reservation.startTime}-{reservation.endTime}
+                  </TimeItem>
+                </Details>
+              </ReservationItem>
+            ))}
+          </RecentContainer>
+        )}
       </Category>
 
       <Category>
         <CategoryTitle>최근 케어 내역</CategoryTitle>
-        <RecentContainer>
-          {careRecent.map(reservation => (
-            <ReservationItem key={reservation.id}>
-              <Left>
-                {reservation.wcTag}{" "}
-                {calculateDuration(reservation.startTime, reservation.endTime)}
-                <ImgContainer>
-                  <ProfileImage
-                    src={reservation.memberImage} // 서버에서 받아온 프로필 이미지 URL을 사용
-                    alt="Profile Image"
-                  />
-                </ImgContainer>
-              </Left>
-              <Details>
-                <Item>{reservation.nickName}님</Item>
-                <TimeItem>
-                  {reservation.startTime} - {reservation.endTime}
-                </TimeItem>
-              </Details>
-            </ReservationItem>
-          ))}
-        </RecentContainer>
+        {careRecent.length === 0 ? (
+          <Message>아직 케어 내역이 없습니다!</Message>
+        ) : (
+          <RecentContainer>
+            {careRecent.map(reservation => (
+              <ReservationItem key={reservation.id}>
+                <Left>
+                  {reservation.wcTag}{" "}
+                  {calculateDuration(
+                    reservation.startTime,
+                    reservation.endTime,
+                  )}
+                  <ImgContainer>
+                    <ProfileImage
+                      src={reservation.memberImage} // 서버에서 받아온 프로필 이미지 URL을 사용
+                      alt="Profile Image"
+                    />
+                  </ImgContainer>
+                </Left>
+                <Details>
+                  <Item>{reservation.nickName}님</Item>
+                  <TimeItem>
+                    {reservation.startTime} - {reservation.endTime}
+                  </TimeItem>
+                </Details>
+              </ReservationItem>
+            ))}
+          </RecentContainer>
+        )}
       </Category>
     </Container>
   );
@@ -200,4 +214,13 @@ const Left = styled.div`
 
 const TimeItem = styled.div`
   font-size: 12px;
+`;
+const Message = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
+  width: 100%;
+  height: 96px;
 `;
