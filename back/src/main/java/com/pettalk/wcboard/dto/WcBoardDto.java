@@ -127,6 +127,7 @@ public class WcBoardDto {
         private LocalDateTime endTime;
         private String createdAt;
         private String nickName;
+        private Long memberId;
     }
 
     @Getter
@@ -136,7 +137,6 @@ public class WcBoardDto {
         private String nowJob;
         private boolean smoking;
         private String petSitterImage;
-        //Todo 리뷰 포함되야하나?
     }
 
     @Getter
