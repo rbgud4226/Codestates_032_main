@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css";
 import AreaSubmit from "./AreaSubmit";
@@ -8,7 +8,11 @@ import before from "../../asset/PetsitterRegisterAsset/Before.png";
 import "react-calendar/dist/Calendar.css";
 import Pickr from "./Pickr";
 import UploadImage from "./ImageSubmit";
+import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
+const api = process.env.REACT_APP_DB_HOST;
 interface PostFormProps {
   step: number;
   post: {
@@ -18,9 +22,13 @@ interface PostFormProps {
     wcTag: string;
     animalTag: string;
     areaTag: string;
+    startTime: string; // 시작 시간 추가
+    endTime: string; // 끝나는 시간 추가
   };
   InputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
 
   AnimalTagChange: (animal: string) => void;
@@ -29,9 +37,65 @@ interface PostFormProps {
   Submit: () => Promise<void>;
   AreaChange: (area: string | null) => void;
   isSubmitting: boolean;
-  handleImageChange: (newImages: string[]) => void; // handleImageChange 추가
-  images: string[]; // images 추가
+  handleImageChange: (newImages: string[]) => void;
+  images: string[];
   imagePreview: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+}
+
+//이거 사실 분리해야 하는데 시간 없어서 같이 넣어버림 나중에 리펙토링
+function ReservationPage({
+  post,
+  InputChange,
+  StepChange,
+  Submit,
+}: {
+  post: PostFormProps["post"];
+  InputChange: PostFormProps["InputChange"];
+  StepChange: PostFormProps["StepChange"];
+  Submit: PostFormProps["Submit"];
+}) {
+  // ReservationPage 컴포넌트 내부 코드를 그대로 가져옵니다.
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const handleSubmit = () => {
+    if (startDate && endDate) {
+      const startTime = startDate.toISOString();
+      const endTime = endDate.toISOString();
+      post.startTime = startTime; // post 객체에 시작 시간 추가
+      post.endTime = endTime; // post 객체에 끝나는 시간 추가
+      Submit(); // Submit 함수 호출
+    }
+  };
+
+  return (
+    <PageListContainer>
+      <div>
+        <SectionTitle>시작 시간</SectionTitle>
+
+        <CustomDatePicker
+          selected={startDate}
+          onChange={date => setStartDate(date)}
+          minDate={new Date()}
+          showTimeSelect
+          dateFormat="yyyy-MM-dd h:mm"
+        />
+        <SectionTitle>종료 시간</SectionTitle>
+        <CustomDatePicker
+          selected={endDate}
+          minDate={new Date()}
+          onChange={(date: Date | null) => setEndDate(date)}
+          showTimeSelect
+          dateFormat="yyyy-MM-dd h:mm"
+        />
+      </div>
+      <SectionButtonContainer>
+        <SubmitButton onClick={handleSubmit}>제출하기</SubmitButton>
+      </SectionButtonContainer>
+    </PageListContainer>
+  );
 }
 
 function PostForm({
@@ -49,6 +113,7 @@ function PostForm({
   const [selectedWcTag, setSelectedWcTag] = useState<string | null>(null);
   const [selectedAnimalTags, setSelectedAnimalTags] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [userNickname, setUserNickname] = useState<string>(""); // 사용자 닉네임 상태 변수 추가
 
   const handleWcTagChange = (wcTag: string) => {
     if (selectedWcTag === wcTag) {
@@ -59,6 +124,27 @@ function PostForm({
       setSelectedWcTag(wcTag);
     }
   };
+  useEffect(() => {
+    // 사용자 닉네임을 가져오는 함수
+    const fetchUserNickname = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get(`${api}/members`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const userNickname = response.data.nickName;
+        setUserNickname(userNickname);
+      } catch (error) {
+        console.error("Error fetching user nickname:", error);
+      }
+    };
+
+    // 컴포넌트가 마운트될 때 사용자의 닉네임을 가져옴
+    fetchUserNickname();
+  }, []);
 
   const handleAnimalTagChange = (animalTag: string) => {
     const isSelected = selectedAnimalTags.includes(animalTag);
@@ -102,7 +188,7 @@ function PostForm({
             </OptionButtonContainer>
           </SectionContainer>
           <SectionContainer>
-            <SectionTitle>동물 선택</SectionTitle>
+            <SectionTitle>반려 동물 선택</SectionTitle>
             <OptionButtonContainer>
               <OptiontwoButton
                 selected={selectedAnimalTags.includes("강아지")}
@@ -151,7 +237,6 @@ function PostForm({
               주의사항 들의 내용을 적어주세요.
             </ContentSText>
             <InputName
-              type="text"
               name="content"
               value={post.content}
               onChange={InputChange}
@@ -186,17 +271,31 @@ function PostForm({
               <AreaSubmit onRegionSelect={AreaChange} />
             </SectionContainer>
             <SectionContainer>
+              <SectionArTitle>주소</SectionArTitle>
+              <ContentSAreText>시/구 까지만 입력하세요</ContentSAreText>
+              <InputArName
+                name="content"
+                value={post.content}
+                onChange={InputChange}
+                maxLength={10}
+                placeholder="예시)관악구 신사로."
+              />
+            </SectionContainer>
+            <SectionContainer>
               <SectionTitle>예약 날짜</SectionTitle>
-              <Pickr></Pickr>
+              <ReservationPage
+                post={post}
+                InputChange={InputChange}
+                StepChange={StepChange}
+                Submit={Submit}
+              />
             </SectionContainer>
             <SectionContainer>
               <StepReButton onClick={() => StepChange(1)}>
                 <StyledImage src={before} alt="before"></StyledImage>
               </StepReButton>
             </SectionContainer>
-            <SectionButtonContainer>
-              <StepSubmitButton onClick={Submit}>제출하기</StepSubmitButton>
-            </SectionButtonContainer>
+            <SectionButtonContainer></SectionButtonContainer>
           </PageContainer>
         )}
       </PageContainer>
@@ -214,6 +313,7 @@ const PageContainer = styled.div`
 
 const SectionContainer = styled.div`
   margin-bottom: 32px;
+  text-align: left;
 `;
 const SectionButtonContainer = styled.div`
   margin-bottom: 32px;
@@ -228,8 +328,25 @@ const SectionTitle = styled.div`
   font-size: 20px;
   margin-bottom: 8px;
 `;
+
+const SectionArTitle = styled.div`
+  font-size: 20px;
+  margin-bottom: 8px;
+  float: left;
+  gap: 14px;
+`;
+
+const SectionDayTitle = styled.div`
+  font-size: 20px;
+  margin-bottom: 8px;
+  float: left;
+  gap: 16px;
+  justify-content: space-around;
+`;
+
 const OptionButtonContainer = styled.div`
   display: flex;
+  gap: 16px;
   justify-content: space-around;
 `;
 
@@ -243,8 +360,8 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 200px;
   height: 44px;
+  width: 100%;
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
@@ -255,7 +372,7 @@ const OptiontwoButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 200px;
+  width: 100%;
   height: 44px;
   border-radius: 4px;
   padding: 8px 16px;
@@ -270,6 +387,22 @@ const ContentSText = styled.div`
   margin-top: 8px;
   margin-bottom: 8px;
 `;
+const ContentSAreText = styled.div`
+  font-size: 12px;
+  position: absolute;
+  margin-top: -28px;
+  margin-left: 48px;
+  color: #595959;
+`;
+
+const ContentSDay2Title = styled.div`
+  font-size: 12px;
+  position: absolute;
+  margin-top: -28px;
+  margin-left: 48px;
+  color: #595959;
+`;
+
 const ContentSubmitText = styled.div`
   font-size: 12px;
   color: #595959;
@@ -277,9 +410,22 @@ const ContentSubmitText = styled.div`
   margin-bottom: 8px;
 `;
 
-const InputName = styled.input`
+const InputName = styled.textarea`
   width: 100%;
   height: 120px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #595959;
+  text-align: left;
+  overflow: auto;
+  white-space: normal;
+  resize: none;
+  border: 1px solid #595959;
+`;
+
+const InputArName = styled.textarea`
+  width: 100%;
+  height: 40px;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #595959;
@@ -319,6 +465,21 @@ const StepSubmitButton = styled.button`
   height: 44px;
   border-radius: 4px;
   padding: 8px 16px;
+
+  cursor: pointer;
+  justify-content: space-around;
+  font-size: 16px;
+  display: inline-block;
+`;
+
+const SubmitButton = styled.button`
+  color: white;
+  background-color: #279eff;
+  border: 1px solid #279eff;
+  width: 120px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 8px 16px;
   cursor: pointer;
   justify-content: space-around;
   font-size: 16px;
@@ -327,10 +488,22 @@ const StepSubmitButton = styled.button`
 
 const StepReButton = styled.button`
   position: absolute;
-  bottom: -74px;
   left: 0px;
   background: none;
   border: none;
   cursor: pointer;
   position: relative;
+  top: -64px;
+`;
+const SubmitButtonContainer = styled.div`
+  bottom: 100px;
+  display: inline-block;
+`;
+const CustomDatePicker = styled(DatePicker)`
+  input {
+    width: 200px; 
+    height: 40px; 
+    font-size: 16px; /
+
+  }
 `;

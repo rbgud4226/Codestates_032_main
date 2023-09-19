@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+
 import MainImage1 from "../../asset/MainAsset/MainImage1.png";
 import MainLogo from "../../asset/MainAsset/MainLogo.png";
 import MainImage2 from "../../asset/MainAsset/MainImage2.png";
@@ -24,98 +25,145 @@ function MainForm(props: MainProps) {
     navigate("/login");
   };
 
+  const [textPosition, setTextPosition] = useState<number>(0); // 숫자로 변경
+  const [textOpacity, setTextOpacity] = useState<number>(1);
+  const [imagePosition, setImagePosition] = useState<string>("translateY(0)");
+  const [imageOpacity, setImageOpacity] = useState<number>(1);
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY || window.pageYOffset;
+    const startScroll = 200;
+    const endScroll = 800;
+
+    if (scrollY <= startScroll) {
+      setTextPosition(0);
+      setTextOpacity(1);
+    } else if (scrollY >= startScroll && scrollY <= endScroll) {
+      const normalizedScroll =
+        (scrollY - startScroll) / (endScroll - startScroll);
+
+      // 텍스트를 스크롤을 따라 아래로 이동
+      setTextPosition(normalizedScroll * 100); // 예시로 100px 아래로 이동
+
+      setTextOpacity(1 - normalizedScroll);
+    } else {
+      setTextPosition(100); // 스크롤을 아래로 내린 후 텍스트를 고정시킴
+      setTextOpacity(0);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const [selectedButton, setSelectedButton] = useState("walk");
+
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const handleButtonClick = (buttonName: string) => {
     setSelectedButton(buttonName);
   };
   const whiteBoxText =
-    /* 여기부분도 좀 잘하면 더 좋아질거같은데 급하다.*/
     selectedButton === "walk" ? (
       <>
         <WalkText>
-          동네 산책 <br />
+          동네 산책
           <WalkSText>후각 활동, 마킹, 바른 습관 형성 .</WalkSText>
-          <WalkIText>------------------------------</WalkIText>
-          발 닦기
-          <br />
+          <HR />발 닦기
           <WalkSText>물티슈 또는 물세척 후 닦기 .</WalkSText>
-          <WalkIText>------------------------------</WalkIText>
+          <HR />
           배변 정리
-          <br />
           <WalkSText>산책 중 배변 처리</WalkSText>
-          <WalkIText>------------------------------</WalkIText>
+          <HR />
         </WalkText>
       </>
     ) : (
       <>
         <WalkText>
-          맞춤 배식 <br />
+          맞춤 배식
           <WalkSText>사료와 간식, 물 급여 </WalkSText>
-          <WalkIText>------------------------------</WalkIText>
+          <HR />
           신나는 놀이
-          <br />
           <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
-          <WalkIText>------------------------------</WalkIText>
+          <HR />
           배변 정리
-          <br />
           <WalkSText>돌봄 중 배변 처리</WalkSText>
-          <WalkIText>------------------------------</WalkIText>
+          <HR />
         </WalkText>
       </>
     );
   return (
-    <Container>
-      <Container>
-        <A>
-          <MainImage src={MainImage1} alt={`Image`} />
-          <TextWrap>
-            <MainText>{"내가 없을 때\n 내 아이는?"}</MainText>
+    <PageListContainer>
+      <PageContainer>
+        <SectionContainer>
+          <MainImage
+            src={MainImage1}
+            alt={`Image`}
+            style={{
+              transform: `translateX(${textPosition}px)`, // 수정된 부분
+              opacity: imageOpacity * textOpacity,
+            }}
+          />
+          <TextWrap style={{ position: "absolute" }}>
+            <MainText textPosition={textPosition}>
+              {"내가 없을 때\n 내 아이는?"}
+            </MainText>
             <Btn onClick={LoginButtonClick}>예약하기</Btn>
           </TextWrap>
+        </SectionContainer>
 
+        <SectionContainer>
           <MainLogoImage src={MainLogo} alt={`Image`} />
           <MainLogoText>{"펫톡과 함께하세요!"}</MainLogoText>
+        </SectionContainer>
 
-          <A>
-            <NainItwo>
-              <MainImagetwo src={MainImage2} alt={`Image`} />
-              <WhiteImage />
-            </NainItwo>
-            <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
-            <MainTexttwoo>
-              {
-                "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
-              }
-            </MainTexttwoo>
-          </A>
-        </A>
+        <SectionContainer>
+          <NainItwo>
+            <MainImagetwo src={MainImage2} alt={`Image`} />
+            <WhiteImage>
+              <MainTexttwo>{"산책시 실시간\n 위치확인까지!"}</MainTexttwo>
+              <MainTexttwoo>
+                {
+                  "우리 아이가 지금 어디에서 산책하는\n 지 영상과 함께, 실시간 GPS 경로를 \n볼 수 있어요"
+                }
+              </MainTexttwoo>
+            </WhiteImage>
+          </NainItwo>
+        </SectionContainer>
 
-        <Carousel showThumbs={false}>
-          <div>
-            <img src={MainImage3} alt="Image 3" />
-            <h1>
-              돌봄 맡기기 <br />
-              휴가도 즐겁게!
-            </h1>
-            <p>
-              집을 비우거나 휴가를 떠날 때 <br />
-              혼자 있는 우리 아이 걱정 없이!
-            </p>
-          </div>
-          <div>
-            <img src={MainImage4} alt="Image 4" />
-            <h1>
-              돌봄 맡기기 <br />
-              휴가도 즐겁게!
-            </h1>
-            <p>
-              집을 비우거나 휴가를 떠날 때 <br />
-              혼자 있는 우리 아이 걱정 없이!
-            </p>
-          </div>
-        </Carousel>
-      </Container>
+        <SectionContainer>
+          <Carousel showThumbs={false}>
+            <div>
+              <img src={MainImage3} alt="Image 3" />
+              <h1>
+                돌봄 맡기기 <br />
+                휴가도 즐겁게!
+              </h1>
+              <p>
+                집을 비우거나 휴가를 떠날 때 <br />
+                혼자 있는 우리 아이 걱정 없이!
+              </p>
+            </div>
+            <div>
+              <img src={MainImage4} alt="Image 4" />
+              <h1>
+                돌봄 맡기기 <br />
+                휴가도 즐겁게!
+              </h1>
+              <p>
+                집을 비우거나 휴가를 떠날 때 <br />
+                혼자 있는 우리 아이 걱정 없이!
+              </p>
+            </div>
+          </Carousel>
+        </SectionContainer>
+      </PageContainer>
+
       <WhiteBoxContainer>
         <WalkButton
           className={selectedButton === "walk" ? "active" : ""}
@@ -137,10 +185,28 @@ function MainForm(props: MainProps) {
           <WalkSbutton onClick={LoginButtonClick}>예약하기</WalkSbutton>
         </TextWrap1>
       </WhiteBoxContainer>
-    </Container>
+    </PageListContainer>
   );
 }
 export default MainForm;
+
+const PageListContainer = styled.div`
+  text-align: left;
+`;
+
+const PageContainer = styled.div`
+  text-align: left;
+`;
+
+const SectionContainer = styled.div`
+  margin-bottom: 32px;
+`;
+
+const HR = styled.hr`
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 16px;
+`;
 
 const NainItwo = styled.div`
   background-color: White;
@@ -154,11 +220,6 @@ const NainItwo = styled.div`
 const WalkText = styled.div`
   font-size: 16px;
   margin-top: 100px;
-`;
-
-const WalkIText = styled.div`
-  font-size: "12px";
-  margin: 20px;
 `;
 
 const WalkSText = styled.div`
@@ -201,13 +262,25 @@ const WhiteBoxImage = styled.img`
   margin-top: 60%;
 `;
 
+const slideDown = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
 const MainImage = styled.img`
   display: flex;
   justify-content: center;
   width: 100%;
   height: auto;
   margin: 0px auto;
+  animation: ${slideDown} 1s ease; /* keyframes 애니메이션을 적용합니다. */
+  animation-fill-mode: forwards; /* 애니메이션 종료 후 상태를 유지합니다. */
 `;
+
 const h1 = styled.div`
   color: "#279eff";
   margin-top: "30%";
@@ -226,10 +299,6 @@ const MainImagetwo = styled.img`
   height: auto;
 `;
 
-const A = styled.div`
-  position: relative;
-  margin-bottom: 40px;
-`;
 const TextWrap1 = styled.div`
   position: relative;
   display: flex;
@@ -246,15 +315,14 @@ const TextWrap = styled.div`
   white-space: pre-line;
 `;
 
-const MainText = styled.div`
-  margin-left: 16px;
-  top: 0;
-  margin-top: 263px;
+const MainText = styled.div<{ textPosition: number }>`
+  transform: translateX(${props => props.textPosition}px); // 수정된 부분
+  margin-top: 350px;
   color: White;
+  margin-left: 24px;
   font-size: 36px;
   font-weight: bold;
 `;
-
 const WalkButton = styled.button`
   background-color: white;
   color: #279eff;
@@ -300,22 +368,21 @@ const MainLogoText = styled.div`
 `;
 
 const MainTexttwo = styled.div`
-  margin-left: 20%;
+  margin-left: 30%;
+  margin-top: 15px;
   top: 70%;
   color: #279eff;
   font-size: 28px;
   z-index: 3;
-  position: absolute;
   white-space: pre-line;
 `;
 
 const MainTexttwoo = styled.div`
-  margin-left: 20%;
-  top: 84%;
+  margin-left: 25%;
+  margin-top: 15px;
   color: black;
   font-size: 16px;
-  z-index: 3;
-  position: absolute;
+
   white-space: pre-line;
 `;
 

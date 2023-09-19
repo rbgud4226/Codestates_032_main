@@ -14,7 +14,6 @@ import SignUpDonePage from "./page/signup/SignUpDone";
 import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
-import BookingHistroyPage from "./page/BookingHistoryPage";
 
 function App() {
   return (
@@ -47,7 +46,7 @@ function App() {
                   element={<BookingHistroyPage />}
                 />
                 <Route path="/chat" element={<ChatPage />} />
-                <Route path="/mainpage" element={<BorderListPage />} />
+                <Route path="/mainPage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board" element={<PostDetailPage />} />
                 <Route

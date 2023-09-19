@@ -16,13 +16,15 @@ function WritePost() {
     wcTag: "",
     animalTag: "",
     areaTag: "",
-    // startTime: "",
-    //  endTime: "",
+    startTime: "",
+    endTime: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false); // 추가
   const [images, setImages] = useState<string[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기 추가
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<Date | null>(null); // startDate 초기화
+  const [endDate, setEndDate] = useState<Date | null>(null); // endDate 초기화
 
   const navigate = useNavigate();
 
@@ -73,6 +75,7 @@ function WritePost() {
       });
     }
   };
+  const accessToken = localStorage.getItem("accessToken");
 
   const Submit = async () => {
     if (isSubmitting) return; // 이미 제출 중이라면 중복 제출 방지
@@ -87,14 +90,15 @@ function WritePost() {
         post.content,
         post.areaTag,
         post.images,
-        // post.startTime,
-        // post.endTime,
+        post.startTime,
+        post.endTime,
       );
       const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
+          Authorization: `${accessToken}`,
         },
       });
 
@@ -110,8 +114,8 @@ function WritePost() {
         content: "",
         images: "",
         areaTag: "",
-        // startTime: "",
-        // endTime: "",
+        startTime: "",
+        endTime: "",
       });
 
       navigate("/mainPage");
@@ -138,6 +142,8 @@ function WritePost() {
         handleImageChange={handleImageChange}
         images={images}
         imagePreview={imagePreview}
+        startDate={startDate} // startDate 추가
+        endDate={endDate}
       />
     </div>
   );

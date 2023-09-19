@@ -1,122 +1,86 @@
-import React, { useRef, useEffect, useState } from "react";
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
+import React, { useState } from "react";
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-interface TimeSelectorProps {
-  inputRef: React.RefObject<HTMLInputElement>;
-  onTimeChange: (selectedTime: string) => void;
+type Post = {
+  startTime: string;
+  endTime: string;
+};
+
+interface ReservationPageProps {
+  post: Post;
+  InputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
+  StepChange: (newStep: number) => void;
+  Submit: (startTime: string, endTime: string) => void; // startTime과 endTime 추가
 }
+export default function ReservationPage({
+  post,
+  InputChange,
+  StepChange,
+  Submit,
+}: ReservationPageProps) {
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-function TimeSelector({ inputRef }: TimeSelectorProps) {
-  useEffect(() => {
-    let picker: flatpickr.Instance | null = null;
-
-    if (inputRef.current) {
-      picker = flatpickr(inputRef.current, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true,
-        defaultDate: "09:00",
-      });
+  const handleSubmit = () => {
+    if (startDate && endDate) {
+      const startTime = startDate.toISOString();
+      const endTime = endDate.toISOString();
+      Submit(startTime, endTime); // startTime과 endTime을 함께 전달
     }
-
-    return () => {
-      if (picker) {
-        picker.destroy();
-      }
-    };
-  }, [inputRef]);
+  };
 
   return (
-    <InputBox
-      ref={inputRef}
-      className="timeSelector"
-      placeholder="9:00"
-      type="text"
-    />
+    <PageListContainer>
+      <div>
+        <SectionTitle>시작 시간</SectionTitle>
+        <CustomDatePicker
+          selected={startDate}
+          onChange={(date: Date | null) => setStartDate(date)}
+          minDate={new Date()}
+          showTimeSelect
+          dateFormat="yyyy-MM-dd h:mm"
+        />
+        <SectionTitle>종료 시간</SectionTitle>
+        <CustomDatePicker
+          selected={endDate}
+          minDate={new Date()}
+          onChange={(date: Date | null) => setEndDate(date)}
+          showTimeSelect
+          dateFormat="yyyy-MM-dd h:mm"
+        />
+      </div>
+      <SectionButtonContainer>
+        <button onClick={handleSubmit}>예약 시간 선택 완료</button>
+      </SectionButtonContainer>
+    </PageListContainer>
   );
 }
 
-function Pickr() {
-  const startDateInputRef = useRef<HTMLInputElement | null>(null);
-  const endDateInputRef = useRef<HTMLInputElement | null>(null);
-  const [startTime, setStartTime] = useState<string>("");
-  const [endTime, setEndTime] = useState<string>("");
+const SubmitButton = styled.button`
+  color: white;
+  background-color: #279eff;
+  border: 1px solid #279eff;
+  width: 120px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 8px 16px;
 
-  useEffect(() => {
-    const dateSelector = document.querySelector(".dateSelector");
-
-    if (dateSelector) {
-      flatpickr(dateSelector, {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "Y-m-d",
-        disable: [
-          function (date) {
-            return !(date.getDate() % 8);
-          },
-        ],
-        onChange: (selectedDates, selectedDateStr) => {
-          if (selectedDates.length === 2) {
-            const [start, end] = selectedDateStr.split(" to ");
-            setStartTime(start);
-            setEndTime(end);
-          }
-        },
-      });
-    }
-  }, []);
-
-  const handleStartTimeChange = (selectedTime: string) => {
-    setStartTime(selectedTime);
-  };
-
-  // const handleEndTimeChange = (selectedTime: string) => {
-  //   setEndTime(selectedTime);
-  //   const apiPayload = {
-  //     startTime,
-  //     endTime,
-  //   };
-  //   console.log("API로 전송할 데이터:", apiPayload);
-  // };
-  const handleEndTimeChange = (selectedTime: string) => {
-    // 백엔드에서 만들어 주지 않았음.
-  };
-  return (
-    <PageContainer>
-      <SectionContainer>
-        <InputBox
-          className="dateSelector"
-          type="text"
-          placeholder="날짜"
-          ref={startDateInputRef}
-        />
-      </SectionContainer>
-      <DailyContainer>
-        <SectionTitle>시작시간 </SectionTitle>
-        <SectionTitle>종료시간 </SectionTitle>
-      </DailyContainer>
-      <SectionContainer>
-        <TimeSelector
-          inputRef={startDateInputRef}
-          onTimeChange={handleStartTimeChange}
-        />
-        <TimeSelector
-          inputRef={endDateInputRef}
-          onTimeChange={handleEndTimeChange}
-        />
-      </SectionContainer>
-    </PageContainer>
-  );
-}
-export default Pickr;
-
+  cursor: pointer;
+  justify-content: space-around;
+  font-size: 16px;
+  display: inline-block;
+`;
 const PageContainer = styled.div`
   text-align: left;
 `;
-const SectionContainer = styled.div`
+const PageListContainer = styled.div`
+  text-align: left;
+`;
+const SectionButtonContainer = styled.div`
   margin-bottom: 32px;
 `;
 
@@ -138,4 +102,12 @@ const InputBox = styled.input`
 const SectionTitle = styled.div`
   font-size: 20px;
   margin-right: 130px;
+`;
+const CustomDatePicker = styled(DatePicker)`
+  input {
+    width: 200px; 
+    height: 40px; 
+    font-size: 16px; /
+
+  }
 `;
