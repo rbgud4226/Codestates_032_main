@@ -151,8 +151,10 @@ public class WcBoardDto {
         private String animalTag;
         private String areaTag;
         private String postStatus;
-        private String startTime;
-        private String endTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
         private String createdAt;
         private String nickName;
         private String petSitterNickname;
@@ -161,8 +163,10 @@ public class WcBoardDto {
     @Getter
     @Setter
     public static class WcBoardWithPetSitterInfo {
-        private String startTime;
-        private String endTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
         private WcBoard.PostStatus postStatus;
         private String petSitterNickname;
         private String petSitterImage;

@@ -62,8 +62,6 @@ public class MemberController {
     @GetMapping
     public ResponseEntity memberGet(@LoginMemberId Long memberId,
                                     @RequestParam int page) {
-        System.out.println(memberId+"memberIdddd");
-        System.out.println(page+"pageeee");
         try {
             GetMemberDto getMemberDto = memberService.getMember(memberId,page);
             return new ResponseEntity<>(getMemberDto, HttpStatus.OK);

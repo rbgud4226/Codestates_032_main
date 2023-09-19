@@ -145,8 +145,8 @@ public interface WcBoardMapper {
           response.setAnimalTag(wcBoard.getAnimalTag());
           response.setAreaTag(wcBoard.getAreaTag());
           response.setPostStatus(wcBoard.getPostStatus().name());
-          response.setStartTime(wcBoard.getStartTime().toString());
-          response.setEndTime(wcBoard.getEndTime().toString());
+          response.setStartTime(wcBoard.getStartTime());
+          response.setEndTime(wcBoard.getEndTime());
           response.setCreatedAt(wcBoard.getCreatedAt());
           response.setNickName(member.getNickName());
           response.setPetSitterNickname(wcBoard.getPetSitter().getName());

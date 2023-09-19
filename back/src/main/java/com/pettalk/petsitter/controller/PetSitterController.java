@@ -5,6 +5,7 @@ import com.pettalk.argumentresolver.LoginMemberId;
 import com.pettalk.member.entity.Member;
 import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.dto.PetSitterDto;
+import com.pettalk.petsitter.dto.PetsittersDto;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.mapper.PetSitterMapper;
 import com.pettalk.petsitter.service.PetSitterService;
@@ -134,9 +135,10 @@ public class PetSitterController {
 //        int size = Integer.MAX_VALUE;  // Load all available data at once
 
         List<WcBoard> wcBoardList = service.getRecentPost(memberId);
-
-        return new ResponseEntity<>(
-                mapper.wcBoardstoPetSitterMultiDto(wcBoardList), HttpStatus.OK);
+        List<PetSitterDto.multiResponse> responses = mapper.wcBoardstoPetSitterMultiDto(wcBoardList);
+        long totalBoard = wcBoardList.size();
+        PetsittersDto response = new PetsittersDto(responses, totalBoard);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

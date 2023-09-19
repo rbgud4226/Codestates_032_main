@@ -106,6 +106,7 @@ public class PetSitterDto {
         private String nickName;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
         private LocalDateTime endTime;
         private String memberImage;
         private WcBoard.PostStatus postStatus;

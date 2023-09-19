@@ -111,8 +111,8 @@ public class MemberService {
 
             WcBoardDto.WcBoardWithPetSitterInfo wcBoardWithPetSitterInfo = new WcBoardDto.WcBoardWithPetSitterInfo();
             wcBoardWithPetSitterInfo.setPostStatus(wcBoard.getPostStatus());
-            wcBoardWithPetSitterInfo.setStartTime(wcBoard.getStartTime().toString());
-            wcBoardWithPetSitterInfo.setEndTime(wcBoardWithPetSitterInfo.getEndTime());
+            wcBoardWithPetSitterInfo.setStartTime(wcBoard.getStartTime());
+            wcBoardWithPetSitterInfo.setEndTime(wcBoard.getEndTime());
             wcBoardWithPetSitterInfo.setPetSitterNickname(petSitter.getName());
             wcBoardWithPetSitterInfo.setPetSitterImage(petSitter.getPetSitterImage());
             wcBoardsPetSitterInfo.add(wcBoardWithPetSitterInfo);
