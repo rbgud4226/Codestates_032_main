@@ -42,8 +42,7 @@ public class WcBoardDto {
         private String areaTag;
 
         private String location;
-        //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-//        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime startTime;
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
