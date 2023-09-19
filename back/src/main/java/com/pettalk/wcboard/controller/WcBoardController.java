@@ -132,20 +132,24 @@ public class WcBoardController {
 
     //게시글 삭제
     @DeleteMapping("/{wcboard-id}")
-    public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId) {
+    public ResponseEntity WcbDelete(@PathVariable("wcboard-id") Long wcboardId,
+                                    @LoginMemberId Long memberId) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        memberService.findMemberByPrincipal(principal.toString());
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        memberService.findMemberByPrincipal(principal.toString());
 
-        if ("anonymousUser".equals(principal)) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("권한이 없어요!");
-        }else {
-            service.deletePost(wcboardId);
+        WcBoard findWcboard = service.findVerifyPost(wcboardId);
+        Long wcMemberId = findWcboard.getMember().getMemberId();
+
+        if (wcMemberId == memberId) {
+            service.deletePost(wcboardId, memberId);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body("삭제 완료!");
+        }else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("권한이 없어요!");
         }
     }
 }
