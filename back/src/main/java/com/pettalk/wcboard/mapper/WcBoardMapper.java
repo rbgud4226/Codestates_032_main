@@ -71,7 +71,10 @@ public interface WcBoardMapper {
           Member findMember = wcBoard.getMember();
           nickName = findMember.getNickName();
 
-          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, location, postStatus, startTime, endTime, createdAt, nickName );
+          Long memberId = null;
+          memberId = findMember.getMemberId();
+
+          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, location, postStatus, startTime, endTime, createdAt, nickName, memberId );
 
           return response;
      }
