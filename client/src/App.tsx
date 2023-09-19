@@ -44,7 +44,13 @@ function App() {
                 <Route path="/petsitter/edit" element={<PetSitterPage />} />
                 <Route
                   path="/members/recent"
-                  element={<BookingHistroyPage />}
+                  element={
+                    window.localStorage.getItem("accessToken") ? (
+                      <Mypage />
+                    ) : (
+                      <BookingHistroyPage />
+                    )
+                  }
                 />
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/mainPage" element={<BorderListPage />} />
