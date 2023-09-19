@@ -6,7 +6,8 @@ import styled from "styled-components";
 import SitterDetailModal from "../component/Modal/SitterDetailModal";
 
 const api = process.env.REACT_APP_DB_HOST;
-const accessToken = window.localStorage.getItem("accessToken");
+const accessToken = localStorage.getItem("accessToken");
+const ngrokSkipBrowserWarning = "69420";
 
 interface T {
   profileImage: string;
@@ -74,15 +75,14 @@ const PostDetailPage = () => {
     console.log(wcboardId);
     console.log(accessToken);
     try {
-      await axios.post(`${api}/submit/${wcboardId}`, {
+      await axios.post(`${api}/submit/${wcboardId}`, null, {
         headers: {
           Authorization: `${accessToken}`,
-          "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
-          "ngrok-skip-browser-warning": "69420",
+          "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
         },
       });
-    } catch (e: any) {
+    } catch (e) {
       console.log(e);
     }
   };
@@ -124,23 +124,6 @@ const PostDetailPage = () => {
   //주소잘못됨 이거아님.
   const editHdr = () => {
     window.location.href = "/petsitter/edit";
-  };
-
-  //채팅방테스트
-  const chatRoomHdr = async () => {
-    try {
-      const res = await axios.get(`${api}/chat/5`, {
-        headers: {
-          Authorization: `${accessToken}`,
-          Accept: "application/json",
-          "ngrok-skip-browser-warning": "69420",
-        },
-      });
-      console.log(res.data);
-      window.location.href = `/chat/${res.data.roomId}`;
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   return (
@@ -209,9 +192,6 @@ const PostDetailPage = () => {
       ) : (
         ""
       )}
-      <button style={{ margin: "8px" }} onClick={chatRoomHdr}>
-        채팅룸테스트
-      </button>
     </PDCtn>
   );
 };
