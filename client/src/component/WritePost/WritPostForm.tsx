@@ -22,6 +22,7 @@ interface PostFormProps {
     wcTag: string;
     animalTag: string;
     areaTag: string;
+    location: string;
     startTime: string; // 시작 시간 추가
     endTime: string; // 끝나는 시간 추가
   };
@@ -62,10 +63,18 @@ function ReservationPage({
 
   const handleSubmit = () => {
     if (startDate && endDate) {
-      const startTime = startDate.toISOString();
-      const endTime = endDate.toISOString();
-      post.startTime = startTime; // post 객체에 시작 시간 추가
-      post.endTime = endTime; // post 객체에 끝나는 시간 추가
+      // 9 시간을 더해서 UTC -> 원하는 시간대로 변환
+      const startTime = new Date(startDate);
+      startTime.setHours(startTime.getHours() + 9);
+      const endTime = new Date(endDate);
+      endTime.setHours(endTime.getHours() + 9);
+
+      // 원하는 형식으로 문자열로 변환
+      const startTimeString = startTime.toISOString().replace("Z", "");
+      const endTimeString = endTime.toISOString().replace("Z", "");
+
+      post.startTime = startTimeString;
+      post.endTime = endTimeString;
       Submit(); // Submit 함수 호출
     }
   };
@@ -274,8 +283,8 @@ function PostForm({
               <SectionArTitle>주소</SectionArTitle>
               <ContentSAreText>시/구 까지만 입력하세요</ContentSAreText>
               <InputArName
-                name="content"
-                value={post.content}
+                name="location"
+                value={post.location}
                 onChange={InputChange}
                 maxLength={10}
                 placeholder="예시)관악구 신사로."

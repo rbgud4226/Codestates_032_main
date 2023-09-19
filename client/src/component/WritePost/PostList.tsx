@@ -17,6 +17,7 @@ interface Board {
   animalTag: string;
   areaTag: string;
   postStatus: string;
+  location: string;
 }
 
 interface PageInfo {
@@ -340,7 +341,7 @@ const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  box-shadow: 4px 4px 30px rgba(39, 44, 86, 0.3);
+  box-shadow: 0px 4px 12px rgba(34, 39, 76, 0.2);
   width: 100%;
 `;
 
@@ -406,24 +407,26 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 72px;
+  width: 60px;
   height: 44px;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 8px;
   cursor: pointer;
   justify-content: space-around;
   font-size: 12px;
+  margin-left: 12px;
 `;
 
 const WcOptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 72px;
+  width: 60px;
   height: 44px;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 8px;
+  margin-left: 4px;
   cursor: pointer;
   justify-content: space-around;
-  font-size: 16px;
+  font-size: 12px;
 `;
