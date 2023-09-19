@@ -26,8 +26,6 @@ import java.util.List;
 public class PetSitterApplicantController {
     private final PetSitterApplicantMapper mapper;
     private final PetSitterApplicantService service;
-    private final TimeService timeService;
-    private final MemberService memberService;
 
     //게시글에 펫시터 신청
     @PostMapping("/{wcboard-id}")
