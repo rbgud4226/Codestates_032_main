@@ -16,6 +16,7 @@ function WritePost() {
     wcTag: "",
     animalTag: "",
     areaTag: "",
+    location: "",
     startTime: "",
     endTime: "",
   });
@@ -82,17 +83,8 @@ function WritePost() {
     setIsSubmitting(true); // 제출 중으로 표시
 
     try {
-      console.log(
-        post.images,
-        post.wcTag,
-        post.title,
-        post.animalTag,
-        post.content,
-        post.areaTag,
-        post.images,
-        post.startTime,
-        post.endTime,
-      );
+      console.log(post.location, post.endTime);
+      console.log(accessToken);
       const response = await axios.post(`${api}/wcboard`, post, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
@@ -108,12 +100,13 @@ function WritePost() {
 
       // 글 초기화
       setPost({
-        wcTag: "",
-        animalTag: "",
         title: "",
         content: "",
         images: "",
+        wcTag: "",
+        animalTag: "",
         areaTag: "",
+        location: "",
         startTime: "",
         endTime: "",
       });
