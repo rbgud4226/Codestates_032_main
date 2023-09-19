@@ -46,9 +46,9 @@ function App() {
                   path="/members/recent"
                   element={
                     window.localStorage.getItem("accessToken") ? (
-                      <Mypage />
-                    ) : (
                       <BookingHistroyPage />
+                    ) : (
+                      <LoginPage />
                     )
                   }
                 />
