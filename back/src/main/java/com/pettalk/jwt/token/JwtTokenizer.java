@@ -36,8 +36,10 @@ public class JwtTokenizer {
     public String generateAccessToken(Map<String, Object> claims,
                                       String subject,
                                       Date expiration,
-                                      String base64EncodedSecretKey) {
+                                      String base64EncodedSecretKey,
+                                      Long memberId) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+        claims.put("memberId",memberId);
 
         return Jwts.builder()
                 .setClaims(claims)
