@@ -9,6 +9,9 @@ import global from "../../../Data/global";
 import axios from "axios";
 import PersonInfo from "./PersonInfo";
 
+const accessToken = window.localStorage.getItem("accessToken");
+const memberId = Number(window.localStorage.getItem("memberId"));
+
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [client, setClient] = useState(null);
@@ -25,7 +28,7 @@ const Chat: React.FC = () => {
       });
 
       clientData.onConnect = () => {
-        clientData.subscribe(`/sub/room/1`, msgGet);
+        clientData.subscribe(`/sub/room/5`, msgGet);
       };
       clientData.activate();
       setClient(clientData);
@@ -45,9 +48,9 @@ const Chat: React.FC = () => {
       try {
         if (client.connected) {
           client.publish({
-            destination: `/pub/1`,
+            destination: `/pub/5`,
             body: JSON.stringify({
-              userType: "신청자",
+              memberId: Number(memberId),
               message: input,
             }),
           });
@@ -62,7 +65,7 @@ const Chat: React.FC = () => {
   //메세지 리스트 get 함수
   const msgGet = async () => {
     try {
-      const msg = await axios.get("http://3.35.193.208:8080/message/1");
+      const msg = await axios.get("http://3.35.193.208:8080/message/5");
       console.log(msg.data);
       setMsgList(msg.data);
       window.scrollTo(
@@ -90,12 +93,12 @@ const Chat: React.FC = () => {
 
   return (
     <ChatCtn>
-      <PersonInfo />
+      <PersonInfo disconnect={disconnect} />
       <MessageSection>
         <MsgCtn>
           {msgList
             ? msgList.map((el, index) =>
-                el.userType === "신청자" ? (
+                el.memberId === memberId ? (
                   <SendChatDesign
                     key={index}
                     input={el.message}
@@ -133,33 +136,30 @@ const Chat: React.FC = () => {
 
 export default Chat;
 
-export const ChatCtn = styled.div`
+const ChatCtn = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export const MessageSection = styled.section`
+const MessageSection = styled.section`
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 300px);
 `;
-
-export const MsgCtn = styled.div`
+const MsgCtn = styled.div`
   display: flex;
   flex-direction: column;
   bottom: 70px;
   position: sticky;
   flex-grow: 1;
 `;
-
-export const MessageForm = styled.form`
+const MessageForm = styled.form`
   display: flex;
   border-top: 1px solid ${global.Gray[5].value};
   position: sticky;
   bottom: 70px;
 `;
-
-export const ImgBtn = styled.div`
+const ImgBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -171,8 +171,7 @@ export const ImgBtn = styled.div`
     background-color: ${global.WhiteButtonActive.value};
   }
 `;
-
-export const MessageInput = styled.input`
+const MessageInput = styled.input`
   display: flex;
   flex: 1;
   font: 16px;
@@ -185,8 +184,7 @@ export const MessageInput = styled.input`
     margin-left: 12px;
   }
 `;
-
-export const SendButton = styled.button`
+const SendButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -199,8 +197,7 @@ export const SendButton = styled.button`
     background-color: ${global.PrimaryActive.value};
   }
 `;
-
-export const SendIconImg = styled.img`
+const SendIconImg = styled.img`
   display: flex;
   color: ${global.White.value};
 `;

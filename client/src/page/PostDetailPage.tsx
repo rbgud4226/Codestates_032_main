@@ -6,6 +6,7 @@ import styled from "styled-components";
 import SitterDetailModal from "../component/Modal/SitterDetailModal";
 
 const api = process.env.REACT_APP_DB_HOST;
+const accessToken = window.localStorage.getItem("accessToken");
 
 interface T {
   profileImage: string;
@@ -40,7 +41,6 @@ const PostDetailPage = () => {
         try {
           const response = await axios.get(`${api}/submit/${wcboardId}`, {
             headers: {
-              Authorization: `${localStorage.getItem("accessToken")}`,
               "Content-Type": "application/json;charset=UTF-8",
               Accept: "application/json",
               "ngrok-skip-browser-warning": "69420",
@@ -70,11 +70,13 @@ const PostDetailPage = () => {
 
   //신청하기 함수
 
-  const applyHdr = async (item: number) => {
+  const applyHdr = async () => {
+    console.log(wcboardId);
+    console.log(accessToken);
     try {
       await axios.post(`${api}/submit/${wcboardId}`, {
         headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`,
+          Authorization: `${accessToken}`,
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
@@ -91,11 +93,12 @@ const PostDetailPage = () => {
     try {
       await axios.delete(`${api}/wcboard/${wcboardId}`, {
         headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`,
+          Authorization: `${accessToken}`,
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
         },
       });
+      window.location.href = "/mainpage";
     } catch (e) {
       console.log(e);
     }
@@ -117,6 +120,28 @@ const PostDetailPage = () => {
     const timePart = longDateStr.split(" ")[1].split(":").slice(0, 2).join(":");
     return timePart;
   }
+
+  //주소잘못됨 이거아님.
+  const editHdr = () => {
+    window.location.href = "/petsitter/edit";
+  };
+
+  //채팅방테스트
+  const chatRoomHdr = async () => {
+    try {
+      const res = await axios.get(`${api}/chat/5`, {
+        headers: {
+          Authorization: `${accessToken}`,
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+      console.log(res.data);
+      window.location.href = `/chat/${res.data.roomId}`;
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <PDCtn>
@@ -178,14 +203,15 @@ const PostDetailPage = () => {
             flexDirection: "column",
           }}
         >
-          <RegisterBtn onClick={() => applyHdr(post.wcboardId)}>
-            신청하기
-          </RegisterBtn>
+          <RegisterBtn onClick={() => applyHdr()}>신청하기</RegisterBtn>
           <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
         </div>
       ) : (
         ""
       )}
+      <button style={{ margin: "8px" }} onClick={chatRoomHdr}>
+        채팅룸테스트
+      </button>
     </PDCtn>
   );
 };
