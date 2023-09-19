@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class WcBoard { //..
     @Column
     private String createdAt = LocalDateTimeFormatting.formatLocalDateTime(LocalDateTime.now());
     @Column
-    private LocalDateTime startTime; //Todo : 서버 업로드시 LocalDateTime.now 없애기
+    private LocalDateTime startTime;
     @Column
     private LocalDateTime endTime;
 
