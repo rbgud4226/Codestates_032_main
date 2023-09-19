@@ -108,7 +108,6 @@ const BoardList = () => {
 
     try {
       const response = await axios.get(`${api}/wcboard`, {
-
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
