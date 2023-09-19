@@ -20,6 +20,7 @@ import BorderListPage from "./page/PostList";
 import WritePostPage from "./page/WritePostPage";
 import PostDetailPage from "./page/PostDetailPage";
 import BookingHistroyPage from "./page/BookingHistoryPage";
+import LocationPage from "./page/LocationPage";
 
 function App() {
   const { wcboardId } = useParams();
@@ -59,8 +60,9 @@ function App() {
                     )
                   }
                 />
-                <Route path="/chat/:roomId" element={<ChatPage />} />
-                <Route path="/mainpage" element={<BorderListPage />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/map" element={<LocationPage />} />
+                <Route path="/mainPage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board/:wcboardId" element={<PostDetailPage />} />
               </Routes>
