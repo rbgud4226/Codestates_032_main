@@ -19,7 +19,7 @@ interface P {
 }
 
 interface T {
-  wcboardId: string;
+  wcboardId: number;
   index: number;
   item: P;
 }
@@ -33,7 +33,7 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
     setModalOpen(true);
     console.log(modalItem);
   };
-
+  //지원하기 버튼 입력시 채팅룸 생성.
   const chatHdr = async () => {
     setChatAble(true);
     setModalOpen(false);
@@ -49,8 +49,26 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           },
         },
       );
+      console.log(res.data);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  //채팅룸에 들어감.
+  const chatRoomHdr = async () => {
+    try {
+      const res = await axios.get(`${api}/chat/${wcboardId}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+      console.log(res.data);
+      window.location.href = `/chat/${res.data.roomId}`;
+    } catch (e) {
+      console.log(e);
     }
   };
   return (
@@ -84,7 +102,7 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           </ImgCtn>
         </SitterBtn>
       ) : (
-        <SitterBtn>
+        <SitterBtn onClick={() => chatRoomHdr()}>
           <PetalkChat>펫톡쳇입장</PetalkChat>
           <ImgCtn>
             <img

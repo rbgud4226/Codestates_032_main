@@ -62,7 +62,7 @@ const Chat: React.FC = () => {
   //메세지 리스트 get 함수
   const msgGet = async () => {
     try {
-      const msg = await axios.get("http://3.35.193.208:8080/chat/1");
+      const msg = await axios.get("http://3.35.193.208:8080/message/1");
       console.log(msg.data);
       setMsgList(msg.data);
       window.scrollTo(
@@ -93,21 +93,23 @@ const Chat: React.FC = () => {
       <PersonInfo />
       <MessageSection>
         <MsgCtn>
-          {msgList.map((el, index) =>
-            el.userType === "신청자" ? (
-              <SendChatDesign
-                key={index}
-                input={el.message}
-                createAt={el.createdAt.slice(11, 16)}
-              />
-            ) : (
-              <RecieveChatDesign
-                key={index}
-                input={el.message}
-                createAt={el.createdAt.slice(11, 16)}
-              />
-            ),
-          )}
+          {msgList
+            ? msgList.map((el, index) =>
+                el.userType === "신청자" ? (
+                  <SendChatDesign
+                    key={index}
+                    input={el.message}
+                    createAt={el.createdAt.slice(11, 16)}
+                  />
+                ) : (
+                  <RecieveChatDesign
+                    key={index}
+                    input={el.message}
+                    createAt={el.createdAt.slice(11, 16)}
+                  />
+                ),
+              )
+            : ""}
         </MsgCtn>
 
         <MessageForm onSubmit={e => submitHdr(e)}>

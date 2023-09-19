@@ -23,41 +23,7 @@ const PostDetailPage = () => {
   const { wcboardId } = useParams();
   const [post, setPost] = useState(null);
   const [applyErrMsg, setApplyErrMsg] = useState("");
-  const [sitterList, setSitterList] = useState<Array<T>>([
-    {
-      profileImage: "https://i.imgur.com/d67J76L.png",
-      name: "아무개",
-      nowJob: "프로그래머",
-      smoking: "비흡연자 ",
-      phone: "01012345678",
-      email: "asdf@gmail.com ",
-      exAnimal: ["개"],
-      info: "잘할수 있을까요?",
-      petSitterId: 3,
-    },
-    {
-      profileImage: "https://i.imgur.com/BNU6iSc.png",
-      name: "홍길동",
-      nowJob: "동물훈련가",
-      smoking: "흡연자",
-      phone: "01087654321",
-      email: "qwer@gmail.com",
-      exAnimal: ["개", "고양이", "기타"],
-      info: "12년차 베테랑 조교입니다.",
-      petSitterId: 4,
-    },
-    {
-      profileImage: "https://i.imgur.com/BNU6iSc.png",
-      name: "고길동",
-      nowJob: "회사원",
-      smoking: "흡연자",
-      phone: "01012344321",
-      email: "zxcv@gmail.com",
-      exAnimal: ["기타"],
-      info: "공룡 외계인 타조 키워봤습니다.",
-      petSitterId: 5,
-    },
-  ]);
+  const [sitterList, setSitterList] = useState<Array<T>>([]);
   //본문과 신청자 리스트를 가져옴
   useEffect(() => {
     const fetchData = async () => {
@@ -68,27 +34,23 @@ const PostDetailPage = () => {
             Accept: "application/json",
           },
         });
-        console.log(typeof response.data.wcboardId);
         console.log(response.data);
         setPost(response.data);
-        // try {
-        //   //여기 ngrok임 나중에 주소바꿔야됨
-        //   const response = await axios.get(
-        //     `https://48c9-121-162-236-116.ngrok-free.app/submit/${wcboardId}`,
-        //     {
-        //       headers: {
-        //         Authorization: `${localStorage.getItem("accessToken")}`,
-        //         "Content-Type": "application/json;charset=UTF-8",
-        //         Accept: "application/json",
-        //         "ngrok-skip-browser-warning": "69420",
-        //       },
-        //     },
-        //   );
-        //   console.log(response.data);
-        //   setSitterList(response.data);
-        // } catch (error) {
-        //   console.error("API 요청 중 오류 발생:", error);
-        // }
+        try {
+          //여기 ngrok임 나중에 주소바꿔야됨
+          const response = await axios.get(`${api}/submit/${wcboardId}`, {
+            headers: {
+              Authorization: `${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json;charset=UTF-8",
+              Accept: "application/json",
+              "ngrok-skip-browser-warning": "69420",
+            },
+          });
+          console.log(response.data);
+          setSitterList(response.data);
+        } catch (error) {
+          console.error("API 요청 중 오류 발생:", error);
+        }
       } catch (error) {
         console.error("API 요청 중 오류 발생:", error);
       }
@@ -106,9 +68,11 @@ const PostDetailPage = () => {
     return temp;
   };
 
+  //신청하기 함수
+
   const applyHdr = async (item: number) => {
     try {
-      await axios.post(`${api}/wcboard/petsitter/${wcboardId}`, {
+      await axios.post(`${api}/wcboard/${wcboardId}`, {
         headers: {
           Authorization: `${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json;charset=UTF-8",
@@ -178,11 +142,21 @@ const PostDetailPage = () => {
           </BtnCtn>
           <MainContent>{post.content}</MainContent>
         </ContentCtn>
-        <DateInfoText>{`날짜 ${formatDate(post.startTime)}`}</DateInfoText>
-        <DateInfoText>{`시간 ${extractTime(post.startTime)}-${extractTime(
-          post.endTime,
-        )}`}</DateInfoText>
-        <DateInfoText>{"위치  관악구신사로"}</DateInfoText>
+        <DateInfoText>
+          {post.startTime
+            ? `날짜 ${formatDate(post.startTime)}`
+            : `날짜 : 입력되지않음`}
+        </DateInfoText>
+        <DateInfoText>
+          {post.startTime && post.endTime
+            ? `시간 ${extractTime(post?.startTime)}-${extractTime(
+                post?.endTime,
+              )}`
+            : "시간 : 입력되지않음"}
+        </DateInfoText>
+        <DateInfoText>
+          {post.location ? `위치 ${post.location}` : `위치 : 입력되지않음`}
+        </DateInfoText>
         {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
       </PostSection>
       <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
@@ -192,18 +166,26 @@ const PostDetailPage = () => {
             key={index}
             item={item}
             index={index}
-            wcboardId={wcboardId}
+            wcboardId={Number(wcboardId)}
           ></SitterDetailModal>
         ))}
       </SitterListSection>
-      <div
-        style={{ marginTop: "16px", display: "flex", flexDirection: "column" }}
-      >
-        <RegisterBtn onClick={() => applyHdr(post.wcboardId)}>
-          신청하기
-        </RegisterBtn>
-        <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
-      </div>
+      {localStorage.getItem("accessToken") ? (
+        <div
+          style={{
+            marginTop: "16px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <RegisterBtn onClick={() => applyHdr(post.wcboardId)}>
+            신청하기
+          </RegisterBtn>
+          <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
+        </div>
+      ) : (
+        ""
+      )}
     </PDCtn>
   );
 };

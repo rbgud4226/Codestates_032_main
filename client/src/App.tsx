@@ -59,8 +59,8 @@ function App() {
                     )
                   }
                 />
-                <Route path="/chat" element={<ChatPage />} />
-                <Route path="/mainPage" element={<BorderListPage />} />
+                <Route path="/chat/:roomId" element={<ChatPage />} />
+                <Route path="/mainpage" element={<BorderListPage />} />
                 <Route path="/writpost" element={<WritePostPage />} />
                 <Route path="/board/:wcboardId" element={<PostDetailPage />} />
               </Routes>
