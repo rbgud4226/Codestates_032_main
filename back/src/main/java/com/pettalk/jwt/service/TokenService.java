@@ -24,8 +24,10 @@ public class TokenService {
         Date newExpiration = new Date(System.currentTimeMillis() + 3600000);
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String subject = (String) claims.get("sub");
+        Long memberId = (Long) claims.get("memberId");
 
-        String newAccessToken = jwtTokenizer.generateAccessToken(claims, subject, newExpiration, base64EncodedSecretKey);
+
+        String newAccessToken = jwtTokenizer.generateAccessToken(claims, subject, newExpiration, base64EncodedSecretKey, memberId);
 
         return newAccessToken;
     }

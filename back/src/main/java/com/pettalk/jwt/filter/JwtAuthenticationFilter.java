@@ -53,6 +53,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Member member = (Member) authResult.getPrincipal();
         String accessToken = delegateAccessToken(member);
 
+        Long memberId = member.getMemberId();
+
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenTime());
         String TokenExpirationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(expiration);
         response.setHeader("TokenExpiration", TokenExpirationDate);
@@ -62,6 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String profileImage = member.getProfileImage();
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
+        response.setHeader("memberId", String.valueOf(memberId));
         Map<String, Object> responseMessage = new HashMap<>();
         responseMessage.put("nickName", nickName);
         responseMessage.put("profileImage", profileImage);
@@ -92,10 +95,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", member.getEmail());
         String subject = member.getEmail();
+        Long memberId = member.getMemberId();
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenTime());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey, memberId);
 
         return accessToken;
     }
