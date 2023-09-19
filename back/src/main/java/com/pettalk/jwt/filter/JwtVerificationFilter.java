@@ -74,7 +74,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private String generateNewAccessToken(String refreshToken)     {
-        // Refresh Token을 사용하여 새로운 Access Token을 생성하는 로직을 구현해야 합니다.
+        // Refresh  Token을 사용하여 새로운 Access Token을 생성하는 로직을 구현해야 합니다.
         // 예를 들어, 서버 내부에서 JWT 라이브러리를 사용하여 새로운 Access Token을 생성할 수 있습니다.
         // 또는 OAuth2 프로토콜을 사용하여 인증 서버에 요청하여 새로운 Access Token을 받아올 수도 있습니다.
         // 구체적인 방법은 프로젝트의 요구 사항과 사용하는 라이브러리 또는 프레임워크에 따라 다를 수 있습니다.
