@@ -118,12 +118,12 @@ public class WcBoardController {
     @GetMapping("/tag")
     public ResponseEntity findAllWithTags(
             @RequestParam(name = "page") int page,
-            @RequestParam(name = "size") int size,
+//            @RequestParam(name = "size") int size,
             @RequestParam(name = "wcTag", required = false) String wcTag,
             @RequestParam(name = "animalTag", required = false) String animalTag,
             @RequestParam(name = "areaTag", required = false) String areaTag){
 
-        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, size, wcTag, animalTag, areaTag);
+        Page<WcBoard> pageWcBoardPosts = service.findAllWithTags(page -1, 5, wcTag, animalTag, areaTag);
         List<WcBoard> posts = pageWcBoardPosts.getContent();
 
         return new ResponseEntity<>(

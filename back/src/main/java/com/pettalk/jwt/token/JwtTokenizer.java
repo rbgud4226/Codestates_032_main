@@ -39,7 +39,6 @@ public class JwtTokenizer {
                                       String base64EncodedSecretKey,
                                       Long memberId) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
-        claims.put("memberId",memberId);
 
         return Jwts.builder()
                 .setClaims(claims)

@@ -45,6 +45,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authenticationManager.authenticate(authenticationToken);
     }
 
+//    @Override
+//    protected void successfulAuthentication(HttpServletRequest request,
+//                                            HttpServletResponse response,
+//                                            FilterChain chain,
+//                                            Authentication authResult) throws IOException {
+//        Member member = (Member) authResult.getPrincipal();
+//        String accessToken = delegateAccessToken(member);
+//
+//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenTime());
+//        String TokenExpirationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(expiration);
+//        response.setHeader("TokenExpiration", TokenExpirationDate);
+//
+//        String refreshToken = delegateRefreshToken(member);
+//        String nickName = member.getNickName();
+//        String profileImage = member.getProfileImage();
+//        response.setHeader("Authorization", "Bearer " + accessToken);
+//        response.setHeader("Refresh", refreshToken);
+//        Map<String, Object> responseMessage = new HashMap<>();
+//        responseMessage.put("nickName", nickName);
+//        responseMessage.put("profileImage", profileImage);
+//        String responseBody = new ObjectMapper().writeValueAsString(responseMessage);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write(responseBody);
+//    }
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -90,6 +116,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(responseBody);
     }
 
+
+//    private String delegateAccessToken(Member member) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("username", member.getEmail());
+//        String subject = member.getEmail();
+//
+//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenTime());
+//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+//        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+//
+//        return accessToken;
+//    }
 
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();

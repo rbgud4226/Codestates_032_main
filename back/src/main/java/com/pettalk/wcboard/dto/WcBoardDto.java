@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -31,7 +32,6 @@ public class WcBoardDto {
 
         private String images;
 
-
         @NotNull (message = "1개 이상 선택해주세요")
         private String wcTag;
 
@@ -44,9 +44,9 @@ public class WcBoardDto {
         private String location;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        private String startTime;
+        private LocalDateTime startTime;
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        private String endTime;
+        private LocalDateTime endTime;
 
 
         private String postStatus;
@@ -64,8 +64,8 @@ public class WcBoardDto {
         private String animalTag;
         private String areaTag;
         private String location;
-        private String startTime;
-        private String endTime;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
         private String postStatus;
         public void addwcBoardId(Long wcboardId) {
             this.wcboardId = wcboardId;
@@ -89,9 +89,6 @@ public class WcBoardDto {
         private LocalDateTime endTime;
         private String createdAt;
     }
-
-
-
 
     @Getter
     @Setter
@@ -124,8 +121,10 @@ public class WcBoardDto {
         private String areaTag;
         private String location;
         private String postStatus;
-        private String startTime;
-        private String endTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime startTime;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+        private LocalDateTime endTime;
         private String createdAt;
         private String nickName;
     }
