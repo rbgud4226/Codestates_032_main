@@ -87,19 +87,19 @@ public class MemberService {
 //        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse:: getWcboardId));
         return new GetMemberDto(findMember.getNickName(), findMember.getEmail(), findMember.getPhone(), findMember.getProfileImage(), wcBoardDtoGet, checkPetSitter, petSitterId);
     }
+//
+//    public GetMembersDto getMembers(Long memberId, int page) {
+//        Member findMember = findVerifyMember(memberId);
+//        int size = 4;
+//        Pageable pageable = PageRequest.of(page - 1, size);
+//        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
+//        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
+//        List<WcBoardDto.getMemberResponse> wcBoardDtoGet = wcBoardMapper.wcBoardsToGetMemberResponse(wcBoards.getContent());
+//        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse::getWcboardId).reversed());
+//        return new GetMembersDto(wcBoardDtoGet, wcBoards.getTotalElements());
+//    }
 
-    public GetMembersDto getMembers(Long memberId, int page) {
-        Member findMember = findVerifyMember(memberId);
-        int size = 4;
-        Pageable pageable = PageRequest.of(page - 1, size);
-        List<WcBoard.PostStatus> wcBoardStatus = Arrays.asList(WcBoard.PostStatus.COMPLETE, WcBoard.PostStatus.IN_PROGRESS, WcBoard.PostStatus.IN_RESERVATION);
-        Page<WcBoard> wcBoards = wcBoardRepository.findByMember_MemberIdAndPostStatusIn(findMember.getMemberId(), wcBoardStatus, pageable);
-        List<WcBoardDto.getMemberResponse> wcBoardDtoGet = wcBoardMapper.wcBoardsToGetMemberResponse(wcBoards.getContent());
-        Collections.sort(wcBoardDtoGet, Comparator.comparing(WcBoardDto.getMemberResponse::getWcboardId).reversed());
-        return new GetMembersDto(wcBoardDtoGet, wcBoards.getTotalElements());
-    }
-
-    public List<WcBoardDto.WcBoardWithPetSitterInfo> getMemberAll(Long memberId) {
+    public GetMembersDto getMemberAll(Long memberId) {
         List<PetSitterApplicant> findApplicants = petSitterApplicantRepository.findByMember_MemberId(memberId);
         List<Long> wcBoardIds = findApplicants.stream().map(PetSitterApplicant::getWcboardId).collect(Collectors.toList());
 
@@ -117,7 +117,8 @@ public class MemberService {
             wcBoardWithPetSitterInfo.setPetSitterImage(petSitter.getPetSitterImage());
             wcBoardsPetSitterInfo.add(wcBoardWithPetSitterInfo);
         }
-        return wcBoardsPetSitterInfo;
+        long totalBoard = wcBoardsPetSitterInfo.size();
+        return new GetMembersDto(wcBoardsPetSitterInfo, totalBoard);
     }
 
 

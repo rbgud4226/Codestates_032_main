@@ -73,20 +73,20 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/recent")
-    public ResponseEntity getMemberBoards(@LoginMemberId Long memberId,
-                                          @RequestParam int page) {
-        try {
-            GetMembersDto wcBoardDtoResponses = memberService.getMembers(memberId,page);
-            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
+//    @GetMapping("/recent")
+//    public ResponseEntity getMemberBoards(@LoginMemberId Long memberId,
+//                                          @RequestParam int page) {
+//        try {
+//            GetMembersDto wcBoardDtoResponses = memberService.getMembers(memberId,page);
+//            return new ResponseEntity<>(wcBoardDtoResponses, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+//        }
+//    }
 
     @GetMapping("/alls")
     public ResponseEntity getMemberBoardsAll(@LoginMemberId @Positive Long memberId) {
-        List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoards = memberService.getMemberAll(memberId);
+        GetMembersDto wcBoards = memberService.getMemberAll(memberId);
         return new ResponseEntity<>(wcBoards, HttpStatus.OK);
     }
 

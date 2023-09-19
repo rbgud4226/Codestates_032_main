@@ -155,7 +155,8 @@ public class WcBoardDto {
         private String endTime;
         private String createdAt;
         private String nickName;
-        private String name;
+        private String petSitterNickname;
+        private String petSitterImage;
     }
     @Getter
     @Setter

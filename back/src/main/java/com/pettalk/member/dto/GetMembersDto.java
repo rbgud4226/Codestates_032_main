@@ -8,11 +8,11 @@ import java.util.List;
 @Getter
 @Setter
 public class GetMembersDto {
-    private List<WcBoardDto.getMemberResponse> wcBoardList;
+    private List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoardWithPetSitterInfos;
     private long totalBoard;
 
-    public GetMembersDto(List<WcBoardDto.getMemberResponse> wcBoardList, long totalBoard) {
-        this.wcBoardList = wcBoardList;
+    public GetMembersDto(List<WcBoardDto.WcBoardWithPetSitterInfo> wcBoardWithPetSitterInfos, long totalBoard) {
+        this.wcBoardWithPetSitterInfos = wcBoardWithPetSitterInfos;
         this.totalBoard = totalBoard;
     }
 }

@@ -149,7 +149,8 @@ public interface WcBoardMapper {
           response.setEndTime(wcBoard.getEndTime().toString());
           response.setCreatedAt(wcBoard.getCreatedAt());
           response.setNickName(member.getNickName());
-          response.setName(wcBoard.getPetSitter().getName());
+          response.setPetSitterNickname(wcBoard.getPetSitter().getName());
+          response.setPetSitterImage(wcBoard.getPetSitter().getPetSitterImage());
           return response;
      }
 
