@@ -10,6 +10,7 @@ import net.bytebuddy.implementation.bind.annotation.Default;
 import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

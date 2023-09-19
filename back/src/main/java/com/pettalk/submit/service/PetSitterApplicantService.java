@@ -35,14 +35,15 @@ public class PetSitterApplicantService {
     private final TimeService timeService;
 
     public ResponseEntity submitPetSitter(Long memberId, Long wcboardId) {
+        log.info("신청지 토큰에서 멤버 아이디 가져오기 : " + memberId);
         Member findMember = memberService.findVerifyMember(memberId);
+
         WcBoard findPost = wcBoardService.findVerifyPost(wcboardId); //wcBoardRepository.finallById(wcboardId);
 
         findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
 
-        Member member = memberService.findVerifyMember(memberId);
-
-        Long petSitterId = member.getPetSitter().getPetSitterId();
+        Long petSitterId = findMember.getPetSitter().getPetSitterId();
+        log.info("신청지 토큰에서 펫시터 아이디 가져오기 : " + petSitterId);
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
         Long countPetSitterId = paRepository.countByPetSitter_PetSitterId(petSitterId);
 

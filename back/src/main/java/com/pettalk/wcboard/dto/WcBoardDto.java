@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -42,11 +43,12 @@ public class WcBoardDto {
         private String areaTag;
 
         private String location;
-
+        //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        private String startTime;
+        private LocalDateTime startTime;
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        private String endTime;
+        private LocalDateTime endTime;
 
 
         private String postStatus;
@@ -64,8 +66,8 @@ public class WcBoardDto {
         private String animalTag;
         private String areaTag;
         private String location;
-        private String startTime;
-        private String endTime;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
         private String postStatus;
         public void addwcBoardId(Long wcboardId) {
             this.wcboardId = wcboardId;
