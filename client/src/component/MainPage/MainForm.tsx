@@ -10,6 +10,9 @@ import MainImage4 from "../../asset/MainAsset/MainImage4.png";
 import WhiteBox from "../../asset/MainAsset/WhiteBox.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import axios from "axios";
+
+const api = process.env.REACT_APP_DB_HOST;
 
 interface MainProps {
   propertyName: string;
@@ -18,6 +21,14 @@ interface MainProps {
 function MainForm(props: MainProps) {
   const navigate = useNavigate();
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("accessToken"),
+  );
+
+  const checkLoginStatus = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  };
 
   useEffect(() => {
     // 이미지 로딩을 1초 뒤에 완료되도록 설정
@@ -25,8 +36,27 @@ function MainForm(props: MainProps) {
       setImagesLoaded(true);
     }, 200);
   }, []);
-  const LoginButtonClick = () => {
-    navigate("/login");
+
+  const moveToWrite = () => {
+    if (!isLoggedIn) {
+      navigate("/login"); // 로그인되어 있지 않은 경우 로그인 페이지로 이동
+    } else {
+      navigate("/mainPage"); // 로그인되어 있는 경우 메인 페이지로 이동
+    }
+  };
+
+  const fetchAccessToken = async () => {
+    try {
+      const response = await axios.post(`${api}/auth/login`, {});
+
+      const accessToken = response.data.accessToken;
+      setIsLoggedIn(accessToken);
+
+      checkLoginStatus(); // 로그인 상태 확인
+      navigate("/mainPage"); // 메인 페이지로 이동
+    } catch (error) {
+      console.error("토큰 요청 중 오류 발생:", error);
+    }
   };
 
   const [textPosition, setTextPosition] = useState<number>(0);
@@ -40,7 +70,7 @@ function MainForm(props: MainProps) {
   const handleScroll = () => {
     const scrollY = window.scrollY || window.pageYOffset;
     const startScroll = 200;
-    const endScroll = 1200; // 변경된 스크롤 위치
+    const endScroll = 1000; // 변경된 스크롤 위치
 
     if (scrollY <= startScroll) {
       setTextPosition(0);
@@ -128,7 +158,7 @@ function MainForm(props: MainProps) {
           <TextWrap style={{ position: "absolute" }}>
             <AnimatedText textPosition={textPosition}>
               {"내가 없을 때 \n 내 아이는?"}
-              <Btn onClick={LoginButtonClick}>예약하기</Btn>
+              <Btn onClick={moveToWrite}>예약하기</Btn>
             </AnimatedText>
           </TextWrap>
         </SectionContainer>
@@ -220,7 +250,7 @@ function MainForm(props: MainProps) {
                 <TextWrap1>
                   {" "}
                   <WhiteBoxText>{whiteBoxText}</WhiteBoxText>
-                  <WalkSbutton onClick={LoginButtonClick}>맡기기</WalkSbutton>
+                  <WalkSbutton onClick={moveToWrite}>맡기기</WalkSbutton>
                 </TextWrap1>
               </ListContainer>
             </SubContainer>
@@ -366,7 +396,6 @@ const WalkSbutton = styled.button`
 
 const WhiteBoxContainer = styled.div`
   background-color: white;
-  position: relative;
 `;
 
 const WhiteBoxText = styled.div`
@@ -470,13 +499,14 @@ const WalkButton = styled.button`
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 50px;
+  left: 60px; /* 조절 필요 */
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
   &.active {
     background-color: #279eff;
     color: white;
+  }
   }
 `;
 
@@ -488,7 +518,7 @@ const CareButton = styled.button`
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 170px;
+  left: 160px; /* 조절 필요 */
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;

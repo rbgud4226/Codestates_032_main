@@ -134,7 +134,6 @@ const BoardList = () => {
 
     try {
       const response = await axios.get(`${api}/wcboard`, {
-
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
@@ -318,7 +317,9 @@ const BoardList = () => {
                         </SubPageContainer>
                         <SubPageContainer>
                           <TitlePage>{post.title}</TitlePage>
-                          <ContentPage>{post.content}</ContentPage>
+                          {post.content.length > 30
+                            ? `${post.content.slice(0, 30)}...`
+                            : post.content}
                         </SubPageContainer>
                       </ListContainer>
                     </ImContainer>
