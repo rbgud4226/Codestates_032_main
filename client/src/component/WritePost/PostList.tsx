@@ -70,7 +70,7 @@ const BoardList = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get(`${api}/wcboard/tag`, {
+      const response = await axios.get(`${api}/wcboard`, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
