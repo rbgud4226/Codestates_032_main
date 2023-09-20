@@ -69,13 +69,25 @@ function ReservationPage({
       const endTime = new Date(endDate);
       endTime.setHours(endTime.getHours() + 9);
 
-      // 원하는 형식으로 문자열로 변환
       const startTimeString = startTime.toISOString().replace("Z", "");
       const endTimeString = endTime.toISOString().replace("Z", "");
 
       post.startTime = startTimeString;
       post.endTime = endTimeString;
-      Submit(); // Submit 함수 호출
+      if (
+        !post.title ||
+        !post.content ||
+        !post.wcTag ||
+        !post.animalTag ||
+        !post.areaTag ||
+        !post.location
+      ) {
+        alert("모든 필수 정보를 입력해주세요.");
+        return;
+      }
+      Submit();
+    } else {
+      alert("시작 시간과 종료 시간을 입력해주세요.");
     }
   };
 

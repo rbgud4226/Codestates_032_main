@@ -10,6 +10,9 @@ import MainImage4 from "../../asset/MainAsset/MainImage4.png";
 import WhiteBox from "../../asset/MainAsset/WhiteBox.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import axios from "axios";
+
+const api = process.env.REACT_APP_DB_HOST;
 
 interface MainProps {
   propertyName: string;
@@ -18,6 +21,14 @@ interface MainProps {
 function MainForm(props: MainProps) {
   const navigate = useNavigate();
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("accessToken"),
+  );
+
+  const checkLoginStatus = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  };
 
   useEffect(() => {
     // 이미지 로딩을 1초 뒤에 완료되도록 설정
@@ -25,8 +36,27 @@ function MainForm(props: MainProps) {
       setImagesLoaded(true);
     }, 200);
   }, []);
-  const LoginButtonClick = () => {
-    navigate("/login");
+
+  const moveToWrite = () => {
+    if (!isLoggedIn) {
+      navigate("/login"); // 로그인되어 있지 않은 경우 로그인 페이지로 이동
+    } else {
+      navigate("/mainPage"); // 로그인되어 있는 경우 메인 페이지로 이동
+    }
+  };
+
+  const fetchAccessToken = async () => {
+    try {
+      const response = await axios.post(`${api}/auth/login`, {});
+
+      const accessToken = response.data.accessToken;
+      setIsLoggedIn(accessToken);
+
+      checkLoginStatus(); // 로그인 상태 확인
+      navigate("/mainPage"); // 메인 페이지로 이동
+    } catch (error) {
+      console.error("토큰 요청 중 오류 발생:", error);
+    }
   };
 
   const [textPosition, setTextPosition] = useState<number>(0);
@@ -40,7 +70,7 @@ function MainForm(props: MainProps) {
   const handleScroll = () => {
     const scrollY = window.scrollY || window.pageYOffset;
     const startScroll = 200;
-    const endScroll = 1200; // 변경된 스크롤 위치
+    const endScroll = 1000; // 변경된 스크롤 위치
 
     if (scrollY <= startScroll) {
       setTextPosition(0);
@@ -108,7 +138,7 @@ function MainForm(props: MainProps) {
       <>
         <WalkText>
           맞춤 배식
-          <WalkSText>사료와 간식, 물 급여하면 건강 형성. </WalkSText>
+          <WalkSText>사료와 간식, 물 급여로. </WalkSText>
           <HR />
           신나는 놀이
           <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
@@ -128,7 +158,7 @@ function MainForm(props: MainProps) {
           <TextWrap style={{ position: "absolute" }}>
             <AnimatedText textPosition={textPosition}>
               {"내가 없을 때 \n 내 아이는?"}
-              <Btn onClick={LoginButtonClick}>예약하기</Btn>
+              <Btn onClick={moveToWrite}>예약하기</Btn>
             </AnimatedText>
           </TextWrap>
         </SectionContainer>
@@ -220,13 +250,54 @@ function MainForm(props: MainProps) {
                 <TextWrap1>
                   {" "}
                   <WhiteBoxText>{whiteBoxText}</WhiteBoxText>
-                  <WalkSbutton onClick={LoginButtonClick}>맡기기</WalkSbutton>
+                  <WalkSbutton onClick={moveToWrite}>맡기기</WalkSbutton>
                 </TextWrap1>
               </ListContainer>
             </SubContainer>
           </WhiteBoxContainer>
         )}
       </SectionContainer>
+      <SectionendContainer>
+        {imagesLoaded && (
+          <EndContainer>
+            {[
+              {
+                feLink: "https://github.com/sebfe45kimck",
+                beLink: "https://github.com/j00r6",
+                name: "FE김철기",
+                beName: "BE박진수",
+              },
+              {
+                feLink: "https://github.com/udaeng8286",
+                beLink: "https://github.com/SEBBE45JGH",
+                name: "FE송유정",
+                beName: "BE장근호",
+              },
+              {
+                feLink: "https://github.com/Dohyun12259",
+                beLink: "https://github.com/gord10011",
+                name: "FE최도현",
+                beName: "BE전찬혁",
+              },
+              {
+                feLink: "",
+                beLink: "https://github.com/rbgud4226",
+                name: "",
+                beName: "BE황규형",
+              },
+            ].map((item, index) => (
+              <EndPage key={index}>
+                {item.feLink && (
+                  <GilinLinkF href={item.feLink}>{item.name}</GilinLinkF>
+                )}
+                {item.beLink && (
+                  <GilinLinkB href={item.beLink}>{item.beName}</GilinLinkB>
+                )}
+              </EndPage>
+            ))}
+          </EndContainer>
+        )}
+      </SectionendContainer>
     </PageListContainer>
   );
 }
@@ -242,6 +313,9 @@ const ListContainer = styled.div`
   margin-top; 100px;
   color: wihte;
 `;
+const EndPage = styled.div`
+  display: flex;
+`;
 
 const PageListContainer = styled.div`
   text-align: left;
@@ -254,6 +328,25 @@ const PageContainer = styled.div`
 const SectionContainer = styled.div`
   margin-bottom: 32px;
   position: relative;
+`;
+
+const SectionendContainer = styled.div`
+  position: relative;
+`;
+
+const EndContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(34, 39, 76, 0.2);
+  height: 100px;
+
+  margin-right: auto;
+  background-color: #279eff;
+  justify-content: center;
+  align-items: center;
 `;
 
 const HR = styled.hr`
@@ -276,6 +369,19 @@ const WalkText = styled.div`
   margin-top: 50px;
 `;
 
+const GilinLinkB = styled.a`
+  margin-right: 10px;
+  width: 100px;
+  height: 20px;
+  color: white;
+`;
+
+const GilinLinkF = styled.a`
+  margin-right: 10px;
+  width: 100px;
+  height: 20px;
+  color: white;
+`;
 const WalkSText = styled.div`
   font-size: 16px;
   margin: 20px;
@@ -297,7 +403,6 @@ const WalkSbutton = styled.button`
 
 const WhiteBoxContainer = styled.div`
   background-color: white;
-  position: relative;
 `;
 
 const WhiteBoxText = styled.div`
@@ -397,11 +502,12 @@ const WalkButton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
-  padding: 24px 52px;
+  padding: 16px 52px;
   position: relative;
   margin-top: 200px;
+  position: relative;
   top: -50px;
-  left: 50px;
+  margin-left: 50px;
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
@@ -409,23 +515,34 @@ const WalkButton = styled.button`
     background-color: #279eff;
     color: white;
   }
-`;
 
+  @media (max-width: 430px) {
+    margin-top: 100px;
+    top: 5;
+    margin-left: 30px;
+  }
+`;
 const CareButton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
-  padding: 24px 52px;
+  padding: 16px 52px;
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 170px;
+  margin-left: 120px;
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
   &.active {
     background-color: #279eff;
     color: white;
+  }
+
+  @media (max-width: 430px) {
+    margin-top: 100px;
+    top: -50px;
+    margin-left: 20px;
   }
 `;
 

@@ -57,11 +57,15 @@ const BoardList = () => {
   // WC 태그와 동물 태그를 가져오는 함수
   const fetchTags = async (
     selectedPage: number,
-    wcTagFilter: string | null,
     animalTagFilter: string | null,
+    wcTagFilter: string | null,
   ) => {
+    // 페이지 크기를 문자열로 변환
+    const size = String(PAGE_SIZE);
+    setIsLoading(true);
+
     try {
-      const wcTagsResponse = await axios.get(`${api}/wcboard/tag`, {
+      const response = await axios.get(`${api}/wcboard/`, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
@@ -70,29 +74,51 @@ const BoardList = () => {
         },
         params: {
           page: selectedPage, // 현재 페이지
+          size, // 페이지당 항목 수 (항상 5로 고정)
           wcTag: wcTagFilter,
           animalTag: animalTagFilter,
+          sort: "wcboardId",
         },
       });
 
-      const animalTagsResponse = await axios.get(`${api}/wcboard/tag`, {
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          Accept: "application/json",
-          "ngrok-skip-browser-warning": "69420",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          page: selectedPage, // 현재 페이지
-          wcTag: wcTagFilter,
-          animalTag: animalTagFilter,
-        },
-      });
+      // 데이터 설정
+      checkLoginStatus();
 
-      setWCTags(wcTagsResponse.data); // WC 태그 설정
-      setAnimalTags(animalTagsResponse.data); // 동물 태그 설정
+      // 만약 응답에서 반환된 항목이 5개 미만이라면, 빈 항목을 추가
+      const data = response.data.data;
+      if (data.length < PAGE_SIZE) {
+        const emptyItemCount = PAGE_SIZE - data.length;
+        const emptyItems = Array.from({ length: emptyItemCount }, () => ({
+          // 빈 항목의 필드들을 적절히 초기화
+          wcboardId: "0",
+          title: "",
+          content: "",
+          images: "",
+          wcTag: "",
+          animalTag: "",
+          areaTag: "",
+          postStatus: "",
+          location: "",
+        }));
+        setPosts([...data, ...emptyItems]);
+      } else {
+        setPosts(data);
+      }
+
+      const pageInfo: PageInfo = response.data.pageInfo;
+
+      setTotalItemsCount(pageInfo.totalElements);
+
+      setIsLoading(false);
+
+      // 페이지가 없으면 1로 보내기
+      if (selectedPage > pageInfo.totalPages) {
+        const url = `/mainPage?p=1`;
+        navigate(url);
+      }
     } catch (error) {
-      console.error("태그 불러오기 중 오류 발생:", error);
+      console.error("API 요청 중 오류 발생:", error);
+      setIsLoading(false);
     }
   };
 
@@ -108,7 +134,6 @@ const BoardList = () => {
 
     try {
       const response = await axios.get(`${api}/wcboard`, {
-
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           Accept: "application/json",
@@ -292,7 +317,9 @@ const BoardList = () => {
                         </SubPageContainer>
                         <SubPageContainer>
                           <TitlePage>{post.title}</TitlePage>
-                          <ContentPage>{post.content}</ContentPage>
+                          {post.content.length > 30
+                            ? `${post.content.slice(0, 30)}...`
+                            : post.content}
                         </SubPageContainer>
                       </ListContainer>
                     </ImContainer>
@@ -404,24 +431,24 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 60px;
-  height: 44px;
+  width: 50px;
+  height: 40px;
   border-radius: 8px;
-  padding: 8px 8px;
   cursor: pointer;
   justify-content: space-around;
   font-size: 12px;
-  margin-left: 12px;
+  margin-left: 4px;
+  
+  }
 `;
 
 const WcOptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 60px;
-  height: 44px;
+  width: 50px;
+  height: 40px;
   border-radius: 8px;
-  padding: 8px 8px;
   margin-left: 4px;
   cursor: pointer;
   justify-content: space-around;
