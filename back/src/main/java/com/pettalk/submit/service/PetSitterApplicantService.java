@@ -40,7 +40,7 @@ public class PetSitterApplicantService {
         log.info("신청지 토큰에서 멤버 아이디 가져오기 : " + memberId);
         WcBoard findPost = wcBoardService.findVerifyPost(wcboardId); //wcBoardRepository.finallById(wcboardId);
 
-        findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
+//        findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
 
         Long petSitterId = findMember.getPetSitter().getPetSitterId();
         log.info("신청지 토큰에서 펫시터 아이디 가져오기 : " + petSitterId);
