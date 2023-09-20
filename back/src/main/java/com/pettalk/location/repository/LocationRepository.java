@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
     List<LocationEntity> findAllBylocationId(Long locationId);
+    List<LocationEntity> findAll();
 
 }

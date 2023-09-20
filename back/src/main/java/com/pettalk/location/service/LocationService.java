@@ -22,8 +22,8 @@ public class LocationService {
         return location;
     }
 
-    public List<LocationEntity> findAllLocation(Long locationId) {
-        return repository.findAllBylocationId(locationId);
-//        return repository.findAll(Sort.by("locationId").descending());
+    public List<LocationEntity> findAllLocation() {
+        return repository.findAll();
+//        return repository.findAll(Sort.by("locationId").descending()); 정렬
     }
 }

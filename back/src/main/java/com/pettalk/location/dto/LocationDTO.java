@@ -35,7 +35,6 @@ public class LocationDTO {
         private float lat;
         private float lon;
     }
-
 }
 
 
