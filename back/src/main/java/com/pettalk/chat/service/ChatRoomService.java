@@ -30,6 +30,9 @@ public class ChatRoomService {
         if (chatRoomExists){
             throw new ChatRoomException("Chatroom already exists in this board");
         }
+        WcBoard wcboard = wcBoardService.findVerifyPost(chatRoom.getWcBoardId());
+        wcboard.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
+        wcBoardRepository.save(wcboard);
         return chatRoomRepository.save(chatRoom);
     }
 
