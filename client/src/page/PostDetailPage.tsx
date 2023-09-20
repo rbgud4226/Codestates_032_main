@@ -4,10 +4,12 @@ import axios from "axios";
 import global from "../Data/global";
 import styled from "styled-components";
 import SitterDetailModal from "../component/Modal/SitterDetailModal";
+import { response } from "express";
 
 const api = process.env.REACT_APP_DB_HOST;
 const accessToken = localStorage.getItem("accessToken");
 const ngrokSkipBrowserWarning = "69420";
+const memberId = localStorage.getItem("memberId");
 
 interface T {
   profileImage: string;
@@ -26,6 +28,7 @@ const PostDetailPage = () => {
   const [post, setPost] = useState(null);
   const [applyErrMsg, setApplyErrMsg] = useState("");
   const [sitterList, setSitterList] = useState<Array<T>>([]);
+  const [isApply, setIsApply] = useState(false);
   //본문과 신청자 리스트를 가져옴
   useEffect(() => {
     const fetchData = async () => {
@@ -82,8 +85,8 @@ const PostDetailPage = () => {
           "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
         },
       });
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      console.log(e.response.data);
     }
   };
 
@@ -120,6 +123,23 @@ const PostDetailPage = () => {
     const timePart = longDateStr.split(" ")[1].split(":").slice(0, 2).join(":");
     return timePart;
   }
+
+  //채팅룸에 들어감.
+  const chatRoomHdr = async () => {
+    try {
+      const res = await axios.get(`${api}/chat/${wcboardId}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+      console.log(res.data);
+      window.location.href = `/chat/${res.data.roomId}`;
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   //주소잘못됨 이거아님.
   const editHdr = () => {
@@ -165,20 +185,24 @@ const PostDetailPage = () => {
         <DateInfoText>
           {post.location ? `위치 ${post.location}` : `위치 : 입력되지않음`}
         </DateInfoText>
-        {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
       </PostSection>
       <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
-      <SitterListSection>
-        {sitterList.map((item, index) => (
-          <SitterDetailModal
-            key={index}
-            item={item}
-            index={index}
-            wcboardId={Number(wcboardId)}
-          ></SitterDetailModal>
-        ))}
-      </SitterListSection>
-      {localStorage.getItem("accessToken") ? (
+      {post.memberId && memberId ? (
+        <SitterListSection>
+          {sitterList.map((item, index) => (
+            <SitterDetailModal
+              key={index}
+              item={item}
+              index={index}
+              setIsApply={setIsApply}
+              wcboardId={Number(wcboardId)}
+            ></SitterDetailModal>
+          ))}
+        </SitterListSection>
+      ) : (
+        ""
+      )}
+      {accessToken && memberId !== post.memberId ? (
         <div
           style={{
             marginTop: "16px",
