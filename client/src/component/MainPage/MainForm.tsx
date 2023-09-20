@@ -508,7 +508,7 @@ const WalkButton = styled.button`
     color: white;
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 430px) {
     margin-top: 100px;
     top: 5;
     left: 50px;
@@ -531,7 +531,7 @@ const CareButton = styled.button`
     color: white;
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 430px) {
     margin-top: 100px;
     top: -50px;
     left: 60px;
