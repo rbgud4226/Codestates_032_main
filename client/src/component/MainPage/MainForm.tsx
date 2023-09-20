@@ -138,7 +138,7 @@ function MainForm(props: MainProps) {
       <>
         <WalkText>
           맞춤 배식
-          <WalkSText>사료와 간식, 물 급여하면 건강 형성. </WalkSText>
+          <WalkSText>사료와 간식, 물 급여로 안전하게. </WalkSText>
           <HR />
           신나는 놀이
           <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
@@ -498,8 +498,9 @@ const WalkButton = styled.button`
   padding: 16px 52px;
   position: relative;
   margin-top: 200px;
+  position: relative;
   top: -50px;
-  left: 50px; /* 조절 필요 */
+  margin-left: 50px;
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
@@ -511,7 +512,7 @@ const WalkButton = styled.button`
   @media (max-width: 430px) {
     margin-top: 100px;
     top: 5;
-    left: 50px;
+    margin-left: 30px;
   }
 `;
 const CareButton = styled.button`
@@ -522,7 +523,7 @@ const CareButton = styled.button`
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 170px; /* 조절 필요 */
+  margin-left: 120px;
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
@@ -534,7 +535,7 @@ const CareButton = styled.button`
   @media (max-width: 430px) {
     margin-top: 100px;
     top: -50px;
-    left: 60px;
+    margin-left: 20px;
   }
 `;
 
