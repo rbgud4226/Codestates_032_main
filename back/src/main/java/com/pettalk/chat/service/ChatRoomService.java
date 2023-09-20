@@ -61,12 +61,18 @@ public class ChatRoomService {
         wcBoardRepository.save(wcBoard);
     }
 
-    public void chatComplete(ChatRoomCompleteDto completeDto) {
+    public ChatRoomCompleteDto.response chatComplete(ChatRoomCompleteDto.request completeDto) {
         WcBoard wcBoard = wcBoardService.findVerifyPost(completeDto.getWcboardId());
         PetSitter petSitter = petSitterService.findPetSitter(completeDto.getPetSitterId());
+        String petSitterEmail = memberService.findVerifyMember(petSitter.getMember().getMemberId()).getEmail();
         wcBoard.setPostStatus(WcBoard.PostStatus.COMPLETE);
         wcBoard.setPetSitter(petSitter);
         wcBoardRepository.save(wcBoard);
+        ChatRoomCompleteDto.response response = new ChatRoomCompleteDto.response();
+        response.setEmail(petSitterEmail);
+        response.setImage(petSitter.getPetSitterImage());
+        response.setName(petSitter.getName());
+        return response;
     }
 
     public boolean checkSender(Long memberId) {
