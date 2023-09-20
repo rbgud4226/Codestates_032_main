@@ -52,6 +52,7 @@ public class PetSitterService {
             petSitter.setPetSitterId(petSitter.getPetSitterId());
             petSitter.setName(petSitter.getName());
             petSitter.setIntroduce(petSitter.getIntroduce());
+            petSitter.setPetSitterImage(findMember.getProfileImage());
             petSitter.setNowJob(petSitter.getNowJob());
             petSitter.setSmoking(petSitter.isSmoking());
             petSitter.setExAnimal(petSitter.getExAnimal());

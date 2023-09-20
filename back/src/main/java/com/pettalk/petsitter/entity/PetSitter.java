@@ -1,6 +1,7 @@
 package com.pettalk.petsitter.entity;
 
 import com.pettalk.member.entity.Member;
+import com.pettalk.review.entity.Review;
 import com.pettalk.submit.entity.PetSitterApplicant;
 import com.pettalk.wcboard.entity.WcBoard;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity

@@ -8,11 +8,11 @@ public class ReviewDto {
     @AllArgsConstructor
     @Getter
     public static class Post {
-        private Long reviewId;
+//        private Long reviewId;
         private String content;
         private String memberNickName;
         private Float star;
-        private Long petSitterId;
+//        private Long petSitterId;
     }
 
     @AllArgsConstructor
@@ -22,7 +22,7 @@ public class ReviewDto {
         private String content;
         private String memberNickName;
         private Float star;
-        private Long petSitterId;
+//        private Long petSitterId;
     }
 
     @AllArgsConstructor
@@ -33,6 +33,16 @@ public class ReviewDto {
         private String memberNickName;
         private Float star;
         private Long petSitterId;
+    }
+
+
+    @AllArgsConstructor
+    @Getter
+    public static class petSitterReviews{
+        private String petSitterName;
+        private Long contents;
+        private Long reviews;
+        private Float star;
     }
 
 
