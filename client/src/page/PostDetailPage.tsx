@@ -3,16 +3,15 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import global from "../Data/global";
 import styled from "styled-components";
-import SitterDetailModal from "../component/Modal/SitterDetailModal";
-import { response } from "express";
+import SitterDetailModal from "../component/Modal/SitterInfoModal";
 
 const api = process.env.REACT_APP_DB_HOST;
 const accessToken = localStorage.getItem("accessToken");
 const ngrokSkipBrowserWarning = "69420";
-const memberId = localStorage.getItem("memberId");
+const memberId = Number(localStorage.getItem("memberId"));
 
 interface T {
-  profileImage: string;
+  petSitterImage: string;
   name: string;
   nowJob: string;
   smoking: string;
@@ -28,10 +27,12 @@ const PostDetailPage = () => {
   const [post, setPost] = useState(null);
   const [applyErrMsg, setApplyErrMsg] = useState("");
   const [sitterList, setSitterList] = useState<Array<T>>([]);
-  const [isApply, setIsApply] = useState(false);
+  const [isWriter, setIsWriter] = useState(false); //글작성자인지 확인하는 변수
+
   //본문과 신청자 리스트를 가져옴
   useEffect(() => {
     const fetchData = async () => {
+      //본문info
       try {
         const response = await axios.get(`${api}/wcboard/${wcboardId}`, {
           headers: {
@@ -42,6 +43,9 @@ const PostDetailPage = () => {
         });
         console.log(response.data);
         setPost(response.data);
+        setIsWriter(memberId === response.data.memberId);
+        console.log(response.data.postStatus);
+        //시터리스트
         try {
           const response = await axios.get(`${api}/submit/${wcboardId}`, {
             headers: {
@@ -55,8 +59,9 @@ const PostDetailPage = () => {
         } catch (error) {
           console.error("API 요청 중 오류 발생:", error);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("API 요청 중 오류 발생:", error);
+        setApplyErrMsg(error.response.data);
       }
     };
 
@@ -75,8 +80,6 @@ const PostDetailPage = () => {
   //신청하기 함수
 
   const applyHdr = async () => {
-    console.log(wcboardId);
-    console.log(accessToken);
     try {
       await axios.post(`${api}/submit/${wcboardId}`, null, {
         headers: {
@@ -85,8 +88,10 @@ const PostDetailPage = () => {
           "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
         },
       });
+      alert("신청되었습니다."); //임시확인용
     } catch (e: any) {
       console.log(e.response.data);
+      setApplyErrMsg(e.response.data);
     }
   };
 
@@ -124,9 +129,10 @@ const PostDetailPage = () => {
     return timePart;
   }
 
-  //채팅룸에 들어감.
+  //채팅방에 들어감.
   const chatRoomHdr = async () => {
     try {
+      const roomId = localStorage.getItem("roomId");
       const res = await axios.get(`${api}/chat/${wcboardId}`, {
         headers: {
           Authorization: `${localStorage.getItem("accessToken")}`,
@@ -135,8 +141,22 @@ const PostDetailPage = () => {
         },
       });
       console.log(res.data);
-      window.location.href = `/chat/${res.data.roomId}`;
-    } catch (e) {
+      if (isWriter) {
+        const [sitter] = sitterList.filter(
+          el =>
+            el.petSitterId === Number(localStorage.getItem("otherPetSitterId")),
+        );
+        localStorage.setItem("sitterProfileImage", sitter.petSitterImage);
+        localStorage.setItem("sitterName", sitter.name);
+        localStorage.setItem("sitterEmail", sitter.email);
+        localStorage.setItem("sitterPhone", sitter.phone);
+      } else {
+        //작성자프로필을 불러올방법이 없음.
+        localStorage.setItem("clientNickName", post.nickName);
+      }
+
+      window.location.href = `/chat/${roomId}`;
+    } catch (e: any) {
       console.log(e);
     }
   };
@@ -187,14 +207,13 @@ const PostDetailPage = () => {
         </DateInfoText>
       </PostSection>
       <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
-      {post.memberId && memberId ? (
+      {isWriter && !!(post.postStatus === "DEFAULT") ? (
         <SitterListSection>
           {sitterList.map((item, index) => (
             <SitterDetailModal
               key={index}
               item={item}
-              index={index}
-              setIsApply={setIsApply}
+              isWriter={isWriter}
               wcboardId={Number(wcboardId)}
             ></SitterDetailModal>
           ))}
@@ -202,7 +221,8 @@ const PostDetailPage = () => {
       ) : (
         ""
       )}
-      {accessToken && memberId !== post.memberId ? (
+
+      {!isWriter ? (
         <div
           style={{
             marginTop: "16px",
@@ -211,7 +231,20 @@ const PostDetailPage = () => {
           }}
         >
           <RegisterBtn onClick={() => applyHdr()}>신청하기</RegisterBtn>
-          <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
+          {applyErrMsg ? <ErrMsg>{applyErrMsg}</ErrMsg> : ""}
+        </div>
+      ) : (
+        ""
+      )}
+      {post.postStatus === "IN_RESERVATION" ? (
+        <div
+          style={{
+            marginTop: "16px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <RegisterBtn onClick={() => chatRoomHdr()}>채팅룸입장</RegisterBtn>
         </div>
       ) : (
         ""
@@ -341,4 +374,11 @@ const RegisterBtn = styled.button`
     outline: none;
     background-color: ${global.PrimaryActive.value};
   }
+`;
+
+const ErrMsg = styled.div`
+  margin-top: 4px;
+  color: #ff2727;
+  font-size: 10px;
+  margin-bottom: 6px;
 `;

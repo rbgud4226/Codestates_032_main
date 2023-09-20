@@ -11,11 +11,13 @@ import PersonInfo from "./PersonInfo";
 
 const accessToken = window.localStorage.getItem("accessToken");
 const memberId = Number(window.localStorage.getItem("memberId"));
+const roomId = Number(window.localStorage.getItem("roomId"));
 
 const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [client, setClient] = useState(null);
   const [msgList, setMsgList] = useState([]);
+  const [otherInfo, setOtherInfo] = useState(null);
 
   const connect = () => {
     try {
@@ -28,7 +30,7 @@ const Chat: React.FC = () => {
       });
 
       clientData.onConnect = () => {
-        clientData.subscribe(`/sub/room/5`, msgGet);
+        clientData.subscribe(`/sub/room/${roomId}`, msgGet);
       };
       clientData.activate();
       setClient(clientData);
@@ -48,13 +50,14 @@ const Chat: React.FC = () => {
       try {
         if (client.connected) {
           client.publish({
-            destination: `/pub/5`,
+            destination: `/pub/${roomId}`,
             body: JSON.stringify({
               memberId: Number(memberId),
               message: input,
             }),
           });
         }
+        console.log(otherInfo);
       } catch (e) {
         console.log(e);
       }
@@ -65,7 +68,7 @@ const Chat: React.FC = () => {
   //메세지 리스트 get 함수
   const msgGet = async () => {
     try {
-      const msg = await axios.get("http://3.35.193.208:8080/message/5");
+      const msg = await axios.get(`http://3.35.193.208:8080/message/${roomId}`);
       console.log(msg.data);
       setMsgList(msg.data);
       window.scrollTo(
@@ -80,6 +83,18 @@ const Chat: React.FC = () => {
   useEffect(() => {
     msgGet();
     connect();
+    if (localStorage.getItem("sitterName")) {
+      setOtherInfo({
+        name: localStorage.getItem("sitterName"),
+        phone: localStorage.getItem("sitterPhone"),
+        email: localStorage.getItem("sitterEmail"),
+        profileImage: localStorage.getItem("sitterProfileImage"),
+      });
+    } else {
+      setOtherInfo({
+        nickName: localStorage.getItem("clientNickName"),
+      });
+    }
   }, []);
 
   const submitHdr = e => {
@@ -93,7 +108,7 @@ const Chat: React.FC = () => {
 
   return (
     <ChatCtn>
-      <PersonInfo disconnect={disconnect} />
+      <PersonInfo disconnect={disconnect} other={otherInfo} />
       <MessageSection>
         <MsgCtn>
           {msgList

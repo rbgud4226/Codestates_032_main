@@ -7,7 +7,7 @@ import axios from "axios";
 const api = process.env.REACT_APP_DB_HOST;
 
 interface P {
-  profileImage: string;
+  petSitterImage: string;
   name: string;
   nowJob: string;
   smoking: string;
@@ -19,15 +19,13 @@ interface P {
 }
 
 interface T {
+  isWriter: boolean;
   wcboardId: number;
-  index: number;
   item: P;
-  setIsApply: (isApply: boolean) => void;
 }
-const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
+const SitterInfoModal = ({ isWriter, item, wcboardId }: T) => {
   const [modalItem, setModalItem] = useState<P | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [chatAble, setChatAble] = useState(false);
 
   const openModalHdr = (item: P) => {
     setModalItem(item);
@@ -40,7 +38,7 @@ const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
     try {
       const res = await axios.post(
         `${api}/chat`,
-        { wcboardId: wcboardId, petSitterId: item.petSitterId },
+        { wcBoardId: wcboardId, petSitterId: item.petSitterId },
         {
           headers: {
             Authorization: `${localStorage.getItem("accessToken")}`,
@@ -49,7 +47,8 @@ const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
           },
         },
       );
-      setChatAble(true);
+      window.localStorage.setItem("roomId", res.data.roomId);
+      window.localStorage.setItem("otherPetSitterId", res.data.petSitterId);
       console.log(res.data);
     } catch (err) {
       console.log(err);
@@ -74,12 +73,12 @@ const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
               color: `${global.PrimaryLight.value}`,
             }}
           >
-            {item.smoking}
+            {item.smoking ? "흡연자" : "비흡연자"}
           </p>
         </InfoCtn>
         <ImgCtn>
           <img
-            src={item.profileImage}
+            src={item.petSitterImage}
             alt="프로필이미지"
             style={{ height: "64px", width: "64px" }}
           ></img>
@@ -100,7 +99,7 @@ const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
           </div>
           <ImgCtn>
             <img
-              src={modalItem?.profileImage}
+              src={modalItem?.petSitterImage}
               alt="프로필이미지"
               style={{ height: "64px", width: "64px" }}
             ></img>
@@ -156,13 +155,18 @@ const PostDetailModal = ({ item, index, wcboardId, setIsApply }: T) => {
             <SitterInfo>{modalItem?.info}</SitterInfo>
           </div>
         </ModalCtn>
-        <RegisterBtn onClick={() => chatHdr()}>신청하기</RegisterBtn>
+        {/* {모달 신청하기 버튼은 글쓴이만 볼 수 있음} */}
+        {isWriter ? (
+          <RegisterBtn onClick={() => chatHdr()}>신청하기</RegisterBtn>
+        ) : (
+          ""
+        )}
       </ReactModal>
     </SitterCtn>
   );
 };
 
-export default PostDetailModal;
+export default SitterInfoModal;
 
 const customModalStyles: ReactModal.Styles = {
   overlay: {

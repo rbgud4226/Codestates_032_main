@@ -1,65 +1,95 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import global from "../../../Data/global";
-import AfterChatModal from "../../Modal/AfterChatModal";
+import AfterChatModal from "../../Modal/ReviewModal";
 
 interface T {
+  other: userForm;
   disconnect: () => void;
 }
 
-const PersonInfo = ({ disconnect }: T) => {
-  const [isAccept, setIsAccept] = useState(false);
-  const [userData, setUserData] = useState({
-    nickName: "아무개",
-    phone: "01012345678",
-    email: "amuge@gmail.com",
-    profileImage: "https://i.imgur.com/d67J76L.png",
-  });
+type userForm = {
+  nickName?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+  profileImage?: string;
+};
 
+const PersonInfo = ({ disconnect, other }: T) => {
+  const [isAccept, setIsAccept] = useState(false);
+
+  if (!other) {
+    return <>로딩중...</>;
+  }
+
+  //거부처리 아마 채팅 폭파. api주소필요함.
   const refuseHdr = () => {
     disconnect();
     window.location.href = "/mainpage";
   };
 
+  //수락시 처리 api주소 필요함.
   const acceptHdr = () => {
     setIsAccept(true);
   };
 
   return (
     <PersonInfoSection>
-      <ImgInfoWrapper>
-        <ProfileImgWrapper>
-          <img style={{ height: "40px" }} src={userData.profileImage}></img>
-        </ProfileImgWrapper>
-        <InfoCtn>
-          <p style={{ fontSize: "16px", marginLeft: "25px" }}>
-            {userData.nickName}
-          </p>
-          <p style={{ fontSize: "14px", color: `${global.Gray[1].value}` }}>
-            {userData.phone}
-          </p>
-          <p
-            style={{
-              fontSize: "14px",
-              color: "rgba(89, 89, 89, 0.58)",
-            }}
-          >
-            {userData.email}
-          </p>
-        </InfoCtn>
-      </ImgInfoWrapper>
-      {!isAccept ? (
-        <BtnCtn>
-          <AcceptBtn onClick={() => acceptHdr()}>수락</AcceptBtn>
-          <RefuseBtn onClick={() => refuseHdr()}>거절</RefuseBtn>
-        </BtnCtn>
+      {other.name ? (
+        <ImgInfoWrapper>
+          <ProfileImgWrapper>
+            <img style={{ height: "40px" }} src={other.profileImage}></img>
+          </ProfileImgWrapper>
+          <InfoCtn>
+            <p style={{ fontSize: "16px", marginLeft: "25px" }}>{other.name}</p>
+            <p style={{ fontSize: "14px", color: `${global.Gray[1].value}` }}>
+              {other.phone}
+            </p>
+            <p
+              style={{
+                fontSize: "14px",
+                color: "rgba(89, 89, 89, 0.58)",
+              }}
+            >
+              {other.email}
+            </p>
+          </InfoCtn>
+        </ImgInfoWrapper>
+      ) : (
+        <ImgInfoWrapper>
+          <ProfileImgWrapper>
+            <img
+              style={{ height: "40px" }}
+              // {클라이언트 프로필사진 임시}
+              src={"https://i.imgur.com/jeAOHnQ.png"}
+            ></img>
+          </ProfileImgWrapper>
+          <InfoCtn>
+            <p style={{ fontSize: "16px", marginLeft: "25px" }}>
+              {other.nickName}
+            </p>
+          </InfoCtn>
+        </ImgInfoWrapper>
+      )}
+      {other.name ? (
+        !isAccept ? (
+          <BtnCtn>
+            <AcceptBtn onClick={() => acceptHdr()}>수락</AcceptBtn>
+            <RefuseBtn onClick={() => refuseHdr()}>거절</RefuseBtn>
+          </BtnCtn>
+        ) : (
+          <BtnCtn>
+            <AfterChatModal
+              name={other.name}
+              email={other.email}
+              profileImage={other.profileImage}
+            />
+          </BtnCtn>
+        )
       ) : (
         <BtnCtn>
-          <AfterChatModal
-            name={"고길동"}
-            email={"ada@gmail.com"}
-            profileImage={"https://i.imgur.com/5blwuBz.png"}
-          />
+          <RefuseBtn onClick={() => refuseHdr()}>거절</RefuseBtn>
         </BtnCtn>
       )}
     </PersonInfoSection>
