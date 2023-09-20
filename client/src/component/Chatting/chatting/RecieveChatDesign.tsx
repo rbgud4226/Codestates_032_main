@@ -18,8 +18,7 @@ const RecieveChatDesign: React.FC<RCVProps> = ({ input, createAt }) => {
 };
 
 export default RecieveChatDesign;
-
-export const ChatCtn = styled.div`
+const ChatCtn = styled.div`
   display: flex;
   align-items: end;
   flex-direction: column;
@@ -27,8 +26,7 @@ export const ChatCtn = styled.div`
   margin-bottom: 8px;
   margin-right: 20px;
 `;
-
-export const ChatDesign = styled.div`
+const ChatDesign = styled.div`
   white-space: normal;
   flex-wrap: wrap;
   justify-content: center;
@@ -40,8 +38,7 @@ export const ChatDesign = styled.div`
   font-size: 14px;
   padding: 12px 24px;
 `;
-
-export const TimeDesign = styled.div`
+const TimeDesign = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

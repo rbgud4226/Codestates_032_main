@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import global from "../Data/global";
 import styled from "styled-components";
-import SitterDetailModal from "../component/Modal/SitterDetailModal";
+import SitterDetailModal from "../component/Modal/SitterInfoModal";
 
 const api = process.env.REACT_APP_DB_HOST;
+const accessToken = localStorage.getItem("accessToken");
+const ngrokSkipBrowserWarning = "69420";
+const memberId = Number(localStorage.getItem("memberId"));
 
 interface T {
-  profileImage: string;
+  petSitterImage: string;
   name: string;
   nowJob: string;
   smoking: string;
@@ -24,9 +27,12 @@ const PostDetailPage = () => {
   const [post, setPost] = useState(null);
   const [applyErrMsg, setApplyErrMsg] = useState("");
   const [sitterList, setSitterList] = useState<Array<T>>([]);
+  const [isWriter, setIsWriter] = useState(false); //글작성자인지 확인하는 변수
+
   //본문과 신청자 리스트를 가져옴
   useEffect(() => {
     const fetchData = async () => {
+      //본문info
       try {
         const response = await axios.get(`${api}/wcboard/${wcboardId}`, {
           headers: {
@@ -37,10 +43,12 @@ const PostDetailPage = () => {
         });
         console.log(response.data);
         setPost(response.data);
+        setIsWriter(memberId === response.data.memberId);
+        console.log(response.data.postStatus);
+        //시터리스트
         try {
           const response = await axios.get(`${api}/submit/${wcboardId}`, {
             headers: {
-              Authorization: `${localStorage.getItem("accessToken")}`,
               "Content-Type": "application/json;charset=UTF-8",
               Accept: "application/json",
               "ngrok-skip-browser-warning": "69420",
@@ -51,8 +59,9 @@ const PostDetailPage = () => {
         } catch (error) {
           console.error("API 요청 중 오류 발생:", error);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("API 요청 중 오류 발생:", error);
+        setApplyErrMsg(error.response.data);
       }
     };
 
@@ -70,18 +79,19 @@ const PostDetailPage = () => {
 
   //신청하기 함수
 
-  const applyHdr = async (item: number) => {
+  const applyHdr = async () => {
     try {
-      await axios.post(`${api}/submit/${wcboardId}`, {
+      await axios.post(`${api}/submit/${wcboardId}`, null, {
         headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json;charset=UTF-8",
+          Authorization: `${accessToken}`,
           Accept: "application/json",
-          "ngrok-skip-browser-warning": "69420",
+          "ngrok-skip-browser-warning": ngrokSkipBrowserWarning,
         },
       });
+      alert("신청되었습니다."); //임시확인용
     } catch (e: any) {
-      console.log(e);
+      console.log(e.response.data);
+      setApplyErrMsg(e.response.data);
     }
   };
 
@@ -91,11 +101,12 @@ const PostDetailPage = () => {
     try {
       await axios.delete(`${api}/wcboard/${wcboardId}`, {
         headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`,
+          Authorization: `${accessToken}`,
           Accept: "application/json",
           "ngrok-skip-browser-warning": "69420",
         },
       });
+      window.location.href = "/mainpage";
     } catch (e) {
       console.log(e);
     }
@@ -117,6 +128,43 @@ const PostDetailPage = () => {
     const timePart = longDateStr.split(" ")[1].split(":").slice(0, 2).join(":");
     return timePart;
   }
+
+  //채팅방에 들어감.
+  const chatRoomHdr = async () => {
+    try {
+      const roomId = localStorage.getItem("roomId");
+      const res = await axios.get(`${api}/chat/${wcboardId}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
+      console.log(res.data);
+      if (isWriter) {
+        const [sitter] = sitterList.filter(
+          el =>
+            el.petSitterId === Number(localStorage.getItem("otherPetSitterId")),
+        );
+        localStorage.setItem("sitterProfileImage", sitter.petSitterImage);
+        localStorage.setItem("sitterName", sitter.name);
+        localStorage.setItem("sitterEmail", sitter.email);
+        localStorage.setItem("sitterPhone", sitter.phone);
+      } else {
+        //작성자프로필을 불러올방법이 없음.
+        localStorage.setItem("clientNickName", post.nickName);
+      }
+
+      window.location.href = `/chat/${roomId}`;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  //주소잘못됨 이거아님.
+  const editHdr = () => {
+    window.location.href = "/petsitter/edit";
+  };
 
   return (
     <PDCtn>
@@ -157,20 +205,24 @@ const PostDetailPage = () => {
         <DateInfoText>
           {post.location ? `위치 ${post.location}` : `위치 : 입력되지않음`}
         </DateInfoText>
-        {/* <DateInfoText>{`위치  ${post.}`}</DateInfoText> */}
       </PostSection>
       <ApplyCountCtn>{`신청:(${sitterList.length})`}</ApplyCountCtn>
-      <SitterListSection>
-        {sitterList.map((item, index) => (
-          <SitterDetailModal
-            key={index}
-            item={item}
-            index={index}
-            wcboardId={Number(wcboardId)}
-          ></SitterDetailModal>
-        ))}
-      </SitterListSection>
-      {localStorage.getItem("accessToken") ? (
+      {isWriter && !!(post.postStatus === "DEFAULT") ? (
+        <SitterListSection>
+          {sitterList.map((item, index) => (
+            <SitterDetailModal
+              key={index}
+              item={item}
+              isWriter={isWriter}
+              wcboardId={Number(wcboardId)}
+            ></SitterDetailModal>
+          ))}
+        </SitterListSection>
+      ) : (
+        ""
+      )}
+
+      {!isWriter ? (
         <div
           style={{
             marginTop: "16px",
@@ -178,10 +230,21 @@ const PostDetailPage = () => {
             flexDirection: "column",
           }}
         >
-          <RegisterBtn onClick={() => applyHdr(post.wcboardId)}>
-            신청하기
-          </RegisterBtn>
-          <p style={{ color: `${global.ErrorMsgRed.value}` }}>{applyErrMsg}</p>
+          <RegisterBtn onClick={() => applyHdr()}>신청하기</RegisterBtn>
+          {applyErrMsg ? <ErrMsg>{applyErrMsg}</ErrMsg> : ""}
+        </div>
+      ) : (
+        ""
+      )}
+      {post.postStatus === "IN_RESERVATION" ? (
+        <div
+          style={{
+            marginTop: "16px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <RegisterBtn onClick={() => chatRoomHdr()}>채팅룸입장</RegisterBtn>
         </div>
       ) : (
         ""
@@ -311,4 +374,11 @@ const RegisterBtn = styled.button`
     outline: none;
     background-color: ${global.PrimaryActive.value};
   }
+`;
+
+const ErrMsg = styled.div`
+  margin-top: 4px;
+  color: #ff2727;
+  font-size: 10px;
+  margin-bottom: 6px;
 `;

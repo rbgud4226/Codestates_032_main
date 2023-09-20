@@ -7,7 +7,7 @@ import axios from "axios";
 const api = process.env.REACT_APP_DB_HOST;
 
 interface P {
-  profileImage: string;
+  petSitterImage: string;
   name: string;
   nowJob: string;
   smoking: string;
@@ -19,28 +19,26 @@ interface P {
 }
 
 interface T {
+  isWriter: boolean;
   wcboardId: number;
-  index: number;
   item: P;
 }
-const PostDetailModal = ({ item, index, wcboardId }: T) => {
+const SitterInfoModal = ({ isWriter, item, wcboardId }: T) => {
   const [modalItem, setModalItem] = useState<P | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [chatAble, setChatAble] = useState(false);
 
   const openModalHdr = (item: P) => {
     setModalItem(item);
     setModalOpen(true);
     console.log(modalItem);
   };
-  //지원하기 버튼 입력시 채팅룸 생성.
+  //신청하기 버튼 입력시 채팅룸 생성.
   const chatHdr = async () => {
-    setChatAble(true);
     setModalOpen(false);
     try {
       const res = await axios.post(
         `${api}/chat`,
-        { wcboardId: wcboardId, petSitterId: item.petSitterId },
+        { wcBoardId: wcboardId, petSitterId: item.petSitterId },
         {
           headers: {
             Authorization: `${localStorage.getItem("accessToken")}`,
@@ -49,71 +47,43 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           },
         },
       );
+      window.localStorage.setItem("roomId", res.data.roomId);
+      window.localStorage.setItem("otherPetSitterId", res.data.petSitterId);
       console.log(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
-  //채팅룸에 들어감.
-  const chatRoomHdr = async () => {
-    try {
-      const res = await axios.get(`${api}/chat/${wcboardId}`, {
-        headers: {
-          Authorization: `${localStorage.getItem("accessToken")}`,
-          Accept: "application/json",
-          "ngrok-skip-browser-warning": "69420",
-        },
-      });
-      console.log(res.data);
-      window.location.href = `/chat/${res.data.roomId}`;
-    } catch (e) {
-      console.log(e);
-    }
-  };
   return (
     <SitterCtn>
-      {!chatAble ? (
-        <SitterBtn
-          onClick={() => {
-            openModalHdr(item);
-          }}
-        >
-          <InfoCtn>
-            <p style={{ fontSize: "20px", fontWeight: "600" }}>{item.name}</p>
-            <p style={{ fontSize: "20px", color: `${global.Gray[1].value}` }}>
-              {item.nowJob}
-            </p>
-            <p
-              style={{
-                fontSize: "20px",
-                color: `${global.PrimaryLight.value}`,
-              }}
-            >
-              {item.smoking}
-            </p>
-          </InfoCtn>
-          <ImgCtn>
-            <img
-              src={item.profileImage}
-              alt="프로필이미지"
-              style={{ height: "64px", width: "64px" }}
-            ></img>
-          </ImgCtn>
-        </SitterBtn>
-      ) : (
-        <SitterBtn onClick={() => chatRoomHdr()}>
-          <PetalkChat>펫톡쳇입장</PetalkChat>
-          <ImgCtn>
-            <img
-              src={item.profileImage}
-              alt="프로필이미지"
-              style={{ height: "64px", width: "64px" }}
-            ></img>
-          </ImgCtn>
-        </SitterBtn>
-      )}
-
+      <SitterBtn
+        onClick={() => {
+          openModalHdr(item);
+        }}
+      >
+        <InfoCtn>
+          <p style={{ fontSize: "20px", fontWeight: "600" }}>{item.name}</p>
+          <p style={{ fontSize: "20px", color: `${global.Gray[1].value}` }}>
+            {item.nowJob}
+          </p>
+          <p
+            style={{
+              fontSize: "20px",
+              color: `${global.PrimaryLight.value}`,
+            }}
+          >
+            {item.smoking ? "흡연자" : "비흡연자"}
+          </p>
+        </InfoCtn>
+        <ImgCtn>
+          <img
+            src={item.petSitterImage}
+            alt="프로필이미지"
+            style={{ height: "64px", width: "64px" }}
+          ></img>
+        </ImgCtn>
+      </SitterBtn>
       <ReactModal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
@@ -129,7 +99,7 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
           </div>
           <ImgCtn>
             <img
-              src={modalItem?.profileImage}
+              src={modalItem?.petSitterImage}
               alt="프로필이미지"
               style={{ height: "64px", width: "64px" }}
             ></img>
@@ -185,13 +155,18 @@ const PostDetailModal = ({ item, index, wcboardId }: T) => {
             <SitterInfo>{modalItem?.info}</SitterInfo>
           </div>
         </ModalCtn>
-        <RegisterBtn onClick={() => chatHdr()}>지원하기</RegisterBtn>
+        {/* {모달 신청하기 버튼은 글쓴이만 볼 수 있음} */}
+        {isWriter ? (
+          <RegisterBtn onClick={() => chatHdr()}>신청하기</RegisterBtn>
+        ) : (
+          ""
+        )}
       </ReactModal>
     </SitterCtn>
   );
 };
 
-export default PostDetailModal;
+export default SitterInfoModal;
 
 const customModalStyles: ReactModal.Styles = {
   overlay: {
@@ -222,12 +197,6 @@ const customModalStyles: ReactModal.Styles = {
   },
 };
 
-const ModalCtn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
 const SitterCtn = styled.div`
   display: flex;
   flex-direction: row;
@@ -266,7 +235,12 @@ const ImgCtn = styled.div`
 `;
 
 //여기서부터 모달 스타일
-
+const ModalCtn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
 const BackBtn = styled.button`
   background-color: white;
   border: 0px;
