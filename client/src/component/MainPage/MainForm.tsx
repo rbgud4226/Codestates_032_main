@@ -495,11 +495,11 @@ const WalkButton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
-  padding: 24px 52px;
+  padding: 16px 52px;
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 60px; /* 조절 필요 */
+  left: 50px; /* 조절 필요 */
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
@@ -507,24 +507,34 @@ const WalkButton = styled.button`
     background-color: #279eff;
     color: white;
   }
+
+  @media (max-width: 400px) {
+    margin-top: 100px;
+    top: 5;
+    left: 50px;
   }
 `;
-
 const CareButton = styled.button`
   background-color: white;
   color: #279eff;
   font-size: 16px;
-  padding: 24px 52px;
+  padding: 16px 52px;
   position: relative;
   margin-top: 200px;
   top: -50px;
-  left: 160px; /* 조절 필요 */
+  left: 170px; /* 조절 필요 */
   border: 2px solid #279eff;
   cursor: pointer;
   border-radius: 8px;
   &.active {
     background-color: #279eff;
     color: white;
+  }
+
+  @media (max-width: 400px) {
+    margin-top: 100px;
+    top: -50px;
+    left: 60px;
   }
 `;
 

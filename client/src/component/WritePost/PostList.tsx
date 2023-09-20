@@ -431,24 +431,24 @@ const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 60px;
-  height: 44px;
+  width: 50px;
+  height: 40px;
   border-radius: 8px;
-  padding: 8px 8px;
   cursor: pointer;
   justify-content: space-around;
   font-size: 12px;
-  margin-left: 12px;
+  margin-left: 4px;
+  
+  }
 `;
 
 const WcOptionButton = styled.button<{ selected: boolean }>`
   background-color: ${props => (props.selected ? "#279eff" : "white")};
   color: ${props => (props.selected ? "white" : "#279eff")};
   border: 1px solid #279eff;
-  width: 60px;
-  height: 44px;
+  width: 50px;
+  height: 40px;
   border-radius: 8px;
-  padding: 8px 8px;
   margin-left: 4px;
   cursor: pointer;
   justify-content: space-around;
