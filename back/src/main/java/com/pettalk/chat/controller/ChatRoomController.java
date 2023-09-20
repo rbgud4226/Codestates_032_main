@@ -89,9 +89,9 @@ public class ChatRoomController {
 
     // 채팅에서 완료 버튼
     @PostMapping("/chat/complete")
-    public ResponseEntity ChatComplete(@RequestBody ChatRoomCompleteDto completeDto) {
-        chatRoomService.chatComplete(completeDto);
-        return ResponseEntity.ok("완료");
+    public ResponseEntity ChatComplete(@RequestBody ChatRoomCompleteDto.request completeDto) {
+        ChatRoomCompleteDto.response response = chatRoomService.chatComplete(completeDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 채팅방 메세지 조회
