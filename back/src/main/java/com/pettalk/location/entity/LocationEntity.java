@@ -4,20 +4,20 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long locationId;
 
     @Column
-    private double latitude;
+    private Float lat;
 
     @Column
-    private double longitude;
+    private Float lon;
 }
 
