@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import global from "../../../Data/global";
 import AfterChatModal from "../../Modal/ReviewModal";
+import axios from "axios";
+
+const api = process.env.REACT_APP_DB_HOST;
 
 interface T {
   other: userForm;
@@ -24,13 +27,27 @@ const PersonInfo = ({ disconnect, other }: T) => {
   }
 
   //거부처리 아마 채팅 폭파. api주소필요함.
-  const refuseHdr = () => {
-    disconnect();
-    window.location.href = "/mainpage";
+  const refuseHdr = async () => {
+    try {
+      const wcboardId = localStorage.getItem("wcboardId");
+      const res = await axios.post(`${api}/chat/reject/${wcboardId}`);
+      disconnect();
+      window.location.href = "/mainpage";
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   //수락시 처리 api주소 필요함.
-  const acceptHdr = () => {
+  const acceptHdr = async () => {
+    try {
+      const wcboardId = localStorage.getItem("wcboardId");
+      const res = await axios.post(`${api}/chat/accept/${wcboardId}`);
+      disconnect();
+      window.location.href = "/mainpage";
+    } catch (e) {
+      console.log(e);
+    }
     setIsAccept(true);
   };
 
