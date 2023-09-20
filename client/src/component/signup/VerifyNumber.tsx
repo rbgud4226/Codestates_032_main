@@ -38,7 +38,7 @@ const VerifyNumber = ({ phoneNum }: T) => {
   };
   return (
     <MVForm onSubmit={handleSubmit(certifyHdr)}>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
         <TextInput
           placeholder="인증번호를 입력하세요"
           {...register("verifyNum")}
@@ -57,7 +57,7 @@ const MVForm = styled.form`
   display: flex;
   flex-direction: row;
   width: 240px;
-  margin-bottom: 8px;
+  margin-top: 16px;
 `;
 
 const TextInput = styled.input`
