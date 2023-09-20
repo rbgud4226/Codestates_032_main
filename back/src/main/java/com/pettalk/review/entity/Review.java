@@ -5,6 +5,8 @@ import com.pettalk.petsitter.entity.PetSitter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
 
 import javax.persistence.*;
 
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Entity
+@Setter
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +25,14 @@ public class Review {
     private String memberNickName;
     @Column
     private Float star;
+    @Column
+    private Long wcBoardId;
+//    @Column
+//    private String petSitterImage;
+//    @Column
+//    private String petSitterEmail;
 
-//    @ManyToOne
-//    @JoinColumn(name = "petSitter_id")
-//    private PetSitter petSitter;
+    @ManyToOne
+    @JoinColumn(name = "petSitter_id")
+    private PetSitter petSitter;
 }
