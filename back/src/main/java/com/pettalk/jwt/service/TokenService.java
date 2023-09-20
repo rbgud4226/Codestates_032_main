@@ -26,7 +26,6 @@ public class TokenService {
         String subject = (String) claims.get("sub");
         Long memberId = (Long) claims.get("memberId");
 
-
         String newAccessToken = jwtTokenizer.generateAccessToken(claims, subject, newExpiration, base64EncodedSecretKey, memberId);
 
         return newAccessToken;

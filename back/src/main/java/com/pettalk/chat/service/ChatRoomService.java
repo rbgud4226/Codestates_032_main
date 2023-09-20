@@ -5,6 +5,7 @@ import com.pettalk.chat.entity.ChatRoom;
 import com.pettalk.chat.exception.ChatRoomException;
 import com.pettalk.chat.repository.ChatRoomRepository;
 import com.pettalk.member.entity.Member;
+import com.pettalk.member.service.MemberService;
 import com.pettalk.petsitter.entity.PetSitter;
 import com.pettalk.petsitter.service.PetSitterService;
 import com.pettalk.wcboard.entity.WcBoard;
@@ -22,12 +23,16 @@ public class ChatRoomService {
     private final WcBoardService wcBoardService;
     private final WcBoardRepository wcBoardRepository;
     private final PetSitterService petSitterService;
+    private final MemberService memberService;
 
     public ChatRoom createChatRoom(ChatRoom chatRoom){
         boolean chatRoomExists = chatRoomRepository.existsByWcBoardId(chatRoom.getWcBoardId());
         if (chatRoomExists){
             throw new ChatRoomException("Chatroom already exists in this board");
         }
+        WcBoard wcboard = wcBoardService.findVerifyPost(chatRoom.getWcBoardId());
+        wcboard.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
+        wcBoardRepository.save(wcboard);
         return chatRoomRepository.save(chatRoom);
     }
 
@@ -36,11 +41,11 @@ public class ChatRoomService {
     }
 
     public ChatRoom getChatRoom(Long wcboardId, Long memberId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(wcboardId).orElseThrow(() -> new ChatRoomException("채팅방이 없습니다."));
-        if(chatRoom.getMemberId() != memberId){
-            throw new ChatRoomException("본인의 채팅방이 없습니다.");
+        Long petSitterId = memberService.findVerifyMember(memberId).getPetSitter().getPetSitterId();
+        ChatRoom chatRoom = chatRoomRepository.findByWcBoardIdAndMemberIdOrWcBoardIdAndPetSitterId(wcboardId, memberId, wcboardId, petSitterId);
+        if(chatRoom == null){
+            throw new ChatRoomException("채팅방이 없습니다.");
         }
-
         return chatRoom;
     }
 
@@ -56,11 +61,29 @@ public class ChatRoomService {
         wcBoardRepository.save(wcBoard);
     }
 
-    public void chatComplete(ChatRoomCompleteDto completeDto) {
+    public ChatRoomCompleteDto.response chatComplete(ChatRoomCompleteDto.request completeDto) {
         WcBoard wcBoard = wcBoardService.findVerifyPost(completeDto.getWcboardId());
         PetSitter petSitter = petSitterService.findPetSitter(completeDto.getPetSitterId());
+        String petSitterEmail = memberService.findVerifyMember(petSitter.getMember().getMemberId()).getEmail();
         wcBoard.setPostStatus(WcBoard.PostStatus.COMPLETE);
         wcBoard.setPetSitter(petSitter);
         wcBoardRepository.save(wcBoard);
+        ChatRoomCompleteDto.response response = new ChatRoomCompleteDto.response();
+        response.setEmail(petSitterEmail);
+        response.setImage(petSitter.getPetSitterImage());
+        response.setName(petSitter.getName());
+        return response;
+    }
+
+    public boolean checkSender(Long memberId) {
+        ChatRoom chatRoomMember = chatRoomRepository.findByMemberId(memberId);
+        Member member = memberService.findVerifyMember(chatRoomMember.getMemberId());
+        if(chatRoomMember.getMemberId().equals(memberId)){
+            return true;
+        }else if(chatRoomMember.getPetSitterId().equals(member.getPetSitter().getPetSitterId())){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

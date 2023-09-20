@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -131,21 +132,14 @@ public class WcBoardService {
     }
      */
 
-    public void deletePost(Long wcboardId) {
+    public void deletePost(Long wcboardId, Long memberId) {
         WcBoard findPost = findVerifyPost(wcboardId);
 
-        if(!findPost.getPostStatus().equals(WcBoard.PostStatus.DEFAULT)) { // 진행중인 게시글만 삭제 가능
+        if(!findPost.getPostStatus().equals(WcBoard.PostStatus.DEFAULT)) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED); // 삭제 불가능 예외처리 TODO : 에러코드 수정 필요
         }
-        /**
-         * 멤버와 연결후 구현 / 게시글 작성자만 삭제 가능한 로직
-         if(!findPost.getMember().getMemberId().equals(MemberService.getLoginUserId())) { // 게시글 작성자만 삭제 가능
-         throw new BusinessLogicException(ExceptionCode.NOT_RESOURCE_OWNER); // 삭제 불가능 예외처리
-         }
-         */
         wcBoardRepository.delete(findPost);
     }
-
 
     // 게시글 찾고 없으면 예외처리
     public WcBoard findVerifyPost (Long wcboardId) {

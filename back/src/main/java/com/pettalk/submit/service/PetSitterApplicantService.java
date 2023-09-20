@@ -35,14 +35,15 @@ public class PetSitterApplicantService {
     private final TimeService timeService;
 
     public ResponseEntity submitPetSitter(Long memberId, Long wcboardId) {
+        log.info("신청지 토큰에서 멤버 아이디 가져오기 : " + memberId);
         Member findMember = memberService.findVerifyMember(memberId);
+        log.info("신청지 토큰에서 멤버 아이디 가져오기 : " + memberId);
         WcBoard findPost = wcBoardService.findVerifyPost(wcboardId); //wcBoardRepository.finallById(wcboardId);
 
-        findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
+//        findPost.setPostStatus(WcBoard.PostStatus.IN_RESERVATION);
 
-        Member member = memberService.findVerifyMember(memberId);
-
-        Long petSitterId = member.getPetSitter().getPetSitterId();
+        Long petSitterId = findMember.getPetSitter().getPetSitterId();
+        log.info("신청지 토큰에서 펫시터 아이디 가져오기 : " + petSitterId);
         PetSitter petSitter = petSitterService.findVerifiedPetSitter(petSitterId);
         Long countPetSitterId = paRepository.countByPetSitter_PetSitterId(petSitterId);
 
@@ -50,13 +51,21 @@ public class PetSitterApplicantService {
         if (countPetSitterId != 0) {
             List<TimeFilter> timefilter = timeService.getTimeByPetSitterId(petSitterId);
             if (this.checkDupTime(findPost, timefilter)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("예약시간이 겹쳐요!");
             } else if (hasAlreadyApplied(wcboardId, petSitterId)) {
-                return ResponseEntity.ok("이미 신청한 게시글 입니다!");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("이미 신청한 게시글 입니다!");
             } else if (isOwnPost(findMember, findPost)) {
-                return ResponseEntity.ok("자신의 게시글에 신청할 수 없어요!");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("본인의 게시글엔 신청할수 없어요!");
             } else if (!isPetSitter(findMember)) {
-                return ResponseEntity.ok("펫시터를 아직 등록하지 않으셨어요!");
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("펫시터를 등록하지 않으셨네요!");
             } else {
                 PetSitterApplicant petSitterApplicant = new PetSitterApplicant();
                 petSitterApplicant.setWcboardId(wcboardId);

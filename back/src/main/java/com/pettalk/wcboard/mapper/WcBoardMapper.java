@@ -8,6 +8,7 @@ import com.pettalk.wcboard.entity.WcBoard;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +40,8 @@ public interface WcBoardMapper {
           String areaTag = null;
           String location = null;
           String postStatus = null;
-          String startTime = null;
-          String endTime = null;
+          LocalDateTime startTime = null;
+          LocalDateTime endTime = null;
           String createdAt = null;
 
 
@@ -52,6 +53,8 @@ public interface WcBoardMapper {
           animalTag = wcBoard.getAnimalTag();
           areaTag = wcBoard.getAreaTag();
           location = wcBoard.getLocation();
+          startTime = wcBoard.getStartTime();
+          endTime = wcBoard.getEndTime();
 
           //createdAt 포매팅 적용후 String 타입으로 변환
           createdAt = wcBoard.getCreatedAt();
@@ -68,7 +71,10 @@ public interface WcBoardMapper {
           Member findMember = wcBoard.getMember();
           nickName = findMember.getNickName();
 
-          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, location, postStatus, startTime, endTime, createdAt, nickName );
+          Long memberId = null;
+          memberId = findMember.getMemberId();
+
+          WcBoardDto.GetResponse response = new WcBoardDto.GetResponse( wcboardId, title, content, images, wcTag, animalTag, areaTag, location, postStatus, startTime, endTime, createdAt, nickName, memberId );
 
           return response;
      }
