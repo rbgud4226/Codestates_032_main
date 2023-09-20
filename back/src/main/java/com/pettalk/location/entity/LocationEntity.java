@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -12,12 +11,12 @@ import javax.persistence.*;
 public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long locationId;
 
     @Column
-    private double latitude;
+    private Float lat;
 
     @Column
-    private double longitude;
+    private Float lon;
 }
 
