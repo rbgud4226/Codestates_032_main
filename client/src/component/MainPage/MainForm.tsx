@@ -138,7 +138,7 @@ function MainForm(props: MainProps) {
       <>
         <WalkText>
           맞춤 배식
-          <WalkSText>사료와 간식, 물 급여로 안전하게. </WalkSText>
+          <WalkSText>사료와 간식, 물 급여로. </WalkSText>
           <HR />
           신나는 놀이
           <WalkSText>노즈워크, 장남감 놀이 등 .</WalkSText>
@@ -260,34 +260,41 @@ function MainForm(props: MainProps) {
       <SectionendContainer>
         {imagesLoaded && (
           <EndContainer>
-            <EndPage>
-              <GilinLinkF href="https://github.com/sebfe45kimck">
-                FE김철기
-              </GilinLinkF>
-              <GilinLinkB href="https://github.com/j00r6">BE박진수</GilinLinkB>
-            </EndPage>
-            <EndPage>
-              <GilinLinkF href="https://github.com/udaeng8286">
-                FE송유정
-              </GilinLinkF>
-              <GilinLinkB href="https://github.com/SEBBE45JGH">
-                BE장근호
-              </GilinLinkB>
-            </EndPage>
-            <EndPage>
-              <GilinLinkF href="https://github.com/Dohyun12259">
-                FE최도현
-              </GilinLinkF>
-              <GilinLinkB href="https://github.com/gord10011">
-                BE전찬혁
-              </GilinLinkB>
-            </EndPage>
-            <EndPage>
-              <GilinLinkF></GilinLinkF>
-              <GilinLinkB href="https://github.com/rbgud4226">
-                BE황규형
-              </GilinLinkB>
-            </EndPage>
+            {[
+              {
+                feLink: "https://github.com/sebfe45kimck",
+                beLink: "https://github.com/j00r6",
+                name: "FE김철기",
+                beName: "BE박진수",
+              },
+              {
+                feLink: "https://github.com/udaeng8286",
+                beLink: "https://github.com/SEBBE45JGH",
+                name: "FE송유정",
+                beName: "BE장근호",
+              },
+              {
+                feLink: "https://github.com/Dohyun12259",
+                beLink: "https://github.com/gord10011",
+                name: "FE최도현",
+                beName: "BE전찬혁",
+              },
+              {
+                feLink: "",
+                beLink: "https://github.com/rbgud4226",
+                name: "",
+                beName: "BE황규형",
+              },
+            ].map((item, index) => (
+              <EndPage key={index}>
+                {item.feLink && (
+                  <GilinLinkF href={item.feLink}>{item.name}</GilinLinkF>
+                )}
+                {item.beLink && (
+                  <GilinLinkB href={item.beLink}>{item.beName}</GilinLinkB>
+                )}
+              </EndPage>
+            ))}
           </EndContainer>
         )}
       </SectionendContainer>
