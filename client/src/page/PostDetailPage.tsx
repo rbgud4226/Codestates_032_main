@@ -146,6 +146,7 @@ const PostDetailPage = () => {
           el =>
             el.petSitterId === Number(localStorage.getItem("otherPetSitterId")),
         );
+        localStorage.setItem("wcboardId", wcboardId);
         localStorage.setItem("sitterProfileImage", sitter.petSitterImage);
         localStorage.setItem("sitterName", sitter.name);
         localStorage.setItem("sitterEmail", sitter.email);

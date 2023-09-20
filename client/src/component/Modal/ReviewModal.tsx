@@ -34,16 +34,9 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     formState: { errors },
     getValues,
     setValue,
-    watch,
   } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
   const [modalOpen, setModalOpen] = useState(false);
   const [point, setPoint] = useState("0");
-
-  const check1 = watch("check1", false);
-  const check2 = watch("check2", false);
-  const check3 = watch("check3", false);
-  const check4 = watch("check4", false);
-  const check5 = watch("check5", false);
 
   //완료버튼 누를시 모달팝업
   const doneHdr = () => {
@@ -57,6 +50,11 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     setValue("check3", false);
     setValue("check4", false);
     setValue("check5", false);
+    if (point === "0") {
+      setPoint("1");
+    } else {
+      setPoint("0");
+    }
     console.log(point);
   };
 
@@ -66,6 +64,11 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     setValue("check3", false);
     setValue("check4", false);
     setValue("check5", false);
+    if (point === "0") {
+      setPoint("2");
+    } else {
+      setPoint("0");
+    }
     console.log(point);
   };
   const check3Hdr = () => {
@@ -74,6 +77,11 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     setValue("check3", !getValues("check3"));
     setValue("check4", false);
     setValue("check5", false);
+    if (point === "0") {
+      setPoint("3");
+    } else {
+      setPoint("0");
+    }
     console.log(point);
   };
 
@@ -83,6 +91,11 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     setValue("check3", !getValues("check4"));
     setValue("check4", !getValues("check4"));
     setValue("check5", false);
+    if (point === "0") {
+      setPoint("4");
+    } else {
+      setPoint("0");
+    }
     console.log(point);
   };
 
@@ -92,42 +105,22 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
     setValue("check3", !getValues("check5"));
     setValue("check4", !getValues("check5"));
     setValue("check5", !getValues("check5"));
-    console.log(check5);
+    if (point === "0") {
+      setPoint("5");
+    } else {
+      setPoint("0");
+    }
   };
 
-  //점수계산
-  const pointHdr = () => {
-    if (check5) {
-      setPoint("5");
-      return;
-    }
-    if (check4) {
-      setPoint("4");
-      return;
-    }
-    if (check3) {
-      setPoint("3");
-      return;
-    }
-    if (check2) {
-      setPoint("2");
-      return;
-    }
-    if (check1) {
-      setPoint("1");
-      return;
-    }
-    setPoint("0"); // 모든 조건을 만족하지 않는 경우
-  };
   //후기제출 hdr 클릭시 메인페이지이동, 및 채팅방폭파, 및 후기작성및 별점 보내야됨.
   const assessHdr = async (data: FormData) => {
-    console.log(pointHdr());
+    console.log(point);
     const sendData = {
       petSitterImage: profileImage,
       email: email,
       content: data.content,
       name: name,
-      star: pointHdr(),
+      star: point,
     };
     try {
       const res = await axios.post(`${api}/review`, sendData, {
@@ -185,6 +178,7 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
               {checkArr.map((el, idx) =>
                 !getValues(el.name) ? (
                   <img
+                    id={String(idx)}
                     key={idx}
                     onClick={el.hdr}
                     style={{ cursor: "pointer" }}
@@ -193,6 +187,7 @@ const ReviewModal = ({ name, profileImage, email }: T) => {
                   />
                 ) : (
                   <img
+                    id={String(idx)}
                     key={idx}
                     onClick={el.hdr}
                     style={{ cursor: "pointer" }}

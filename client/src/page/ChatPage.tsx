@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import Chat from "../component/Chatting/chatting/Chat";
 import global from "../Data/global";
+import Map from "../component/Location/Map";
 
 const ChatPage = () => {
   const [isChat, setIsChat] = useState(true);
@@ -27,7 +28,7 @@ const ChatPage = () => {
         </PetalkBtnCtn>
       )}
 
-      {isChat ? <Chat /> : ""}
+      {isChat ? <Chat /> : <Map />}
     </Ctn>
   );
 };

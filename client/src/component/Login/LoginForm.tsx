@@ -68,26 +68,18 @@ const LoginForm = () => {
     <LoginContainer>
       <LForm onSubmit={handleSubmit(loginHdr)}>
         <InputWrapper>
-          <TextInput placeholder="email" {...register("email")} />
-          {!errors.email ? (
-            <Span>email을 입력하세요</Span>
-          ) : (
-            <ErrMsg>{errors?.email?.message}</ErrMsg>
-          )}
+          <TextInput placeholder="이메일을 입력하세요" {...register("email")} />
+          {!errors.email ? "" : <ErrMsg>{errors?.email?.message}</ErrMsg>}
         </InputWrapper>
         <InputWrapper>
           <TextInput
-            placeholder="password"
+            placeholder="패스워드를 입력하세요"
             type="password"
             {...register("password")}
           />
-          {!errors.password ? (
-            <Span>비밀번호를 입력하세요.</Span>
-          ) : (
-            <ErrMsg>{errors?.password?.message}</ErrMsg>
-          )}
+          {!errors.password ? "" : <ErrMsg>{errors?.password?.message}</ErrMsg>}
         </InputWrapper>
-        <div style={{ marginTop: "12px", width: "100%" }}>
+        <div style={{ marginTop: "20px", width: "100%" }}>
           <LargeBtn name={"로그인"} />
         </div>
         <ErrMsg>{errorMsg}</ErrMsg>
@@ -115,7 +107,7 @@ const LForm = styled.form`
 `;
 const InputWrapper = styled.div`
   width: 100%;
-  margin-bottom: 8px;
+  margin-top: 20px;
 `;
 
 export const TextInput = styled.input`

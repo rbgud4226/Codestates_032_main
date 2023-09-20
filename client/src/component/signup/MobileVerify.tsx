@@ -40,7 +40,6 @@ const MobileVerify = ({ setPhoneNum }: T) => {
         <TextInput placeholder="전화번호를 입력하세요" {...register("phone")} />
         <PhoneBtn name={"인증"} />
       </MVForm>
-      <Span>전화번호를 입력하세요</Span>
     </MVCtn>
   );
 };
