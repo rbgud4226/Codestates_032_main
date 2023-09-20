@@ -310,8 +310,8 @@ const ListContainer = styled.div`
   flex-grow: 1;
   flex-direction: column;
   padding: 16px;
-  margin-top; 100px;
-  color: wihte;
+  margin-top: 100px;
+  color: white;
 `;
 const EndPage = styled.div`
   display: flex;
