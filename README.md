@@ -26,8 +26,14 @@
 |----|----|----|----|
 <img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/a2078fb9-3b7b-49c6-bfd2-2432c14faf3c" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/f9d4444e-ee2d-41b7-ae75-61495665d178" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/429fae6c-cd09-4174-8f28-a70260d4ef7d" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/d5844bab-8a7c-413a-9324-64e6802eee7a" width="100" height="100"/>|
 [@SEBBE45JGH](https://github.com/SEBBE45JGH)|[@gord10011](https://github.com/gord10011)|[@rbgud4226](https://github.com/rbgud4226)|[@j00r6](https://github.com/j00r6)|
-
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 
@@ -35,6 +41,8 @@
 
 
 <div align='center'>
+
+# 서비스 소개
 
 </div>
 <br>
