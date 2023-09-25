@@ -106,7 +106,6 @@ const DepositedHistory = () => {
 
   return (
     <Container>
-      <CategoryTitle>맡긴 내역</CategoryTitle>
       {wcBoardList.length === 0 ? (
         <NoReservations>
           등록된 예약이 없습니다.
@@ -166,11 +165,6 @@ export default DepositedHistory;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const CategoryTitle = styled.p`
-  font-size: 18px;
-  margin-bottom: 8px;
 `;
 
 const NoReservations = styled.div`

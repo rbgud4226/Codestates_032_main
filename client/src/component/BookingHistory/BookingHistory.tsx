@@ -17,11 +17,15 @@ const BookingHistory = () => {
         <TabButton
           onClick={() => handleTabClick("care")}
           selected={selectedTab === "care"}
-        ></TabButton>
+        >
+          맡긴내역
+        </TabButton>
         <TabButton
           onClick={() => handleTabClick("deposited")}
           selected={selectedTab === "deposited"}
-        ></TabButton>
+        >
+          케어내역
+        </TabButton>
       </Tabs>
       <Separator />
       {selectedTab === "care" ? <DepositedHistory /> : <CareHistory />}
