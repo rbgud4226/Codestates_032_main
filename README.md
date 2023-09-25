@@ -15,7 +15,8 @@
 
 |최도현|송유정|김철기|
 |----|----|----|
-|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/baff3d94-a471-4491-8cb7-a47e4f704e92" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/c22bd3d2-47b0-4fd8-876b-46cef479463b" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/27bfecd4-29fe-4dbf-8a94-cc2977776d31" width="100" height="100"/>|[@Dohyun12259](https://github.com/Dohyun12259)|[@udaeng8286](https://github.com/udaeng8286)|[@gprsto](https://github.com/sebfe45kimck)|
+|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/baff3d94-a471-4491-8cb7-a47e4f704e92" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/c22bd3d2-47b0-4fd8-876b-46cef479463b" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/27bfecd4-29fe-4dbf-8a94-cc2977776d31" width="100" height="100"/>
+|[@Dohyun12259](https://github.com/Dohyun12259)|[@udaeng8286](https://github.com/udaeng8286)|[@gprsto](https://github.com/sebfe45kimck)|
 <br>
 <br>
 <br>
