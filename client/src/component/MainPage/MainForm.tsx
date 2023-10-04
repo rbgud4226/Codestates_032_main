@@ -14,11 +14,7 @@ import axios from "axios";
 
 const api = process.env.REACT_APP_DB_HOST;
 
-interface MainProps {
-  propertyName: string;
-}
-
-function MainForm(props: MainProps) {
+function MainForm() {
   const navigate = useNavigate();
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(

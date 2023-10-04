@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import MainImage1 from "../../asset/MainAsset/MainImage1.png";
 import MainLogo from "../../asset/MainAsset/MainLogo.png";
+import MainButton from "./MainButton";
 
 function MainFirst() {
   return (
@@ -10,7 +11,7 @@ function MainFirst() {
         <MainImage src={MainImage1} alt={`Image`} />
         <MainImageContainer>
           <MainImageText>{"내가 없을 때\n 내 아이는?"}</MainImageText>
-          <MainButton>예약하기</MainButton>
+          <MainButton />
         </MainImageContainer>
       </SectionContainer>
 
@@ -51,22 +52,6 @@ const MainImageText = styled.text`
   @media (max-width: 430px) {
     left: 0px;
     bottom: 200px;
-  }
-`;
-
-const MainButton = styled.button`
-  background-color: #279eff;
-  color: white;
-  font-size: 12px;
-  padding: 8px 12px;
-  position: relative;
-  bottom: 250px;
-  width: 80px;
-  left: 40px;
-  border: 2px solid #279eff;
-  cursor: pointer;
-  @media (max-width: 430px) {
-    bottom: 150px;
   }
 `;
 

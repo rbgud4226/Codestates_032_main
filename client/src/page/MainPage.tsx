@@ -6,7 +6,7 @@ const MainPage = () => {
   return (
     <div>
       <MainFirst />
-      <MainSecond propertyName="example" />
+      <MainSecond />
     </div>
   );
 };
