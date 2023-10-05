@@ -62,6 +62,7 @@ const LogoContainer = styled.div`
 const LogoText = styled.text`
   position: absolute;
   white-space: pre-line;
+
   top: 70px;
   left: 120px;
   color: #279eff;

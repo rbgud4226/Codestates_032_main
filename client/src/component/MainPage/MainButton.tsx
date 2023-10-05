@@ -6,6 +6,12 @@ import { useNavigate } from "react-router-dom";
 function MainButton() {
   const navigate = useNavigate();
 
+  const [modarOpen, setmodarOpen] = useState(false); //모달창
+
+  const showModat = () => {
+    setmodarOpen(true);
+  };
+
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("accessToken"),
   );
@@ -18,10 +24,16 @@ function MainButton() {
     }
   };
 
-  return <CustomButtom onClick={moveToWrite}>예약하기</CustomButtom>;
+  return (
+    <Customdiv>
+      <CustomButtom onClick={moveToWrite}>예약하기</CustomButtom>
+    </Customdiv>
+  );
 }
 
 export default MainButton;
+
+const Customdiv = styled.div``;
 
 const CustomButtom = styled.button`
   background-color: #279eff;

@@ -57,6 +57,7 @@ const NavContainer = styled.nav`
   box-shadow: 0px 10px 34px #272c5614;
   background-color: ${global.White.value};
   justify-content: space-between;
+  z-index: 999;
 `;
 
 const BaseStyledComponent = styled(Link)`
