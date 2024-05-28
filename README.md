@@ -58,6 +58,10 @@
 **기능 설명 영상**
 [👀 Description video](http://pettalk-bucket.s3-website.ap-northeast-2.amazonaws.com/)
 
+**프로젝트 기능 ppt**
+[🎏 45-Team-032](https://github.com/udaeng8286/Portfolio/files/15473351/45-Team-032-.pptx)
+
+
 - **서비스 글 CRUD**: 산책 및 케어를 해줄 펫시터를 구하는 글 게시, 조회, 삭제, 수정 기능
 - **펫시터 등록 및 확인**: 펫시터 사용자는 펫시터 자격을 등록하고, 서비스 이용자는 펫시터의 정보를 확인할 수 있는 기능 
 - **1:1 채팅 기능**: 클라이언트와 펫시터 매칭 후 1:1 채팅방에서 대화를 할 수 있는 기능
