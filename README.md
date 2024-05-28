@@ -6,6 +6,8 @@
 
 **배포 사이트**
 [🦖 Live Demo](http://pettalk-bucket.s3-website.ap-northeast-2.amazonaws.com/)
+
+
 <table>
   <tr>
     <td align="center"><b>테스트 시작 페이지</b></td>
@@ -37,23 +39,31 @@
 ### front-end
 
 |최도현|송유정|김철기|
-|----|----|----|
-|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/baff3d94-a471-4491-8cb7-a47e4f704e92" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/c22bd3d2-47b0-4fd8-876b-46cef479463b" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/27bfecd4-29fe-4dbf-8a94-cc2977776d31" width="100" height="100"/>
+|:----:|:----:|:----:|
 |[@Dohyun12259](https://github.com/Dohyun12259)|[@udaeng8286](https://github.com/udaeng8286)|[@gprsto](https://github.com/sebfe45kimck)|
+|  - 서비스 소개 페이지 <br /> - 예약글 CRUD <br /> - 예약글 전체 조회 <br /> - 예약글 태그 필터 | - 마이페이지 <br /> - 펫시터 등록 및 수정 <br /> - 예약 내역 페이지 <br /> - 사용자의 산책 위치 | - Header,Nav 공동컴포넌트 <br /> - 예약글 상세 조회 <br /> - 회원가입/로그인/로그아웃 <br /> - 1:1 채팅방 |
 <br>
 
 
 ### back-end
 |장근호|전찬혁|황규형|박진수|
-|----|----|----|----|
-<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/a2078fb9-3b7b-49c6-bfd2-2432c14faf3c" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/f9d4444e-ee2d-41b7-ae75-61495665d178" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/429fae6c-cd09-4174-8f28-a70260d4ef7d" width="100" height="100"/>|<img src="https://github.com/codestates-seb/seb45_main_032/assets/130388654/d5844bab-8a7c-413a-9324-64e6802eee7a" width="100" height="100"/>|
+|:----:|:----:|:----:|:----:|
 [@SEBBE45JGH](https://github.com/SEBBE45JGH)|[@gord10011](https://github.com/gord10011)|[@rbgud4226](https://github.com/rbgud4226)|[@j00r6](https://github.com/j00r6)|
+|  - 펫시터 API <br /> - Exception 기능|  - 1:1 채팅 <br /> - AWS설계 및 환경 구축 | - 맴버 API <br /> - 회원가입/로그인/로그아웃 | - 예약글 CRUD <br /> - 이동 경로 GPS 기능 |
 </br>
 
 
 
-## 서비스 소개
+## 주요 기능
+**기능 설명 영상**
+[👀 Description video](http://pettalk-bucket.s3-website.ap-northeast-2.amazonaws.com/)
 
+- **서비스 글 CRUD**: 산책 및 케어를 해줄 펫시터를 구하는 글 게시, 조회, 삭제, 수정 기능
+- **펫시터 등록 및 확인**: 펫시터 사용자는 펫시터 자격을 등록하고, 서비스 이용자는 펫시터의 정보를 확인할 수 있는 기능 
+- **1:1 채팅 기능**: 클라이언트와 펫시터 매칭 후 1:1 채팅방에서 대화를 할 수 있는 기능
+- **사용자 위치 확인**: 펫시터와 반려동물의 현재의 위치를 지도에서 확인 할 수 있는 기능
+  
+</br>
 
 ## 기술 스택
 ### front-end
