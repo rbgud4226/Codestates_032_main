@@ -65,11 +65,9 @@
 [👀 Description video](http://pettalk-bucket.s3-website.ap-northeast-2.amazonaws.com/)
 
 **프로젝트 기능 ppt**
-[🎏 45-Team-032](https://github.com/udaeng8286/Portfolio/files/15473351/45-Team-032-.pptx)
+[🎏 45-Team-032](https://github.com/user-attachments/files/15524699/main_45team.pptx)
 
 
-
-  
 </br>
 
 ## 기술 스택
